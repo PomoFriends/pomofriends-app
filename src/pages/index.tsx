@@ -1,9 +1,6 @@
 import React from 'react';
-/**
- *
- * @return {JSX.Element}
- */
-const Home = (): JSX.Element => {
+
+const Home: React.FC = () => {
   return (
     <div className="flex rounded-lg p-24 justify-center">
       <div className="text-center md:text-left">
