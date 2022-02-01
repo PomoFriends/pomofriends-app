@@ -48,6 +48,7 @@ export const useAuthProvider = () => {
   };
 
   const getUserAdditionalData = async (user: any) => {
+    console.log('getUserAdditionalData');
     return await db
       .collection('users')
       .doc(user.uid)
@@ -56,6 +57,13 @@ export const useAuthProvider = () => {
         if (userData.data()) {
           // console.log('UserData:', userData.data());
           setUser(userData.data() as any);
+        } else {
+          console.log(user);
+          createUser({
+            uid: user?.uid,
+            email: user.email,
+            displayName: user.displayName,
+          });
         }
       });
   };
