@@ -15,6 +15,10 @@ export type ResetPasswordData = {
   email: string;
 };
 
+export type ErrorMessage = {
+  message: string | null;
+};
+
 export type UserData = firebase.User;
 
 export type authContextType = {

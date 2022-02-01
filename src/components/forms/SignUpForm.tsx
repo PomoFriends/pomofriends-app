@@ -1,8 +1,10 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import React from 'react';
-import { SignUpData } from '../../utils/types';
+import React, { useState } from 'react';
+import { ErrorMessage, SignUpData } from '../../utils/types';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
+import Button from '../elements/Button';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 const SignUpForm: React.FC = () => {
   const {
@@ -14,9 +16,17 @@ const SignUpForm: React.FC = () => {
   const auth = useAuth();
   const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<ErrorMessage | null>(null);
+
   const onSubmit: SubmitHandler<SignUpData> = async (data: SignUpData) => {
-    return await auth.signUp(data).then(() => {
-      router.push('/dashboard');
+    setIsLoading(true);
+    setError(null);
+    return await auth.signUp(data).then((response) => {
+      setIsLoading(false);
+      setError(getErrorMessage(response.error));
+
+      if (error === null) router.push('/dashboard');
     });
   };
 
@@ -104,14 +114,15 @@ const SignUpForm: React.FC = () => {
 
       <div className="mt-6">
         <span className="block w-full rounded-md shadow-sm">
-          <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-          >
-            Sign up
-          </button>
+          <Button title="Sign up" type="submit" isLoading={isLoading} />
         </span>
       </div>
+
+      {error?.message && (
+        <div className="mb-4 mt-6 text-red-500 text-center border-dashed border border-red-600 p-2 rounded">
+          <span>{error.message}</span>
+        </div>
+      )}
     </form>
   );
 };

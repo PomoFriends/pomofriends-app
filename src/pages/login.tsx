@@ -6,7 +6,7 @@ const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen flex bg-gray-200">
       <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="text-center mt-24">
+        <div className="text-center mt-4">
           <h2 className="text-center text-3xl leading-9 font-extrabold text-gray-900">
             Log in
           </h2>
