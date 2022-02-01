@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import LoginForm from '../components/forms/LoginForm';
+import GoogleAuth from '../hooks/googleAuth';
 
 const LoginPage: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const LoginPage: React.FC = () => {
             </Link>
           </p>
         </div>
+        <GoogleAuth />
         <div className="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <LoginForm />
         </div>

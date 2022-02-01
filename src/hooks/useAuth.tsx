@@ -56,13 +56,6 @@ export const useAuthProvider = () => {
         if (userData.data()) {
           // console.log('UserData:', userData.data());
           setUser(userData.data() as any);
-
-          // setUser((prevUser) => {
-          //   const newUser = Object.assign({}, prevUser);
-          //   // assume it is just the name field we want to add
-          //   newUser.displayName = userData.data()?.displayName || 'unnamed';
-          //   return newUser;
-          // });
         }
       });
   };
@@ -105,8 +98,9 @@ export const useAuthProvider = () => {
     });
   };
 
+  // TO-DO: Create user after google and github login
   const handleAuthStateChanged = async (user: UserData | null) => {
-    // console.log('handleAuthStateChanged', user);
+    console.log('handleAuthStateChanged', user);
     setUser(user);
     if (user) {
       await getUserAdditionalData(user);

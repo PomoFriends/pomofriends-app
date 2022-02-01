@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import SignUpForm from '../components/forms/SignUpForm';
+import GoogleAuth from '../hooks/googleAuth';
 
 const SignUpPage: React.FC = () => {
   return (
@@ -10,6 +11,7 @@ const SignUpPage: React.FC = () => {
           <h2 className="text-center text-3xl leading-9 font-extrabold text-gray-900">
             Sign up
           </h2>
+
           <p className="mt-2 text-center text-md text-gray-600">
             {'Already have an account? '}
             <Link href="/login">
@@ -19,6 +21,7 @@ const SignUpPage: React.FC = () => {
             </Link>
           </p>
         </div>
+        <GoogleAuth />
         <div className="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <SignUpForm />
         </div>
