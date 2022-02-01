@@ -1,10 +1,9 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import React from 'react';
-
-interface LoginData {
-  email: string;
-  password: string;
-}
+import { LoginData } from '../../utils/types';
+import { useRouter } from 'next/router';
+import { useAuth } from '../../hooks/useAuth';
+import Link from 'next/link';
 
 const LoginForm: React.FC = () => {
   const {
@@ -13,8 +12,13 @@ const LoginForm: React.FC = () => {
     formState: { errors },
   } = useForm<LoginData>();
 
-  const onSubmit: SubmitHandler<LoginData> = (data: LoginData) => {
-    console.log(data);
+  const auth = useAuth();
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<LoginData> = async (data: LoginData) => {
+    return await auth.signIn(data).then(() => {
+      router.push('/dashboard');
+    });
   };
 
   return (
@@ -33,6 +37,11 @@ const LoginForm: React.FC = () => {
             className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 shadow-sm"
             {...register('email', {
               required: 'Please enter an email',
+              pattern: {
+                value:
+                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: 'Not a valid email',
+              },
             })}
           />
           {errors.email && (
@@ -78,6 +87,19 @@ const LoginForm: React.FC = () => {
             Log in
           </button>
         </span>
+      </div>
+
+      <div className="mt-4 flex items-end">
+        <div className="text-sm leading-5">
+          <Link href="/reset-password">
+            <a
+              href="#"
+              className="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150"
+            >
+              Forgot your password?
+            </a>
+          </Link>
+        </div>
       </div>
     </form>
   );

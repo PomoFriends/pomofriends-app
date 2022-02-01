@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Home: React.FC = () => {
+const HomePage: React.FC = () => {
   return (
     <div className="flex rounded-lg p-24 justify-center">
       <div className="text-center md:text-left">
@@ -13,4 +13,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default HomePage;

@@ -1,11 +1,8 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import React from 'react';
-
-interface SignUpData {
-  username: string;
-  email: string;
-  password: string;
-}
+import { SignUpData } from '../../utils/types';
+import { useRouter } from 'next/router';
+import { useAuth } from '../../hooks/useAuth';
 
 const SignUpForm: React.FC = () => {
   const {
@@ -14,31 +11,36 @@ const SignUpForm: React.FC = () => {
     formState: { errors },
   } = useForm<SignUpData>();
 
-  const onSubmit: SubmitHandler<SignUpData> = (data: SignUpData) => {
-    console.log(data);
+  const auth = useAuth();
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<SignUpData> = async (data: SignUpData) => {
+    return await auth.signUp(data).then(() => {
+      router.push('/dashboard');
+    });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="rounded-md shadow-sm">
         <label
-          htmlFor="username"
+          htmlFor="displayName"
           className="block text-sm font-medium leading-5 text-gray-700"
         >
           Username
         </label>
         <input
           type="text"
-          id="username"
+          id="displayName"
           className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-          {...register('username', {
+          {...register('displayName', {
             required: 'Please enter a username',
             maxLength: 20,
           })}
         />
-        {errors.username && (
+        {errors.displayName && (
           <div className="mt-2 text-xs text-red-600">
-            {errors.username.message}
+            {errors.displayName.message}
           </div>
         )}
       </div>
@@ -57,6 +59,11 @@ const SignUpForm: React.FC = () => {
             className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
             {...register('email', {
               required: 'Please enter an email',
+              pattern: {
+                value:
+                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: 'Not a valid email',
+              },
             })}
           />
           {errors.email && (

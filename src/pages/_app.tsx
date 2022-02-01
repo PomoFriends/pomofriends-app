@@ -1,12 +1,14 @@
+import { AppProps } from 'next/app';
+import { AuthProvider } from '../hooks/useAuth';
 import React from 'react';
 import '../styles/global.css';
 
-/**
- *
- * @return {JSX.Element}
- */
-function MyApp({ Component, pageProps }: any): JSX.Element {
-  return <Component {...pageProps} />;
-}
+const MyApp = ({ Component, pageProps }: AppProps): any => {
+  return (
+    <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
+};
 
 export default MyApp;
