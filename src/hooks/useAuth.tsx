@@ -39,7 +39,7 @@ export const useAuthProvider = () => {
       .set(user)
       .then(() => {
         setUser(user);
-        console.log('User:', user);
+        // console.log('User:', user);
         return user;
       })
       .catch((error) => {
@@ -58,7 +58,7 @@ export const useAuthProvider = () => {
           // console.log('UserData:', userData.data());
           setUser(userData.data() as any);
         } else {
-          console.log(user);
+          // console.log(user);
           createUser({
             uid: user?.uid,
             email: user.email,
