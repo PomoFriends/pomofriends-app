@@ -1,6 +1,12 @@
 import React from 'react';
 
-const HomePage: React.FC = () => {
+/**
+ *
+ * @return {JSX.Element}
+ *
+ * Landing page
+ */
+const HomePage: React.FC = (): JSX.Element => {
   return (
     <div className="flex rounded-lg p-24 justify-center">
       <div className="text-center md:text-left">

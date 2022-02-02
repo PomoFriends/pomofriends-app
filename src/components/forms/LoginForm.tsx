@@ -7,14 +7,20 @@ import Link from 'next/link';
 import Button from '../elements/Button';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 
-const LoginForm: React.FC = () => {
+/**
+ *
+ * @return {JSX.Element}
+ *
+ * Login Form
+ */
+const LoginForm: React.FC = (): JSX.Element => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginData>();
 
-  const auth = useAuth();
+  const { signIn } = useAuth();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +29,7 @@ const LoginForm: React.FC = () => {
   const onSubmit: SubmitHandler<LoginData> = async (data: LoginData) => {
     setIsLoading(true);
     setError(null);
-    return await auth.signIn(data).then((response) => {
+    return await signIn(data).then((response) => {
       setIsLoading(false);
       setError(getErrorMessage(response.error.message));
 

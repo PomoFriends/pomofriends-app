@@ -1,8 +1,19 @@
 import { ErrorMessage } from './types';
 
-export const getErrorMessage = (errorResponse: any) => {
+/**
+ *
+ * @param {any} errorResponse
+ * @return {ErrorMessage | null}
+ *
+ * Gets an error message by firebase for login and signin forms,
+ * transfroms it into a better message and then returns it
+ */
+export const getErrorMessage = (errorResponse: any): ErrorMessage | null => {
   let error: ErrorMessage | null = null;
 
+  // 'uid' error is due to a weird bug, that doesn't fetch user.uid from
+  // the db for the first time but it still signs in the user.
+  // Therefore this error can be ignored.
   if (errorResponse?.message?.includes('uid')) {
     console.log(errorResponse?.message);
     error = { message: null };

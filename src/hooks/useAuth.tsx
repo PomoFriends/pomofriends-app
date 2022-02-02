@@ -16,6 +16,15 @@ import {
 
 const AuthContext = createContext<authContextType>(authContextDefaultValues);
 
+/**
+ *
+ * @param {{ children: ReactNode }} props
+ * @return {JSX.Element}
+ *
+ * AuthProvider is a wrapper that provides a way to share
+ * values between components without having to explicitly pass a prop
+ * through every level of the tree. Or simply a context.
+ */
 export const AuthProvider = (props: { children: ReactNode }): JSX.Element => {
   const auth = useAuthProvider();
   // console.log('useAuthProviderrrrr', auth.user);
@@ -24,20 +33,40 @@ export const AuthProvider = (props: { children: ReactNode }): JSX.Element => {
   );
 };
 
-export const useAuth = () => {
+/**
+ *
+ * @return {authContextType}
+ *
+ * Context hook
+ */
+export const useAuth = (): authContextType => {
   return useContext(AuthContext);
 };
 
-// Provider hook that creates an auth object and handles it's state
-export const useAuthProvider = () => {
+/**
+ *
+ * @return {authContextType}
+ *
+ * Provider hook that creates an auth object and handles it's state.
+ */
+export const useAuthProvider = (): authContextType => {
+  // Create a state for the user
   const [user, setUser] = useState<UserData | null>(null);
 
-  const createUser = async (user: any) => {
+  /**
+   *
+   * @param {any} user
+   * @return {Promise<any>} user or error
+   *
+   * Function that creates a doc for the user in database.
+   */
+  const createUser = async (user: any): Promise<any> => {
     return await db
       .collection('users')
       .doc(user.uid)
       .set(user)
       .then(() => {
+        // Change the state of the user
         setUser(user);
         // console.log('User:', user);
         return user;
@@ -47,7 +76,14 @@ export const useAuthProvider = () => {
       });
   };
 
-  const getUserAdditionalData = async (user: any) => {
+  /**
+   *
+   * @param {any} user
+   * @return {Promise<void>} return user or change the state of the user
+   *
+   * Returns user data from the firestore db.
+   */
+  const getUserAdditionalData = async (user: any): Promise<void> => {
     console.log('getUserAdditionalData');
     return await db
       .collection('users')
@@ -55,10 +91,10 @@ export const useAuthProvider = () => {
       .get()
       .then((userData) => {
         if (userData.data()) {
-          // console.log('UserData:', userData.data());
+          // Change the state of the user
           setUser(userData.data() as any);
         } else {
-          // console.log(user);
+          // Create user if they do not have the doc in db
           createUser({
             uid: user?.uid,
             email: user.email,
@@ -68,7 +104,19 @@ export const useAuthProvider = () => {
       });
   };
 
-  const signUp = async ({ displayName, email, password }: SignUpData) => {
+  /**
+   *
+   * @param {SignUpData} { displayName, email, password }
+   * @return {Promise<any>} user or error
+   *
+   * Sign up the user and create a doc for the user.
+   *
+   */
+  const signUp = async ({
+    displayName,
+    email,
+    password,
+  }: SignUpData): Promise<any> => {
     // console.log(displayName);
     return await auth
       .createUserWithEmailAndPassword(email, password)
@@ -81,11 +129,20 @@ export const useAuthProvider = () => {
       });
   };
 
-  const signIn = async ({ email, password }: LoginData) => {
+  /**
+   *
+   * @param {LoginData} { email, password }
+   * @return {Promise<any>} user or error
+   *
+   * Sign in the user and get additional data of the user.
+   *
+   */
+  const signIn = async ({ email, password }: LoginData): Promise<any> => {
     return await auth
       .signInWithEmailAndPassword(email, password)
       .then(async (response) => {
         const userResponse = response.user;
+        // Change the state of the user
         setUser(userResponse);
         // console.log('response user:', userResponse);
         await getUserAdditionalData(user);
@@ -96,31 +153,66 @@ export const useAuthProvider = () => {
       });
   };
 
-  const signOut = async () => {
+  /**
+   *
+   * @return {Promise<void>}
+   *
+   * Sign out the user.
+   * Change the state of the user to null.
+   *
+   */
+  const signOut = async (): Promise<void> => {
+    // Change the state of the user
     return await auth.signOut().then(() => setUser(null));
   };
 
-  const sendPasswordResetEmail = async (email: string) => {
+  /**
+   *
+   * @param {string} email
+   * @return {Promise<void>}
+   *
+   * Send password reset email.
+   *
+   */
+  const sendPasswordResetEmail = async (email: string): Promise<void> => {
     return await auth.sendPasswordResetEmail(email).then((response) => {
       return response;
     });
   };
 
-  // TO-DO: Create user after google and github login
-  const handleAuthStateChanged = async (user: UserData | null) => {
+  /**
+   *
+   * @param {UserData | null} user
+   * @return {Promise<void>}
+   *
+   * Keeps user logged in.
+   * When user re-enters the application, we need to fetch additional data again.
+   *
+   */
+  const handleAuthStateChanged = async (
+    user: UserData | null
+  ): Promise<void> => {
     console.log('handleAuthStateChanged', user);
+    // Change the state of the user
     setUser(user);
     if (user) {
       await getUserAdditionalData(user);
     }
   };
 
+  /**
+   *  Observer for changes to the user's sign-in state
+   */
   useEffect(() => {
     const unsub = auth.onAuthStateChanged(handleAuthStateChanged);
 
     return () => unsub();
   }, []);
 
+  /**
+   * Makes sure that whenever the user’s document is updated,
+   * we also update the user state in our application.
+   */
   useEffect(() => {
     if (user?.uid) {
       // Subscribe to user document on mount

@@ -1,9 +1,15 @@
 import Link from 'next/link';
 import React from 'react';
 import LoginForm from '../components/forms/LoginForm';
-import GoogleAuth from '../hooks/googleAuth';
+import FirebaseProviderAuth from '../hooks/firebaseProviderAuth';
 
-const LoginPage: React.FC = () => {
+/**
+ *
+ * @return {JSX.Element}
+ *
+ * Login page
+ */
+const LoginPage: React.FC = (): JSX.Element => {
   return (
     <div className="min-h-screen flex bg-gray-200">
       <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-md">
@@ -20,7 +26,7 @@ const LoginPage: React.FC = () => {
             </Link>
           </p>
         </div>
-        <GoogleAuth />
+        <FirebaseProviderAuth />
         <div className="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <LoginForm />
         </div>

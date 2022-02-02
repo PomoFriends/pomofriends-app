@@ -6,14 +6,20 @@ import { useAuth } from '../../hooks/useAuth';
 import Button from '../elements/Button';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 
-const SignUpForm: React.FC = () => {
+/**
+ *
+ * @return {JSX.Element}
+ *
+ * SignUp Form
+ */
+const SignUpForm: React.FC = (): JSX.Element => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpData>();
 
-  const auth = useAuth();
+  const { signUp } = useAuth();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +28,7 @@ const SignUpForm: React.FC = () => {
   const onSubmit: SubmitHandler<SignUpData> = async (data: SignUpData) => {
     setIsLoading(true);
     setError(null);
-    return await auth.signUp(data).then((response) => {
+    return await signUp(data).then((response) => {
       setIsLoading(false);
       setError(getErrorMessage(response.error));
 

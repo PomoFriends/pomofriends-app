@@ -6,6 +6,15 @@ interface ButtonProps {
   isLoading?: boolean;
 }
 
+/**
+ *
+ * @param {string} title
+ * @param {isLoading} boolean
+ * @return {JSF.Element}
+ *
+ * A button with the loading spinner.
+ * Takes isLoading state and title
+ */
 const Button = ({
   isLoading,
   title,

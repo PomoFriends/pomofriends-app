@@ -2,7 +2,13 @@ import Link from 'next/link';
 import React from 'react';
 import ResetPasswordForm from '../components/forms/ResetPasswordForm';
 
-const ResetPasswordPage: React.FC = () => {
+/**
+ *
+ * @return {JSX.Element}
+ *
+ * Reset password page
+ */
+const ResetPasswordPage: React.FC = (): JSX.Element => {
   return (
     <div className="min-h-screen flex bg-gray-200">
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">

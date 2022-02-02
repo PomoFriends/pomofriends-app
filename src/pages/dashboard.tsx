@@ -2,7 +2,14 @@
 import React from 'react';
 import { useRequireAuth } from '../hooks/useRequireAuth';
 
-const DashboardPage: React.FC = () => {
+/**
+ *
+ * @return {JSX.Element}
+ *
+ * Dashboard page
+ * Shows users info
+ */
+const DashboardPage: React.FC = (): JSX.Element => {
   const { user, signOut } = useRequireAuth();
 
   let body = null;

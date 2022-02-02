@@ -4,17 +4,23 @@ import { ResetPasswordData } from '../../utils/types';
 import { useAuth } from '../../hooks/useAuth';
 import React from 'react';
 
-const ResetPasswordForm: React.FC = () => {
+/**
+ *
+ * @return {JSX.Element}
+ *
+ * Form for resetting a password
+ */
+const ResetPasswordForm: React.FC = (): JSX.Element => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ResetPasswordData>();
 
-  const auth = useAuth();
+  const { sendPasswordResetEmail } = useAuth();
   const router = useRouter();
   const onSubmit = (data: { email: string }) => {
-    auth.sendPasswordResetEmail(data.email);
+    sendPasswordResetEmail(data.email);
     router.push('/login');
   };
 
