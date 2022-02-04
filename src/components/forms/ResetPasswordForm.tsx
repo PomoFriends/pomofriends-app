@@ -19,6 +19,7 @@ const ResetPasswordForm: React.FC = (): JSX.Element => {
 
   const { sendPasswordResetEmail } = useAuth();
   const router = useRouter();
+
   const onSubmit = (data: { email: string }) => {
     sendPasswordResetEmail(data.email);
     router.push('/login');
