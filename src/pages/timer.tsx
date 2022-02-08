@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ShowTimer from '../components/elements/Timer';
 
 const Timer: React.FC = (): JSX.Element => {
   const [time, setTime] = useState(1500);
@@ -50,6 +51,7 @@ const Timer: React.FC = (): JSX.Element => {
       >
         Pause timer
       </button>
+      <ShowTimer time={time} />
     </div>
   );
 };
