@@ -1,34 +1,234 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PomoFriends
 
-## Getting Started
+## Project Description
 
-First, run the development server:
+### Background & Problem Statement
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+The Pomodoro Technique is a time management method where a person sets a timer for a specified period – traditionally 25 minutes – and focuses on a single task during this timer. Once the 25 minutes are over, a 5-minute break occurs, and then the Pomodoro Technique repeats. Several studies have proven that the Pomodoro Technique helps increase productivity and encourages people to complete tasks without any distractions by having them focus on the task at hand.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Presently, numerous apps and web applications are available for the Pomodoro Technique. However, as we have found, many of them lack social features. Only a tiny handful of them allow the possibility of having groups, but even then, these applications do not have any social aspects like chat boxes or even group hosting. This is where PomoFriends comes in.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Solution
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+PomoFriends is a new web application that aims to harbor a healthy and productive environment and encourage accountability amongst its users through social features that other Pomodoro apps do not have. By implementing aspects like messaging and task sharing in a productivity app, PomoFriends can help users be accountable, especially when done with others or in a group.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+With our application, users can create groups, invite friends or peers, list their tasks, set their timers individually or as a group, and begin their timers. During breaks, users in a group can message each other, set up or edit existing tasks, and have the option to alter timers. On the other hand, during a “focus” session, users in a group will not be able to chat with one another but instead view others’ current task and their remaining time. Disabling chat during this time removes a distraction, and accountability among group members is boosted by having timers and the focused task of others visible. Through these functions and more, PomoFriends can add another level of productivity by incorporating accountability with its users.
 
-## Learn More
+### Project Objectives
 
-To learn more about Next.js, take a look at the following resources:
+WebApp aspects:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Easily Accessible
+- Appealing UI
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Pomodoro aspects:
 
-## Deploy on Vercel
+- Time management
+- Manage distractions
+- Maintain motivation
+- Logs
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Social aspects:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Increase accountability
+- Encouraging group learning
+- Interactive
+- View and share progress
+
+### Target audience
+
+Individuals who want to make use of their time and increase productivity
+
+### Features
+
+Timer
+
+- Start
+- Stop
+- Reset
+- Skip Pomodoro/Break
+- Change timer type
+  - Pomodoro/Short break/Long Break
+
+Settings
+
+- Adjust timers
+  - Pomodoro
+  - Short Break
+  - Long Break
+- Set Long Break interval
+- Set automatic timers
+  - Automatically start Pomodoro after Break
+  - Automatically start Break after Pomodoro
+- Alarms and Sounds
+  - Sound options
+  - Adjust volume
+  - Clock tick sounds
+    - When the timer is close to the end
+- Notifications
+  - Allow browser to show notifications
+
+Tasks
+
+- Create task
+  - Name task
+  - Describe the task
+  - The number of Pomodoro sessions task will last for
+  - Add type
+- Edit
+- Delete
+- Show list of tasks
+  - Save a list of tasks as a template
+  - Load a template of tasks
+  - Delete completed Tasks
+  - Delete all Tasks
+- Categorization
+  - Sort tasks by type
+- Reorder tasks
+
+Chat/Group
+
+- List of the groups
+- Create a group
+  - Async
+    - Individual timers per participant
+  - Sync
+    - The timer is shared across all participants
+      - The creator of the group decided on a time
+- Join a group
+  - Message exchange
+  - Participants list
+    - View their current tasks
+    - View their timer
+    - View how long they have been in a group
+    - View their profile
+  - Mute user
+  - When Pomodoro starts, hide the chat
+    - Automatically disable chat and switch to the participant list
+    - Show chat once on a break or idle
+  - Kick user
+    - If sync, head of group kicks
+    - If async, majority vote
+- When the owner of the group leaves, assign a new owner
+- Group is deleted once every member leaves
+
+User
+
+- Register, Login, Logout
+  - Google/Github auth
+- Settings
+  - Customization
+    - Change display name
+    - Display name color in chat/group
+  - Privacy
+    - Visibility settings
+      - Tasks
+      - Timer
+      - Activity
+- View personal record/log/report
+  - Time spent in Pomodoro timer
+  - Tasks completed
+    - Detailed report:
+      - Time completed
+      - How long did the task take to complete
+  - Days accessed on application
+  - Day Streak
+
+Extra
+
+- Ranking system
+  - Weekly leaders
+    - Display users with the most cumulative Pomodoro time for the week
+      - Profile picture
+      - Username
+      - Cumulative Pomodoro time
+    - Update every week
+- Stickers for the chat
+- Give a prompt after # of Pomodoros that asks you to rate your productivity
+  - Scale from 1-5
+  - Depending on the rating, either increase or decrease the timer accordingly
+- Achievements
+
+### Incentive
+
+Social incentive
+
+- Show other users’ timers and tasks in a group
+- Accountability with others
+- Leaderboard
+
+Personal incentive
+
+- Time management
+- Task management
+- Report
+  - Time focused
+  - Tasks completed
+  - Other stats to encourage app use
+- Achievements
+- Promote productivity
+
+### Rules
+
+- Can’t chat during Pomodoro session
+- No spam
+  - A timer of when the last message was sent
+  - Prevents sending repeated messages within a short time period
+- No harassment
+  - Group participants can report bad actors
+  - Filter
+    - Removes inappropriate messages
+- Users can only join one group
+
+## Technologies
+
+Language: TypeScript
+Framework: React.js, Next.js
+Hosting: Vercel
+API: Firebase, Firebase Functions
+Database: Firestore
+
+## Timeline
+
+## Risks
+
+Bad actors in the group
+
+## Project Deliverables
+
+### Social
+
+- Creating groups
+- Chat in a group
+- Show timer and tasks of a user in a group
+- Show users statistics
+- Leaderboard
+
+### Data
+
+- Pomodoro Settings
+- Tasks
+- Achievements
+- Statistics
+
+### Security
+
+Protecting personal information (full names, emails, etc.)
+
+## Testing
+
+### User Experience
+
+During the testing phase of the project, a link to the web application will be distributed to peers to gather insight into their experience and any critiques or bugs found while using the app.
+
+Our team will include a survey into the app to gather feedback from the users on their experience using it. Users will be able to report any bugs and other complications through this survey. This can be done as a prompt/pop-up that is shown to the user after their timer is completed and through a feedback window or link.
+
+### Features to be tested
+
+- Authentication
+- User Settings
+- Pomodoro Settings
+- Pomodoro Timer
+- CRUD for Tasks
+- Group/Chat
+- Report
