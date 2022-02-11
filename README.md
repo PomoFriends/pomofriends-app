@@ -1,4 +1,4 @@
-# PomoFriends
+# PomoFriends ⏳📖👥
 
 ## Project Description
 
@@ -182,13 +182,31 @@ Personal incentive
 
 ## Technologies
 
-Language: TypeScript
-Framework: React.js, Next.js
-Hosting: Vercel
-API: Firebase, Firebase Functions
-Database: Firestore
+- Language: TypeScript
+- Framework: React.js, Next.js
+- Hosting: Vercel
+- API: Firebase, Firebase Functions
+- Database: Firestore
 
 ## Timeline
+
+| Sprint           | Feature           |
+| ---------------- | ----------------- |
+| Jan 23 - Feb 5   | User Account      |
+|                  | Pomodoro Timer    |
+|                  | Pomodoro Settings |
+|                  | Tasks             |
+| Feb 6 - Feb 19   | User profile      |
+|                  | Groups            |
+|                  | Chat              |
+| Feb 20 - Mar 5   | Report            |
+|                  | Leaderboard       |
+| Mar 6 - Mar 19   | Design            |
+|                  | Chores            |
+|                  | Achievements      |
+| Mar 20 - April 2 | Testing           |
+|                  | Fixing bugs       |
+|                  | Host              |
 
 ## Risks
 
