@@ -43,3 +43,19 @@ export const authContextDefaultValues: authContextType = {
   signOut: async () => {},
   sendPasswordResetEmail: async () => {},
 };
+
+export type useGroupType = {
+  // getGroups: () => Promise<GroupData[]>;
+  createGroup: ({ name, description }: GroupForm) => Promise<GroupData | any>;
+};
+
+export type GroupData = {
+  id: string;
+  name: string;
+  description: string;
+};
+
+export type GroupForm = {
+  name: string;
+  description: string;
+};
