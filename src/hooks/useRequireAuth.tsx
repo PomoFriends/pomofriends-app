@@ -27,7 +27,23 @@ export const useRequireAuth = (): authContextType => {
 
   // Observer for changes to the user's sign-in state
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged(handleAuthStateChanged);
+    // const unsub = auth.onAuthStateChanged(handleAuthStateChanged);
+
+    const unsub = auth.onAuthStateChanged((user) => {
+      if (user === null) {
+        handleAuthStateChanged(user);
+      } else {
+        const userData: UserData = {
+          id: user.uid,
+          username: user!.displayName!,
+          email: user!.email!,
+          profilePic: user!.photoURL!,
+        };
+
+        handleAuthStateChanged(userData);
+      }
+    });
+
     return () => unsub();
   }, []);
 

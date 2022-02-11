@@ -22,7 +22,7 @@ const DashboardPage: React.FC = (): JSX.Element => {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="text-center mt-4">
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              {`Welcome ${user.displayName}!`}
+              {`Welcome ${user.username}!`}
             </h2>
             <p className="mt-2 text-center text-md text-gray-600">
               {`You are logged in with ${user.email}`}

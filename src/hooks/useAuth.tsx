@@ -10,9 +10,12 @@ import {
   authContextDefaultValues,
   authContextType,
   LoginData,
+  PomodoroSettingsDefaultValues,
   SignUpData,
   UserData,
+  UserSettingsDefaultValues,
 } from '../utils/types';
+import { serverTimestamp } from 'firebase/firestore';
 
 const AuthContext = createContext<authContextType>(authContextDefaultValues);
 
@@ -55,39 +58,50 @@ export const useAuthProvider = (): authContextType => {
 
   /**
    *
-   * @param {any} user
+   * @param {UserData} user
    * @return {Promise<any>} user or error
    *
    * Function that creates a doc for the user in database.
    */
-  const createUser = async (user: any): Promise<any> => {
-    return await db
+  const createUser = async (user: UserData): Promise<any> => {
+    const newUser = await db
       .collection('users')
-      .doc(user.uid)
+      .doc(user.id)
       .set(user)
       .then(() => {
         // Change the state of the user
         setUser(user);
         // console.log('User:', user);
         return user;
-      })
-      .catch((error) => {
-        return { error };
       });
+
+    if (newUser) {
+      // Create settings, tasks, and pomodoroSettings docs with the same id as user
+      db.collection('userSettings')
+        .doc(newUser.id)
+        .set(UserSettingsDefaultValues);
+      db.collection('tasks').doc(newUser.id).set({});
+      db.collection('pomodoroSettings')
+        .doc(newUser.id)
+        .set(PomodoroSettingsDefaultValues);
+    } else {
+      return { error: 'Something went wrong!' };
+    }
+
+    return newUser;
   };
 
   /**
    *
-   * @param {any} user
+   * @param {UserData} user
    * @return {Promise<void>} return user or change the state of the user
    *
    * Returns user data from the firestore db.
    */
-  const getUserAdditionalData = async (user: any): Promise<void> => {
-    console.log('getUserAdditionalData');
+  const getUserAdditionalData = async (user: UserData): Promise<void> => {
     return await db
       .collection('users')
-      .doc(user.uid)
+      .doc(user?.id)
       .get()
       .then((userData) => {
         if (userData.data()) {
@@ -96,9 +110,12 @@ export const useAuthProvider = (): authContextType => {
         } else {
           // Create user if they do not have the doc in db
           createUser({
-            uid: user?.uid,
-            email: user.email,
-            displayName: user.displayName,
+            id: user!.id,
+            username: user!.username,
+            email: user!.email,
+            profilePic: user!.profilePic,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
           });
         }
       });
@@ -122,7 +139,15 @@ export const useAuthProvider = (): authContextType => {
       .createUserWithEmailAndPassword(email, password)
       .then((response) => {
         auth.currentUser?.sendEmailVerification();
-        return createUser({ uid: response.user?.uid, email, displayName });
+        if (response.user)
+          return createUser({
+            id: response.user.uid,
+            username: displayName,
+            email: email,
+            profilePic: `https://avatars.dicebear.com/api/jdenticon/${response.user.uid}.svg`,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
       })
       .catch((error) => {
         return { error };
@@ -142,10 +167,18 @@ export const useAuthProvider = (): authContextType => {
       .signInWithEmailAndPassword(email, password)
       .then(async (response) => {
         const userResponse = response.user;
+
         // Change the state of the user
-        setUser(userResponse);
+        const userData: UserData = {
+          id: userResponse!.uid,
+          username: userResponse!.displayName!,
+          email: userResponse!.email!,
+          profilePic: userResponse!.photoURL!,
+        };
+
+        setUser(userData);
         // console.log('response user:', userResponse);
-        await getUserAdditionalData(user);
+        await getUserAdditionalData(userData);
         return response.user;
       })
       .catch((error) => {
@@ -182,7 +215,7 @@ export const useAuthProvider = (): authContextType => {
 
   /**
    *
-   * @param {UserData | null} user
+   * @param {UserData} user
    * @return {Promise<void>}
    *
    * Keeps user logged in.
@@ -192,7 +225,7 @@ export const useAuthProvider = (): authContextType => {
   const handleAuthStateChanged = async (
     user: UserData | null
   ): Promise<void> => {
-    console.log('handleAuthStateChanged', user);
+    // console.log('handleAuthStateChanged', user);
     // Change the state of the user
     setUser(user);
     if (user) {
@@ -204,7 +237,20 @@ export const useAuthProvider = (): authContextType => {
    *  Observer for changes to the user's sign-in state
    */
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged(handleAuthStateChanged);
+    const unsub = auth.onAuthStateChanged((user) => {
+      if (user === null) {
+        handleAuthStateChanged(user);
+      } else {
+        const userData: UserData = {
+          id: user.uid,
+          username: user!.displayName!,
+          email: user!.email!,
+          profilePic: user!.photoURL!,
+        };
+
+        handleAuthStateChanged(userData);
+      }
+    });
 
     return () => unsub();
   }, []);
@@ -214,11 +260,11 @@ export const useAuthProvider = (): authContextType => {
    * we also update the user state in our application.
    */
   useEffect(() => {
-    if (user?.uid) {
+    if (user?.id) {
       // Subscribe to user document on mount
       const unsubscribe = db
         .collection('users')
-        .doc(user.uid)
+        .doc(user.id)
         .onSnapshot((doc) => setUser(doc.data() as any));
       return () => unsubscribe();
     }
