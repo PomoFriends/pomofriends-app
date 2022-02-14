@@ -106,6 +106,8 @@ export const useAuthProvider = (): authContextType => {
       .then((userData) => {
         if (userData.data()) {
           // Change the state of the user
+
+          console.log(userData.data());
           setUser(userData.data() as any);
         } else {
           // Create user if they do not have the doc in db
@@ -116,6 +118,7 @@ export const useAuthProvider = (): authContextType => {
             profilePic: user!.profilePic,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
+            groupId: null,
           });
         }
       });
@@ -147,6 +150,7 @@ export const useAuthProvider = (): authContextType => {
             profilePic: `https://avatars.dicebear.com/api/jdenticon/${response.user.uid}.svg`,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
+            groupId: null,
           });
       })
       .catch((error) => {
@@ -174,9 +178,10 @@ export const useAuthProvider = (): authContextType => {
           username: userResponse!.displayName!,
           email: userResponse!.email!,
           profilePic: userResponse!.photoURL!,
+          groupId: null,
         };
 
-        setUser(userData);
+        // setUser(userData);
         // console.log('response user:', userResponse);
         await getUserAdditionalData(userData);
         return response.user;
@@ -227,7 +232,7 @@ export const useAuthProvider = (): authContextType => {
   ): Promise<void> => {
     // console.log('handleAuthStateChanged', user);
     // Change the state of the user
-    setUser(user);
+    // setUser(user);
     if (user) {
       await getUserAdditionalData(user);
     }
@@ -246,6 +251,7 @@ export const useAuthProvider = (): authContextType => {
           username: user!.displayName!,
           email: user!.email!,
           profilePic: user!.photoURL!,
+          groupId: null,
         };
 
         handleAuthStateChanged(userData);

@@ -14,6 +14,8 @@
     "test": "npm run check-types && npm run check-lint && npm run check-format && npm run build"
   },
   "dependencies": {
+    "@material-tailwind/react": "0.3.4",
+    "@popperjs/core": "^2.11.2",
     "firebase": "^9.6.5",
     "next": "12.0.9",
     "react": "17.0.2",

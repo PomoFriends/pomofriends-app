@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useGroup } from '../../hooks/group';
+import { useGroup } from '../../hooks/useGroup';
 import Button from '../elements/Button';
 import { GroupForm as Form } from '../../utils/types';
 
@@ -17,7 +17,7 @@ const GroupForm: React.FC = () => {
 
   const onSubmit: SubmitHandler<Form> = async (data: Form) => {
     setIsLoading(true);
-    return await createGroup(data).then((response: any) => {
+    return await createGroup(data).then(() => {
       setIsLoading(false);
       //   console.log(response);
     });

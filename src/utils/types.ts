@@ -32,6 +32,7 @@ export type UserData = {
   profilePic?: string | null;
   createdAt?: FieldValue;
   updatedAt?: FieldValue;
+  groupId?: string | null;
 };
 
 /** User settings type */
@@ -70,7 +71,9 @@ export const authContextDefaultValues: authContextType = {
 /** Type for useGroup hook */
 export type useGroupType = {
   // getGroups: () => Promise<GroupData[]>;
-  createGroup: ({ name, description }: GroupForm) => Promise<GroupData | any>;
+  createGroup: ({ name, description }: GroupForm) => Promise<boolean>;
+  joinGroup: (groupId: string) => Promise<boolean>;
+  leaveGroup: (groupId: string) => Promise<boolean>;
 };
 
 /**  For group form */

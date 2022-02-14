@@ -1,12 +1,10 @@
 import React from 'react';
-import GroupForm from '../components/group/Form';
-import GroupList from '../components/group/List';
+import Group from '../components/group/Group';
 
 const group: React.FC = () => {
   return (
     <div>
-      <GroupList />
-      <GroupForm />
+      <Group />
     </div>
   );
 };
