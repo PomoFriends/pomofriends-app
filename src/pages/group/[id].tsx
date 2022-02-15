@@ -6,16 +6,10 @@ import Spinner from '../../components/images/Spinner';
 import { app } from '../../firebase/firebase';
 import Room from '../../components/group/Room';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
-import { useRouter } from 'next/router';
 
 // eslint-disable-next-line react/prop-types
 const GroupRoom: NextPage<{ id: string }> = ({ id }) => {
-  const { user } = useRequireAuth();
-  const router = useRouter();
-
-  if (!user) {
-    router.push('/login');
-  }
+  const {} = useRequireAuth();
 
   const [groupData, groupDataLoading, groupDataError] = useDocumentOnce(
     doc(getFirestore(app), 'groups', `${id}`)

@@ -15,7 +15,6 @@ import {
   UserData,
   UserSettingsDefaultValues,
 } from '../utils/types';
-import { serverTimestamp } from 'firebase/firestore';
 
 const AuthContext = createContext<authContextType>(authContextDefaultValues);
 
@@ -106,7 +105,6 @@ export const useAuthProvider = (): authContextType => {
       .then((userData) => {
         if (userData.data()) {
           // Change the state of the user
-
           console.log(userData.data());
           setUser(userData.data() as any);
         } else {
@@ -116,8 +114,8 @@ export const useAuthProvider = (): authContextType => {
             username: user!.username,
             email: user!.email,
             profilePic: user!.profilePic,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
             groupId: null,
           });
         }
@@ -148,8 +146,8 @@ export const useAuthProvider = (): authContextType => {
             username: displayName,
             email: email,
             profilePic: `https://avatars.dicebear.com/api/jdenticon/${response.user.uid}.svg`,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
             groupId: null,
           });
       })

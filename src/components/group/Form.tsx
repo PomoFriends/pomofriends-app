@@ -19,7 +19,6 @@ const GroupForm: React.FC = () => {
     setIsLoading(true);
     return await createGroup(data).then(() => {
       setIsLoading(false);
-      //   console.log(response);
     });
   };
 

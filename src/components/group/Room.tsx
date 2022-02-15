@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGroup } from '../../hooks/useGroup';
+import Chat from '../chat/Chat';
 
 interface GroupProps {
   group: any;
@@ -12,14 +13,11 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
     await leaveGroup(group.id);
   };
 
-  console.log(group);
+  console.log(group.id);
 
   let body;
 
   if (group) {
-    console.log(group.id);
-    console.log(group.name);
-    console.log(group.description);
     body = (
       <div>
         <p>{group.id}</p>
@@ -40,6 +38,7 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
     <div className="flex bg-gray-200">
       <div className="my-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white shadow sm:rounded-lg">{body}</div>
+        <Chat groupId={group.id} />
       </div>
     </div>
   );

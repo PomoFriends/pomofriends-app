@@ -1,6 +1,3 @@
-// import firebase from 'firebase/compat/app';
-import { FieldValue } from 'firebase/firestore';
-
 /** For login form */
 export type LoginData = {
   email: string;
@@ -30,8 +27,8 @@ export type UserData = {
   username: string;
   email?: string;
   profilePic?: string | null;
-  createdAt?: FieldValue;
-  updatedAt?: FieldValue;
+  createdAt?: number;
+  updatedAt?: number;
   groupId?: string | null;
 };
 
@@ -74,6 +71,8 @@ export type useGroupType = {
   createGroup: ({ name, description }: GroupForm) => Promise<boolean>;
   joinGroup: (groupId: string) => Promise<boolean>;
   leaveGroup: (groupId: string) => Promise<boolean>;
+  sendMessage: (chat: ChatForm) => Promise<boolean>;
+  getMessages: (groupId: string) => void;
 };
 
 /**  For group form */
@@ -87,8 +86,8 @@ export type GroupData = {
   id: string;
   name: string;
   description: string;
-  createdAt?: FieldValue;
-  updatedAt?: FieldValue;
+  createdAt?: number;
+  updatedAt?: number;
 };
 
 /** Group admin Type */
@@ -103,19 +102,12 @@ export type GroupParticipant = {
   tasks: Task[];
   time: number;
   pomodoroCount: number;
-  joinedAt: FieldValue;
+  joinedAt: number;
   pomodoro: boolean;
   shortBreak: boolean;
   longBreak: boolean;
   showTimer: boolean;
   showTasks: boolean;
-};
-
-/** Message type */
-export type GroupMessage = {
-  userId: string;
-  message: string;
-  createdAt?: FieldValue;
 };
 
 /** Pomodoro settings type */
@@ -147,9 +139,9 @@ export type Task = {
   description: string;
   pomodoros: number;
   complete?: boolean;
-  completedAt?: FieldValue;
-  createdAt?: FieldValue;
-  updatedAt?: FieldValue;
+  completedAt?: number;
+  createdAt?: number;
+  updatedAt?: number;
 };
 
 /** Time type */
@@ -157,4 +149,20 @@ export type Time = {
   hours?: number;
   minutes?: number;
   seconds: number;
+};
+
+/** Message type */
+export type GroupMessage = {
+  id: string;
+  userId: string;
+  username: string;
+  profilePic?: string | null;
+  message: string;
+  createdAt?: number;
+};
+
+/**  Chat input */
+export type ChatForm = {
+  groupId: string;
+  message: string;
 };
