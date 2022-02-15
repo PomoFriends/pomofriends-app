@@ -52,7 +52,19 @@ export const useGroup = (): useGroupType => {
           .doc(newGroup.id)
           .collection('participants')
           .doc(user.id)
-          .set(user);
+          .set({
+            id: user.id,
+            name: user.username,
+            tasks: [],
+            time: 0,
+            pomodoroCount: 0,
+            joinedAt: Date.now(),
+            pomodoro: false,
+            shortBreak: false,
+            longBreak: false,
+            showTimer: true,
+            showTasks: true,
+          });
 
         // Create messages doc with the same id as the group
         await db.collection('messages').doc(newGroup.id).set({});

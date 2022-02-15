@@ -7,8 +7,6 @@ interface DisplayMessageProps {
 }
 
 const DisplayMessages: React.FC<DisplayMessageProps> = ({ messages }) => {
-  console.log(messages);
-
   return (
     <div className="flex">
       <ul>

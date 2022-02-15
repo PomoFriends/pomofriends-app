@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGroup } from '../../hooks/useGroup';
 import Chat from '../chat/Chat';
+import Participants from '../participants/Participants';
 
 interface GroupProps {
   group: any;
@@ -39,6 +40,7 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
       <div className="my-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white shadow sm:rounded-lg">{body}</div>
         <Chat groupId={group.id} />
+        <Participants groupId={group.id} />
       </div>
     </div>
   );

@@ -1,22 +1,80 @@
-import React from 'react';
-import { useCollectionOnce } from 'react-firebase-hooks/firestore';
-import { app } from '../../firebase/firebase';
-import { getFirestore, collection } from 'firebase/firestore';
-import GroupPreview from './Preview';
+import React, { useEffect, useState } from 'react';
+import { db } from '../../firebase/firebase';
+import { GroupData } from '../../utils/types';
 import Spinner from '../images/Spinner';
+import GroupPreview from './Preview';
 
 const GroupList: React.FC = () => {
-  const [groups, groupsLoading, groupsError] = useCollectionOnce(
-    collection(getFirestore(app), 'groups'),
-    {}
-  );
+  // const [groups, groupsLoading, groupsError] = useCollectionOnce(
+  //   collection(getFirestore(app), 'groups'),
+  //   {}
+  // );
+
+  const [groupList, setGroupList] = useState<GroupData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    let cancel = false;
+
+    setIsLoading(true);
+
+    db.collection('groups')
+      .orderBy('createdAt')
+      .limit(100)
+      .onSnapshot((querySnapShot) => {
+        // get all documents from collection with id
+        const data = querySnapShot.docs.map((doc) => ({
+          ...doc.data(),
+        }));
+
+        //   update state
+        if (cancel) return;
+
+        setGroupList(data as GroupData[]);
+        setIsLoading(false);
+      });
+
+    return () => {
+      setIsLoading(false);
+      cancel = true;
+    };
+  }, []);
+
+  let body;
+
+  if (groupList.length === 0 && isLoading) {
+    body = (
+      <div className="flex justify-center py-8">
+        <Spinner width="40" className="animate-spin" />
+      </div>
+    );
+  } else {
+    body = (
+      <div className="flex w-full">
+        <ul className="w-full">
+          {groupList.map((group: GroupData) => (
+            <li key={group.id}>
+              <GroupPreview
+                group={{
+                  id: group.id,
+                  name: group.name,
+                  description: group.description,
+                }}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="flex bg-gray-200">
         <div className="my-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white shadow sm:rounded-lg">
-            <div>
+            <div>{body}</div>
+            {/* <div>
               {groupsError && (
                 <strong>Error: {JSON.stringify(groupsError)}</strong>
               )}
@@ -44,7 +102,7 @@ const GroupList: React.FC = () => {
                   )}
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

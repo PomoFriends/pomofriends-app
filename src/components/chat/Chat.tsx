@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../../firebase/firebase';
 import { GroupMessage } from '../../utils/types';
-import DisplayMessages from './DisplayMessages';
+import DisplayMessages from './Display';
 import ChatForm from './Form';
 
 interface ChatProps {
