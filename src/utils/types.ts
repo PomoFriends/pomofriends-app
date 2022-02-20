@@ -147,7 +147,7 @@ export type Task = {
 /** Time type */
 export type Time = {
   hours?: number;
-  minutes?: number;
+  minutes: number;
   seconds: number;
 };
 

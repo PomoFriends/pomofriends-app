@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useGroup } from '../../hooks/useGroup';
-import Button from '../elements/Button';
+import Button from '../buttons/Button';
 import { GroupForm as Form } from '../../utils/types';
 
 const GroupForm: React.FC = () => {

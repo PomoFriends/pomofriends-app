@@ -105,7 +105,7 @@ export const useAuthProvider = (): authContextType => {
       .then((userData) => {
         if (userData.data()) {
           // Change the state of the user
-          console.log(userData.data());
+          // console.log(userData.data());
           setUser(userData.data() as any);
         } else {
           // Create user if they do not have the doc in db

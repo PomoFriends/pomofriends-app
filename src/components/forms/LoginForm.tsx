@@ -4,7 +4,7 @@ import { ErrorMessage, LoginData } from '../../utils/types';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
 import Link from 'next/link';
-import Button from '../elements/Button';
+import Button from '../buttons/Button';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 
 /**

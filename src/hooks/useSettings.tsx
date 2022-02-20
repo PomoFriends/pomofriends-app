@@ -1,0 +1,218 @@
+import { useRouter } from 'next/router';
+import { db } from '../firebase/firebase';
+import {
+  ChatForm,
+  GroupData,
+  GroupForm,
+  GroupMessage,
+  GroupParticipant,
+  useGroupType,
+} from '../utils/types';
+import { useAuth } from './useAuth';
+
+export const useSettings = (): useGroupType => {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const createGroup = async (group: GroupForm): Promise<GroupData | any> => {
+    if (user) {
+      try {
+        // Create a group doc with randomly generated id
+        const newGroup = db.collection('groups').doc();
+
+        // Set values to the group
+        await newGroup.set({
+          id: newGroup.id,
+          name: group.name,
+          description: group.description,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        });
+
+        // Create admins doc with the same id as the group
+        await db.collection('admins').doc(newGroup.id).set({ userId: user.id });
+
+        // Create participants doc with the same id as the group
+        await db.collection('participants').doc(newGroup.id).set({});
+
+        // add new participant
+        await db
+          .collection('participants')
+          .doc(newGroup.id)
+          .collection('participants')
+          .doc(user.id)
+          .set({
+            id: user.id,
+            name: user.username,
+            tasks: [],
+            time: 0,
+            pomodoroCount: 0,
+            joinedAt: Date.now(),
+            pomodoro: false,
+            shortBreak: false,
+            longBreak: false,
+            showTimer: true,
+            showTasks: true,
+          });
+
+        // Create messages doc with the same id as the group
+        await db.collection('messages').doc(newGroup.id).set({});
+
+        // add first message
+        const firstMessage = db
+          .collection('messages')
+          .doc(newGroup.id)
+          .collection('messages')
+          .doc();
+
+        await firstMessage.set({
+          id: firstMessage.id,
+          userId: firstMessage.id,
+          username: 'PomoBot',
+          profilePic: `https://avatars.dicebear.com/api/jdenticon/${firstMessage.id}.svg`,
+          message: 'yo',
+          createdAt: Date.now(),
+        });
+
+        await router.push(`/group/${newGroup.id}`);
+
+        return true;
+      } catch {
+        return false;
+      }
+    } else {
+      // Will make a pop up
+      router.push('/login');
+    }
+  };
+
+  const joinGroup = async (groupId: string) => {
+    if (user) {
+      const participant: GroupParticipant = {
+        id: user.id,
+        name: user.username,
+        tasks: [],
+        time: 0,
+        pomodoroCount: 0,
+        joinedAt: Date.now(),
+        pomodoro: false,
+        shortBreak: false,
+        longBreak: false,
+        showTimer: true,
+        showTasks: true,
+      };
+
+      // await db
+      //   .collection('participants')
+      //   .doc(groupId)
+      //   .update({ [`${user.id}`]: participant });
+
+      const newParticipant = db
+        .collection('participants')
+        .doc(groupId)
+        .collection('participants')
+        .doc(user.id);
+
+      await newParticipant.set(participant);
+
+      // await db
+      //   .collection('participants')
+      //   .doc(groupId)
+      //   .collection('participants')
+      //   .doc(user.id)
+      //   .add(participant);
+
+      await db.collection('users').doc(user.id).update({ groupId });
+
+      return true;
+    } else {
+      // Will make a pop up
+      await router.push('/login');
+      return false;
+    }
+  };
+
+  const leaveGroup = async (groupId: string) => {
+    if (user) {
+      await db
+        .collection('participants')
+        .doc(groupId)
+        .collection('participants')
+        .doc(user.id)
+        .delete();
+      // .update({
+      //   [`${user.id}`]: firebase.firestore.FieldValue.delete(),
+      // });
+
+      await db.collection('users').doc(user.id).update({ groupId: null });
+      router.push('/group');
+      return true;
+    } else {
+      // Will make a pop up
+
+      return false;
+    }
+  };
+
+  // const getAdmin = async (groupId: string) => {
+
+  // }
+
+  // const deleteGroup = () => {};
+
+  const sendMessage = async (chat: ChatForm) => {
+    if (user) {
+      const newMessage = await db
+        .collection('messages')
+        .doc(chat.groupId)
+        .collection('messages')
+        .doc();
+      // .update({ [uniqid() + uniqid()]: message });
+
+      const message: GroupMessage = {
+        id: newMessage.id,
+        userId: user.id,
+        username: user.username,
+        profilePic: user.profilePic,
+        message: chat.message,
+        createdAt: Date.now(),
+      };
+
+      await newMessage.set(message);
+
+      return true;
+    } else {
+      // Will make a pop up
+      await router.push('/login');
+      return false;
+    }
+  };
+
+  const getMessages = (groupId: string) => {
+    // return await db.collection('messages').doc(groupId).get();
+    return db
+      .collection('messages')
+      .doc(groupId)
+      .collection('messages')
+      .orderBy('createdAt')
+      .limit(100)
+      .onSnapshot((querySnapShot) => {
+        // get all documents from collection with id
+        const data = querySnapShot.docs.map((doc) => ({
+          ...doc.data(),
+        }));
+
+        //   update state
+        // console.log(data);
+        return data;
+      });
+  };
+
+  return {
+    createGroup,
+    joinGroup,
+    leaveGroup,
+    sendMessage,
+    getMessages,
+  };
+};

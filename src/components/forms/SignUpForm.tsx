@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { ErrorMessage, SignUpData } from '../../utils/types';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
-import Button from '../elements/Button';
+import Button from '../buttons/Button';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 
 /**
