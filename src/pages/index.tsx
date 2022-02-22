@@ -1,5 +1,6 @@
 import React from 'react';
-import Pomodoro from '../components/pomodoro/Pomodoro';
+import Layout from '../components/elements/Layout';
+// import Pomodoro from '../components/pomodoro/Pomodoro';
 
 /**
  *
@@ -8,8 +9,8 @@ import Pomodoro from '../components/pomodoro/Pomodoro';
  * Landing page
  */
 const HomePage: React.FC = (): JSX.Element => {
-  // return <div className="flex rounded-lg p-24 justify-center">Home page</div>;
-  return <Pomodoro />;
+  return <Layout>Home page</Layout>;
+  // return <Pomodoro />;
 };
 
 export default HomePage;

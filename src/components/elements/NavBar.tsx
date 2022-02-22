@@ -1,69 +1,195 @@
 /* eslint-disable @next/next/link-passhref */
-import React from 'react';
-import UserDropdown from './UserDropdown';
-import { useAuth } from '../../hooks/useAuth';
+import Info from '@mui/icons-material/Info';
+import Logout from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
+import Settings from '@mui/icons-material/Settings';
+import Star from '@mui/icons-material/Star';
+import Dashboard from '@mui/icons-material/Dashboard';
+import Person from '@mui/icons-material/Person';
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Divider,
+  IconButton,
+  ListItemIcon,
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import Link from 'next/link';
+import React from 'react';
+import { useAuth } from '../../hooks/useAuth';
+import StyledMenu from './StyledMenu';
+
+const pages = ['Rating', 'About'];
 
 const Navbar = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+    null
+  );
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+    null
+  );
+
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  // console.log(user?.profilePic);
+
+  let rightSide;
+
+  if (user) {
+    rightSide = (
+      <Box sx={{ flexGrow: 0 }}>
+        <Tooltip title="Open dropdown">
+          <IconButton
+            onClick={handleOpenUserMenu}
+            id="user-ison-button"
+            aria-controls={Boolean(anchorElUser) ? 'user-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={Boolean(anchorElUser) ? 'true' : undefined}
+          >
+            <Avatar alt={user?.username!} src={user?.profilePic!} />
+          </IconButton>
+        </Tooltip>
+        <StyledMenu
+          id="user-menu"
+          anchorEl={anchorElUser}
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+        >
+          <MenuItem disabled>
+            <Typography
+              variant="h6"
+              component="div"
+              color="primary"
+              // className="w-full align-middle"
+              sx={{ mx: 'auto' }}
+            >
+              {user.username}
+            </Typography>
+          </MenuItem>
+          <Divider />
+          <MenuItem>
+            <ListItemIcon>
+              <Person fontSize="small" />
+            </ListItemIcon>
+            My Profile
+          </MenuItem>
+          <Link href="/dashboard">
+            <MenuItem>
+              <ListItemIcon>
+                <Dashboard fontSize="small" />
+              </ListItemIcon>
+              My Dashboard
+            </MenuItem>
+          </Link>
+          <Divider />
+          <MenuItem>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            Settings
+          </MenuItem>
+          <button onClick={() => signOut()} className="w-full">
+            <MenuItem>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          </button>
+        </StyledMenu>
+      </Box>
+    );
+  } else {
+    rightSide = (
+      <Box sx={{ flexGrow: 0 }}>
+        <Link href="/login">
+          <Button variant="contained" color="secondary">
+            Login
+          </Button>
+        </Link>
+      </Box>
+    );
+  }
 
   return (
-    <nav className="bg-blue-500 border-gray-200 px-2 sm:px-4 py-2.5">
-      <div className="container flex flex-wrap justify-between items-center mx-auto">
-        <div className="flex">
-          <Link href="/">
-            <span className="self-center text-xl font-semibold whitespace-nowrap">
-              PomoFriends
-            </span>
-          </Link>
-        </div>
+    <AppBar position="static">
+      <Container maxWidth="md">
+        <Toolbar disableGutters>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+          >
+            PomoFriends
+          </Typography>
 
-        <div className="flex items-center sm:order-2">
-          {user ? (
-            <div className="justify-between items-center w-full sm:flex sm:w-auto ">
-              <UserDropdown user={user} />
-            </div>
-          ) : (
-            <div className="justify-between items-center w-full sm:flex sm:w-auto ">
-              <ul className="flex flex-row space-x-2">
-                <li>
-                  <div className="py-2.5 px-5 text-black font-medium text-sm text-center sm:mt-5 hover:text-white">
-                    <Link href="/login">Login</Link>
-                  </div>
-                </li>
-                <li>
-                  <div className="py-2.5 px-5 text-black font-medium text-sm text-center bg-violet-400 hover:bg-violet-300 focus:ring-4 focus:ring-violet-600 rounded-lg sm:mt-5">
-                    <Link href="/register">Create Account</Link>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
-        {/* <div className="justify-between items-center w-full sm:flex sm:w-auto sm:order-1">
-          <ul className="flex flex-col mt-2 sm:flex-row sm:space-x-8 sm:mt-0 sm:text-sm sm:font-medium">
-            <li>
-              <Link
-                to="/"
-                className="block py-2 pr-4 pl-3 text-black border-b border-gray-100 hover:bg-gray-50 sm:hover:bg-transparent sm:border-0 hover:text-white sm:p-0"
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="nav-menu"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <StyledMenu
+              id="nav-menu"
+              anchorEl={anchorElNav}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+            >
+              <MenuItem>
+                <ListItemIcon>
+                  <Star fontSize="small" />
+                </ListItemIcon>
+                Rating
+              </MenuItem>
+              <MenuItem>
+                <ListItemIcon>
+                  <Info fontSize="small" />
+                </ListItemIcon>
+                About
+              </MenuItem>
+            </StyledMenu>
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'black' }}
               >
-                Leaderboard
-              </Link>
-            </li>
-            {user ? (
-              <li>
-                <Link
-                  to="/dashboard"
-                  className="block py-2 pr-4 pl-3 text-black border-b border-gray-100 hover:bg-gray-50 sm:hover:bg-transparent sm:border-0 hover:text-white sm:p-0 "
-                >
-                  My Dashboard
-                </Link>
-              </li>
-            ) : null}
-          </ul>
-        </div> */}
-      </div>
-    </nav>
+                {page}
+              </Button>
+            ))}
+          </Box>
+          {rightSide}
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
 

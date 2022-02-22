@@ -6,7 +6,7 @@ const Layout: React.FC = ({ children }) => {
   return (
     <div>
       <Navbar />
-      <div className="w-full">{children}</div>
+      <div>{children}</div>
     </div>
   );
 };
