@@ -178,7 +178,6 @@ export const useGroup = (): useGroupType => {
         .doc(chat.groupId)
         .collection('messages')
         .doc();
-      // .update({ [uniqid() + uniqid()]: message });
 
       const message: GroupMessage = {
         id: newMessage.id,
