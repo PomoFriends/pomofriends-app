@@ -5,7 +5,7 @@ import { ErrorMessage } from './types';
  * @param {any} errorResponse
  * @return {ErrorMessage | null}
  *
- * Gets an error message by firebase for login and signin forms,
+ * Gets an error message by firebase for signup and signin forms,
  * transfroms it into a better message and then returns it
  */
 export const getErrorMessage = (errorResponse: any): ErrorMessage | null => {

@@ -1,12 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import {
-  Alert,
-  Checkbox,
-  Container,
-  FormControlLabel,
-  Grid,
-  TextField,
-} from '@mui/material';
+import { Alert, Container, Grid, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -14,7 +7,7 @@ import React, { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '../../hooks/useAuth';
 import { getErrorMessage } from '../../utils/getErrorMessage';
-import { ErrorMessage, SignUpData } from '../../utils/types';
+import { ErrorMessage, SignInData } from '../../utils/types';
 import SubmitButton from '../buttons/SubmitButton';
 
 const useStyles = makeStyles((theme: any) => ({
@@ -53,25 +46,25 @@ const useStyles = makeStyles((theme: any) => ({
  *
  * @return {JSX.Element}
  *
- * SignUp Form
+ * Sign In Form
  */
-const SignUpForm: React.FC = (): JSX.Element => {
-  const { handleSubmit, control } = useForm<SignUpData>();
+const SignInForm: React.FC = (): JSX.Element => {
+  const { handleSubmit, control } = useForm<SignInData>();
 
-  const { signUp } = useAuth();
+  const { signIn } = useAuth();
   const router = useRouter();
   const classes = useStyles();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ErrorMessage | null>(null);
 
-  const onSubmit: SubmitHandler<SignUpData> = async (data: SignUpData) => {
+  const onSubmit: SubmitHandler<SignInData> = async (data: SignInData) => {
     setIsLoading(true);
     setError(null);
-    return await signUp(data).then((response) => {
+    return await signIn(data).then((response) => {
       setIsLoading(false);
+
       if (response.error) {
-        console.log(response.error);
         setError(getErrorMessage(response.error));
       } else {
         router.push('/dashboard');
@@ -90,43 +83,6 @@ const SignUpForm: React.FC = (): JSX.Element => {
               </Alert>
             </Grid>
           )}
-          <Grid item xs={12}>
-            <Controller
-              name="username"
-              control={control}
-              defaultValue=""
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
-                <TextField
-                  className={classes.textField}
-                  required
-                  fullWidth
-                  id="username"
-                  name="username"
-                  label="Username"
-                  autoComplete="username"
-                  variant="outlined"
-                  value={value}
-                  onChange={onChange}
-                  error={!!error}
-                  helperText={error ? error.message : null}
-                />
-              )}
-              rules={{
-                required: 'Username required',
-                minLength: {
-                  value: 3,
-                  message: 'Should have at least 3 characters',
-                },
-                maxLength: {
-                  value: 20,
-                  message: 'Should have should be less than 20 characters',
-                },
-              }}
-            />
-          </Grid>
           <Grid item xs={12}>
             <Controller
               name="email"
@@ -195,24 +151,32 @@ const SignUpForm: React.FC = (): JSX.Element => {
               }}
             />
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <FormControlLabel
               control={<Checkbox value="allowExtraEmails" color="primary" />}
               label="I want to receive updates and marketing promotions via email."
             />
-          </Grid>
+          </Grid> */}
         </Grid>
-        <SubmitButton title="Sign up" type="submit" isLoading={isLoading} />
+        <SubmitButton title="Sign in" type="submit" isLoading={isLoading} />
         <Grid container>
           <Grid>
-            Already have an account?
+            Don't have an account?
             <span className={classes.signin}>
-              <Link href="/sign-in"> Sign in</Link>
+              <Link href="/sign-up"> Sign up</Link>
             </span>
           </Grid>
         </Grid>
+        {error?.message && (
+          <Grid item xs={12}>
+            Forgot your password?
+            <span className={classes.signin}>
+              <Link href="/reset-password"> Reset password</Link>
+            </span>
+          </Grid>
+        )}
       </form>
     </Container>
   );
 };
-export default SignUpForm;
+export default SignInForm;

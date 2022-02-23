@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import Button from '../buttons/Button';
+import Button from '../buttons/SubmitButton';
 import { ChatForm as Form } from '../../utils/types';
 import { useGroup } from '../../hooks/useGroup';
 

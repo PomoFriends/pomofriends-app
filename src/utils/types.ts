@@ -1,12 +1,12 @@
-/** For login form */
-export type LoginData = {
+/** For sing in form */
+export type SignInData = {
   email: string;
   password: string;
 };
 
 /** For sign up form */
 export type SignUpData = {
-  displayName: string;
+  username: string;
   email: string;
   password: string;
 };
@@ -50,8 +50,8 @@ export const UserSettingsDefaultValues: UserSettings = {
 /** Type for useAuth hook */
 export type authContextType = {
   user: UserData | null;
-  signUp: ({ displayName, email, password }: SignUpData) => Promise<any>;
-  signIn: ({ email, password }: LoginData) => Promise<any>;
+  signUp: ({ username, email, password }: SignUpData) => Promise<any>;
+  signIn: ({ email, password }: SignInData) => Promise<any>;
   signOut: () => void;
   sendPasswordResetEmail: (email: string) => void;
 };

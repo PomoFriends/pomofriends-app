@@ -10,7 +10,7 @@ import { useAuth } from './useAuth';
  *
  * For pages where user must be authentificated.
  * Returns values from the useAuth (user, signUp, signIn, signOut)
- * if user is logged in. Otherwise redirect user to the login page.
+ * if user is logged in. Otherwise redirect user to the sign in page.
  */
 export const useRequireAuth = (): authContextType => {
   const contexAuth = useAuth();
@@ -18,10 +18,10 @@ export const useRequireAuth = (): authContextType => {
 
   // console.log('useRequireAuth', contexAuth);
 
-  // Redirect user to the login page if they are not logged in
+  // Redirect user to the sign in page if they are not logged in
   const handleAuthStateChanged = (user: UserData | null) => {
     if (user === null) {
-      router.push('/login');
+      router.push('/sign-in');
     }
   };
 

@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import React from 'react';
 import Navbar from './NavBar';
 
@@ -7,7 +7,9 @@ const Layout: React.FC = ({ children }) => {
   return (
     <Box>
       <Navbar />
-      <Box>{children}</Box>
+      <Container component="main" maxWidth="md">
+        <Box>{children}</Box>
+      </Container>
     </Box>
   );
 };

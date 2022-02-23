@@ -5,9 +5,15 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#bb86fc',
+      dark: '#8660b5',
+      light: '#c199f3',
+      contrastText: 'rgba(2,2,2,0.87)',
     },
     secondary: {
       main: '#03dac6',
+      light: 'rgb(53, 225, 209)',
+      dark: 'rgb(2, 152, 138)',
+      contrastText: 'rgba(0, 0, 0, 0.87)',
     },
     error: {
       main: '#cf6679',
@@ -24,6 +30,11 @@ const theme = createTheme({
     },
     success: {
       main: '#7be87c',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: 'rgba(255, 255, 255, 0.7)',
+      disabled: 'rgba(255, 255, 255, 0.5)',
     },
   },
 });

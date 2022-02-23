@@ -82,7 +82,7 @@ export const useSettings = (): useGroupType => {
       }
     } else {
       // Will make a pop up
-      router.push('/login');
+      router.push('/sign-in');
     }
   };
 
@@ -127,7 +127,7 @@ export const useSettings = (): useGroupType => {
       return true;
     } else {
       // Will make a pop up
-      await router.push('/login');
+      await router.push('/sign-in');
       return false;
     }
   };
@@ -182,7 +182,7 @@ export const useSettings = (): useGroupType => {
       return true;
     } else {
       // Will make a pop up
-      await router.push('/login');
+      await router.push('/sign-in');
       return false;
     }
   };

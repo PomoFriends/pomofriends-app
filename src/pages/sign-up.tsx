@@ -1,9 +1,10 @@
-import React from 'react';
-import ResetPasswordForm from '../components/forms/ResetPasswordForm';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import React from 'react';
 import Layout from '../components/elements/Layout';
+import SignUpForm from '../components/forms/SignUpForm';
+import FirebaseProviderAuth from '../hooks/firebaseProviderAuth';
 
 const useStyles = makeStyles((theme: any) => ({
   paper: {
@@ -21,9 +22,9 @@ const useStyles = makeStyles((theme: any) => ({
  *
  * @return {JSX.Element}
  *
- * Reset password page
+ * Sign up page
  */
-const ResetPasswordPage: React.FC = (): JSX.Element => {
+const SignUpPage: React.FC = (): JSX.Element => {
   const classes = useStyles();
 
   return (
@@ -33,11 +34,12 @@ const ResetPasswordPage: React.FC = (): JSX.Element => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography variant="h5" color="white">
-          Reset password
+          Sign up
         </Typography>
-        <ResetPasswordForm />
+        <FirebaseProviderAuth />
+        <SignUpForm />
       </Box>
     </Layout>
   );
 };
-export default ResetPasswordPage;
+export default SignUpPage;

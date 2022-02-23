@@ -122,9 +122,9 @@ const Navbar = () => {
   } else {
     rightSide = (
       <Box sx={{ flexGrow: 0 }}>
-        <Link href="/login">
+        <Link href="/sign-in">
           <Button variant="contained" color="secondary">
-            Login
+            Sign In
           </Button>
         </Link>
       </Box>

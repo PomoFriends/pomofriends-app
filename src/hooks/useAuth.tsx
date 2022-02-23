@@ -9,7 +9,7 @@ import { auth, db } from '../firebase/firebase';
 import {
   authContextDefaultValues,
   authContextType,
-  LoginData,
+  SignInData,
   PomodoroSettingsDefaultValues,
   SignUpData,
   UserData,
@@ -124,18 +124,17 @@ export const useAuthProvider = (): authContextType => {
 
   /**
    *
-   * @param {SignUpData} { displayName, email, password }
+   * @param {SignUpData} { username, email, password }
    * @return {Promise<any>} user or error
    *
    * Sign up the user and create a doc for the user.
    *
    */
   const signUp = async ({
-    displayName,
+    username,
     email,
     password,
   }: SignUpData): Promise<any> => {
-    // console.log(displayName);
     return await auth
       .createUserWithEmailAndPassword(email, password)
       .then((response) => {
@@ -143,7 +142,7 @@ export const useAuthProvider = (): authContextType => {
         if (response.user)
           return createUser({
             id: response.user.uid,
-            username: displayName,
+            username: username,
             email: email,
             profilePic: `https://avatars.dicebear.com/api/jdenticon/${response.user.uid}.svg`,
             createdAt: Date.now(),
@@ -158,13 +157,13 @@ export const useAuthProvider = (): authContextType => {
 
   /**
    *
-   * @param {LoginData} { email, password }
+   * @param {SignInData} { email, password }
    * @return {Promise<any>} user or error
    *
    * Sign in the user and get additional data of the user.
    *
    */
-  const signIn = async ({ email, password }: LoginData): Promise<any> => {
+  const signIn = async ({ email, password }: SignInData): Promise<any> => {
     return await auth
       .signInWithEmailAndPassword(email, password)
       .then(async (response) => {
@@ -180,7 +179,6 @@ export const useAuthProvider = (): authContextType => {
         };
 
         // setUser(userData);
-        // console.log('response user:', userResponse);
         await getUserAdditionalData(userData);
         return response.user;
       })

@@ -93,7 +93,7 @@ export const useGroup = (): useGroupType => {
       }
     } else {
       // Will make a pop up
-      router.push('/login');
+      router.push('/sign-in');
     }
   };
 
@@ -138,7 +138,7 @@ export const useGroup = (): useGroupType => {
       return true;
     } else {
       // Will make a pop up
-      await router.push('/login');
+      await router.push('/sign-in');
       return false;
     }
   };
@@ -193,7 +193,7 @@ export const useGroup = (): useGroupType => {
       return true;
     } else {
       // Will make a pop up
-      await router.push('/login');
+      await router.push('/sign-in');
       return false;
     }
   };

@@ -1,5 +1,13 @@
 import React from 'react';
 import Spinner from '../images/Spinner';
+import { Button as CoolButton } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme: any) => ({
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 interface ButtonProps {
   title?: string;
@@ -15,25 +23,29 @@ interface ButtonProps {
  * A button with the loading spinner.
  * Takes isLoading state and title
  */
-const Button = ({
+const SubmitButton = ({
   isLoading,
   title,
   children,
   ...buttonProps
 }: ButtonProps &
   React.ButtonHTMLAttributes<HTMLButtonElement>): JSX.Element => {
+  const classes = useStyles();
+
   return (
-    <button
-      className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-      {...buttonProps}
+    <CoolButton
+      type="submit"
+      fullWidth
+      variant="contained"
+      color="primary"
+      className={classes.submit}
     >
       {isLoading ? (
         <Spinner width="20" fill="white" className="animate-spin" />
       ) : (
         title
       )}
-      {children}
-    </button>
+    </CoolButton>
   );
 };
-export default Button;
+export default SubmitButton;
