@@ -151,12 +151,6 @@ const SignInForm: React.FC = (): JSX.Element => {
               }}
             />
           </Grid>
-          {/* <Grid item xs={12}>
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive updates and marketing promotions via email."
-            />
-          </Grid> */}
         </Grid>
         <SubmitButton title="Sign in" type="submit" isLoading={isLoading} />
         <Grid container>
