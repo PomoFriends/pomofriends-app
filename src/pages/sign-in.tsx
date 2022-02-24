@@ -1,7 +1,7 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Layout from '../components/elements/Layout';
 import SignInForm from '../components/forms/SignInForm';
 import FirebaseProviderAuth from '../hooks/firebaseProviderAuth';
@@ -25,11 +25,7 @@ const useStyles = makeStyles((theme: any) => ({
  * Sign in page
  */
 const SignInPage: React.FC = (): JSX.Element => {
-  const styles = useStyles();
-
-  const [classes, setClasses] = useState(styles);
-
-  useEffect(() => setClasses(styles), []);
+  const classes = useStyles();
 
   return (
     <Layout>
