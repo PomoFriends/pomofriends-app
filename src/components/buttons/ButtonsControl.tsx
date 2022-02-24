@@ -1,5 +1,22 @@
 import React from 'react';
 import { Button } from './ButtonPomodoro';
+import StopIcon from '@mui/icons-material/Stop';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import { makeStyles } from '@mui/styles';
+import { Box } from '@mui/material';
+
+const useStyles = makeStyles((theme: any) => ({
+  box: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  buttons: {
+    margin: 2,
+  },
+}));
 
 interface ButtonsProps {
   setTimeCounting: (boolean: boolean) => void;
@@ -18,18 +35,31 @@ const ButtonsControl: React.FC<ButtonsProps> = ({
   timeCounting,
   started,
 }) => {
+  const classes = useStyles();
+
   return (
-    <div className="flex flex-row justify-center items-center">
+    <Box className={classes.box}>
       {started ? (
         <Button
-          text="Reset"
+          text={<RestartAltIcon />}
+          color="secondary"
+          className={classes.buttons}
           onClick={() => resetTimer()}
-          className="bg-yellow-500 hover:bg-yellow-700 w-20"
         />
       ) : null}
 
       <Button
-        text={!started ? 'Start' : timeCounting ? 'Stop' : 'Resume'}
+        text={
+          !started ? (
+            <PlayArrowIcon />
+          ) : timeCounting ? (
+            <StopIcon />
+          ) : (
+            <PlayArrowIcon />
+          )
+        }
+        color="primary"
+        className={classes.buttons}
         onClick={() => {
           if (!started) {
             startTimer();
@@ -37,16 +67,16 @@ const ButtonsControl: React.FC<ButtonsProps> = ({
             setTimeCounting(!timeCounting);
           }
         }}
-        className="mx-3 w-48 bg-blue-500 hover:bg-blue-700"
       />
       {started ? (
         <Button
-          text="Skip"
+          text={<SkipNextIcon />}
+          color="secondary"
+          className={classes.buttons}
           onClick={() => skipCurrent()}
-          className="bg-purple-500 hover:bg-purple-700 w-20"
         />
       ) : null}
-    </div>
+    </Box>
   );
 };
 

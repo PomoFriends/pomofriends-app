@@ -1,3 +1,4 @@
+import { Grid, Box, Container } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { db } from '../../firebase/firebase';
 import { useAuth } from '../../hooks/useAuth';
@@ -8,11 +9,24 @@ import {
 import { useInterval } from '../../utils/useInterval';
 import ButtonsControl from '../buttons/ButtonsControl';
 import ButtonsType from '../buttons/ButtonsType';
-import Layout from '../elements/Layout';
 import TimeDisplay from './TimeDisplay';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme: any) => ({
+  container: {
+    marginTop: theme.spacing(2),
+  },
+  paper: {
+    width: '100%',
+    backgroundColor: theme.palette.background.paper,
+    padding: 4,
+    borderRadius: 8,
+  },
+}));
 
 const Pomodoro = () => {
   const { user } = useAuth();
+  const classes = useStyles();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
@@ -190,10 +204,10 @@ const Pomodoro = () => {
   ]);
 
   return (
-    <Layout>
-      <main>
-        <div className="flex flex-col justify-center items-center m-10">
-          <div className="max-w-2xl w-full bg-white shadow-md border border-gray-200 rounded-lg p-8 ">
+    <Container className={classes.container}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={7} md={8}>
+          <Box className={classes.paper}>
             <ButtonsType
               startPomodoro={startPomodoro}
               startBreak={startBreak}
@@ -213,37 +227,13 @@ const Pomodoro = () => {
               startTimer={startTimer}
               started={started}
             />
-            {/* <Statistics
-              completedCycles={completedCycles}
-              fullPomodoroTime={fullPomodoroTime}
-              numberOfPomodoros={numberOfPomodoros}
-            /> */}
-
-            {/* <Outlet /> */}
-
-            {/* <Link to="settings">
-              <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                <CogIcon className="h-8 w-8 text-blue-600" aria-hidden="true" />
-              </div>
-            </Link> */}
-          </div>
-        </div>
-      </main>
-      <div className="flex flex-col justify-center items-center m-10">
-        <div className="max-w-2xl w-full bg-white shadow-md border border-gray-200 rounded-lg p-8 ">
-          <div className="flex justify-center items-center text-xl leading-5 font-bold text-blue-700 ">
-            Tasks
-          </div>
-          {/* {tasks ? (
-            <div>
-              {tasks.map((task) => {
-                <div className="border-l-2 bodrder-blue-200">{task.name}</div>;
-              })}
-            </div>
-           ) : null} */}
-        </div>
-      </div>
-    </Layout>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={5} md={4}>
+          <Box className={classes.paper}>Group List</Box>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

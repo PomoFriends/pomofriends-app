@@ -1,18 +1,27 @@
 import React from 'react';
+import MuiButton from '@mui/material/Button';
 
 interface ButtonProps {
-  text: string;
-  onClick?: () => void;
+  text: any;
+  color: any;
   className?: string;
+  onClick?: () => void;
 }
 
-export const Button: React.FC<ButtonProps> = ({ text, onClick, className }) => {
+export const Button: React.FC<ButtonProps> = ({
+  text,
+  color,
+  className,
+  onClick,
+}) => {
   return (
-    <button
+    <MuiButton
       onClick={onClick}
-      className={`my-2 py-2.5 text-xl leading-5 font-bold text-white px-4 rounded-lg ${className}`}
+      className={className}
+      variant="contained"
+      color={color}
     >
       {text}
-    </button>
+    </MuiButton>
   );
 };

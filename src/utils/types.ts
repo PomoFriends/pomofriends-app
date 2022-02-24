@@ -126,8 +126,8 @@ export const PomodoroSettingsDefaultValues: PomodoroSettings = {
   pomodoro: 1500,
   shortBreak: 300,
   longBreak: 900,
-  autoStartBreak: true,
-  autoStartPomodoro: true,
+  autoStartBreak: false,
+  autoStartPomodoro: false,
   longBreakInterval: 4,
   notificationsOn: false,
 };

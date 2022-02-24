@@ -37,6 +37,9 @@ const theme = createTheme({
       disabled: 'rgba(255, 255, 255, 0.5)',
     },
   },
+  typography: {
+    // fontFamily: ['Monaco'].join(','),
+  },
 });
 
 export default theme;

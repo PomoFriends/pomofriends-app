@@ -1,5 +1,33 @@
-import { formatTime, extraDigit } from '../../utils/formatTime';
+import { Container, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import React from 'react';
+import { extraDigit, formatTime } from '../../utils/formatTime';
+
+const useStyles = makeStyles((theme: any) => ({
+  paper: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: '12rem',
+    height: '12rem',
+  },
+  timer: {
+    height: 'full',
+    verticalAlign: 'middle',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '6rem',
+    },
+    [theme.breakpoints.down('md')]: {
+      fontSize: '6rem',
+    },
+    [theme.breakpoints.up('md')]: {
+      fontSize: '7.2rem',
+    },
+    [theme.breakpoints.up('lg')]: {
+      fontSize: '7.2rem',
+    },
+  },
+}));
 
 interface TimerProps {
   time: number;
@@ -7,25 +35,18 @@ interface TimerProps {
   isLongBreak: boolean;
 }
 
-const TimeDisplay: React.FC<TimerProps> = ({ time, isBreak, isLongBreak }) => {
+const TimeDisplay: React.FC<TimerProps> = ({ time }) => {
+  const classes = useStyles();
   const convertedTime = formatTime(time, false);
 
   return (
     <>
-      <div
-        className={
-          !isBreak
-            ? 'bg-blue-400 shadow-md border border-gray-200 rounded-lg p-8'
-            : !isLongBreak
-            ? 'bg-teal-400 shadow-md border border-gray-200 rounded-lg p-8'
-            : 'bg-green-500 shadow-md border border-gray-200 rounded-lg p-8'
-        }
-      >
-        <p className="text-center font-bold text-white lg:text-9xl md:text-9xl sm:text-9xl">
+      <Container className={classes.paper}>
+        <Typography align="center" className={classes.timer}>
           {extraDigit(convertedTime.minutes)}:
           {extraDigit(convertedTime.seconds)}
-        </p>
-      </div>
+        </Typography>
+      </Container>
     </>
   );
 };
