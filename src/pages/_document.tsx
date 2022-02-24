@@ -2,12 +2,15 @@ import * as React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import createEmotionServer from '@emotion/server/create-instance';
 import createEmotionCache from '../utils/createEmotionCache';
+import theme from '../styles/theme/theme';
+import { ServerStyleSheets } from '@mui/styles';
 
 export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
         <Head>
+          <meta name="theme-color" content={theme.palette.primary.main} />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
@@ -48,7 +51,7 @@ MyDocument.getInitialProps = async (ctx) => {
   // 4. page.render
 
   const originalRenderPage = ctx.renderPage;
-
+  const sheets = new ServerStyleSheets();
   // You can consider sharing the same emotion cache between all the SSR requests to speed up performance.
   // However, be aware that it can have global side effects.
   const cache = createEmotionCache();
@@ -57,11 +60,13 @@ MyDocument.getInitialProps = async (ctx) => {
   /* eslint-disable */
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: (App) =>
-        function EnhanceApp(props) {
-          // @ts-ignore: Unreachable code error
-          return <App emotionCache={cache} {...props} />;
-        },
+      enhanceApp: (App: any) => (props) =>
+        sheets.collect(<App emotionCache={cache} {...props} />),
+      // enhanceApp: (App) =>
+      //   function EnhanceApp(props) {
+      //     // @ts-ignore: Unreachable code error
+      //     return <App emotionCache={cache} {...props} />;
+      //   },
     });
   /* eslint-enable */
 
@@ -81,9 +86,14 @@ MyDocument.getInitialProps = async (ctx) => {
   return {
     ...initialProps,
     // Styles fragment is rendered after the app and page rendering finish.
+    // styles: [
+    //   ...React.Children.toArray(initialProps.styles),
+    //   ...emotionStyleTags,
+    // ],
     styles: [
       ...React.Children.toArray(initialProps.styles),
       ...emotionStyleTags,
+      sheets.getStyleElement(),
     ],
   };
 };

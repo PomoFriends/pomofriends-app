@@ -23,10 +23,10 @@ const useStyles = makeStyles((theme: any) => ({
   },
   textField: {
     '& label.Mui-focused': {
-      color: 'white',
+      color: theme.palette.text.primary,
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: 'yellow',
+      borderBottomColor: theme.palette.text.primary,
     },
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
