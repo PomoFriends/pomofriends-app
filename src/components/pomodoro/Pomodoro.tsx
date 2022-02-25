@@ -8,6 +8,7 @@ import {
 import { useInterval } from '../../utils/useInterval';
 import ButtonsControl from '../buttons/ButtonsControl';
 import ButtonsType from '../buttons/ButtonsType';
+import Spinner from '../images/Spinner';
 import TimeDisplay from './TimeDisplay';
 
 const Pomodoro = () => {
@@ -16,21 +17,7 @@ const Pomodoro = () => {
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
   );
-  // const [newMessage, setNewMessage] = useState('');
-
-  // // automatically check db for new messages
-  useEffect(() => {
-    db.collection('pomodoroSettings')
-      .doc(user?.id)
-      .get()
-      .then((settings) => {
-        if (settings.data()) {
-          // Change the state of the user
-          // console.log(settings.data());
-          setSettings(settings.data() as PomodoroSettings);
-        }
-      });
-  }, [db]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [time, setTime] = useState(settings.pomodoro);
   const [timeCounting, setTimeCounting] = useState(false);
@@ -45,6 +32,34 @@ const Pomodoro = () => {
   const [completedCycles, setCompletedCycles] = useState(0);
   const [fullPomodoroTime, setFullPomodoroTime] = useState(0);
   const [numberOfPomodoros, setNumberOfPomodoros] = useState(0);
+
+  // // automatically check db for updated settings
+  useEffect(() => {
+    let cancel = false;
+
+    setIsLoading(true);
+    if (user) {
+      db.collection('pomodoroSettings')
+        .doc(user.id)
+        .get()
+        .then((settings) => {
+          //   update state
+          if (cancel) return;
+
+          setSettings(settings.data() as PomodoroSettings);
+        });
+    }
+    setIsLoading(false);
+
+    return () => {
+      setIsLoading(false);
+      cancel = true;
+    };
+  }, [user, db]);
+
+  useEffect(() => {
+    setTime(settings.pomodoro);
+  }, [settings]);
 
   useInterval(
     () => {
@@ -190,21 +205,33 @@ const Pomodoro = () => {
 
   return (
     <>
-      <ButtonsType
-        startPomodoro={startPomodoro}
-        startBreak={startBreak}
-        isBreak={isBreak}
-        isLongBreak={isLongBreak}
-      />
-      <TimeDisplay time={time} isBreak={isBreak} isLongBreak={isLongBreak} />
-      <ButtonsControl
-        setTimeCounting={setTimeCounting}
-        resetTimer={resetTimer}
-        skipCurrent={skipCurrent}
-        timeCounting={timeCounting}
-        startTimer={startTimer}
-        started={started}
-      />
+      {isLoading ? (
+        <div className="flex justify-center py-8">
+          <Spinner width="40" className="animate-spin" />
+        </div>
+      ) : (
+        <>
+          <ButtonsType
+            startPomodoro={startPomodoro}
+            startBreak={startBreak}
+            isBreak={isBreak}
+            isLongBreak={isLongBreak}
+          />
+          <TimeDisplay
+            time={time}
+            isBreak={isBreak}
+            isLongBreak={isLongBreak}
+          />
+          <ButtonsControl
+            setTimeCounting={setTimeCounting}
+            resetTimer={resetTimer}
+            skipCurrent={skipCurrent}
+            timeCounting={timeCounting}
+            startTimer={startTimer}
+            started={started}
+          />
+        </>
+      )}
     </>
   );
 };

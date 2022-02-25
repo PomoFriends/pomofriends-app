@@ -1,7 +1,15 @@
-import { Typography, Paper } from '@mui/material';
+import {
+  Typography,
+  Paper,
+  Avatar,
+  IconButton,
+  Tooltip,
+  Box,
+} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { extraDigit, formatTime } from '../../utils/formatTime';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const useStyles = makeStyles((theme: any) => ({
   timer: {
@@ -22,6 +30,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   pomodoro: {
+    borderRadius: 8,
     margin: 8,
     display: 'flex',
     flexDirection: 'column',
@@ -31,6 +40,7 @@ const useStyles = makeStyles((theme: any) => ({
     backgroundColor: theme.palette.primary.main,
   },
   shortBreak: {
+    borderRadius: 8,
     margin: 8,
     display: 'flex',
     flexDirection: 'column',
@@ -40,6 +50,7 @@ const useStyles = makeStyles((theme: any) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   longBreak: {
+    borderRadius: 8,
     margin: 8,
     display: 'flex',
     flexDirection: 'column',
@@ -47,6 +58,14 @@ const useStyles = makeStyles((theme: any) => ({
     minHeight: '13rem',
     height: '13rem',
     backgroundColor: theme.palette.secondary.main,
+  },
+  addGroup: {
+    backgroundColor: theme.palette.secondary.main,
+  },
+  settingsBox: {
+    marginLeft: '1.5rem',
+    marginTop: '0.7rem',
+    position: 'absolute',
   },
 }));
 
@@ -62,6 +81,16 @@ const TimeDisplay: React.FC<TimerProps> = ({ time, isBreak, isLongBreak }) => {
 
   return (
     <>
+      <Box className={classes.settingsBox}>
+        <Tooltip title="Settings">
+          <IconButton edge="start" aria-label="add-group">
+            <Avatar className={classes.addGroup}>
+              <SettingsIcon />
+            </Avatar>
+          </IconButton>
+        </Tooltip>
+      </Box>
+
       <Paper
         className={
           !isBreak

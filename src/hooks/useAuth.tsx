@@ -63,6 +63,7 @@ export const useAuthProvider = (): authContextType => {
    * Function that creates a doc for the user in database.
    */
   const createUser = async (user: UserData): Promise<any> => {
+    console.log('createUser', user);
     const newUser = await db
       .collection('users')
       .doc(user.id)
@@ -105,7 +106,7 @@ export const useAuthProvider = (): authContextType => {
       .then((userData) => {
         if (userData.data()) {
           // Change the state of the user
-          // console.log(userData.data());
+          console.log(userData.data());
           setUser(userData.data() as any);
         } else {
           // Create user if they do not have the doc in db
