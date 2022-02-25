@@ -11,6 +11,7 @@ const Footer = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        marginBottom: 2,
       }}
     >
       <Box component="footer">
