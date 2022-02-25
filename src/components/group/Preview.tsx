@@ -1,31 +1,75 @@
-import Link from 'next/link';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import {
+  IconButton,
+  ListItem,
+  ListItemText,
+  Tooltip,
+  Divider,
+} from '@mui/material';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { useGroup } from '../../hooks/useGroup';
 import { GroupData } from '../../utils/types';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme: any) => ({
+  join: {
+    color: theme.palette.primary.main,
+  },
+  info: {
+    color: theme.palette.secondary.main,
+  },
+}));
 
 interface GroupPreviewProps {
   group: GroupData;
 }
 
 const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
+  const classes = useStyles();
+
   const { joinGroup } = useGroup();
+  const router = useRouter();
 
   return (
-    <div>
-      <button
-        type="button"
-        onClick={async () => {
-          await joinGroup(group.id);
-        }}
-        className="w-full"
+    <>
+      <ListItem
+        secondaryAction={
+          <>
+            <Tooltip title="More info">
+              <IconButton
+                edge="end"
+                aria-label="more-info"
+                onClick={async () => {
+                  await joinGroup(group.id);
+                  router.push(`/group/${group.id}`);
+                }}
+                className={classes.info}
+              >
+                <MoreHorizIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={`Join ${group.name}`}>
+              <IconButton
+                edge="end"
+                aria-label="join-group"
+                onClick={async () => {
+                  await joinGroup(group.id);
+                  router.push(`/group/${group.id}`);
+                }}
+                className={classes.join}
+              >
+                <ArrowForwardIosIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        }
       >
-        <div className="bg-gray-200 border-2 border-sky-500 m-2 rounded-md hover:bg-sky-400 hover:text-white">
-          <Link href={`/group/${group.id}`} passHref>
-            <div className="p-2">{group.name}</div>
-          </Link>
-        </div>
-      </button>
-    </div>
+        <ListItemText primary={group.name} />
+      </ListItem>
+      <Divider />
+    </>
   );
 };
 

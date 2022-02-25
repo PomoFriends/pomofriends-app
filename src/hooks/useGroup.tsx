@@ -1,3 +1,4 @@
+import firebase from 'firebase/compat/app';
 import { useRouter } from 'next/router';
 import { db } from '../firebase/firebase';
 import {
@@ -66,6 +67,14 @@ export const useGroup = (): useGroupType => {
             showTasks: true,
           });
 
+        // Add one to participantsCount
+        await db
+          .collection('groups')
+          .doc(newGroup.id)
+          .update({
+            participantsCount: firebase.firestore.FieldValue.increment(1),
+          });
+
         // Create messages doc with the same id as the group
         await db.collection('messages').doc(newGroup.id).set({});
 
@@ -113,11 +122,6 @@ export const useGroup = (): useGroupType => {
         showTasks: true,
       };
 
-      // await db
-      //   .collection('participants')
-      //   .doc(groupId)
-      //   .update({ [`${user.id}`]: participant });
-
       const newParticipant = db
         .collection('participants')
         .doc(groupId)
@@ -125,6 +129,14 @@ export const useGroup = (): useGroupType => {
         .doc(user.id);
 
       await newParticipant.set(participant);
+
+      // Add one to participantsCount
+      await db
+        .collection('groups')
+        .doc(groupId)
+        .update({
+          participantsCount: firebase.firestore.FieldValue.increment(1),
+        });
 
       // await db
       //   .collection('participants')
@@ -156,6 +168,14 @@ export const useGroup = (): useGroupType => {
       // });
 
       await db.collection('users').doc(user.id).update({ groupId: null });
+
+      await db
+        .collection('groups')
+        .doc(groupId)
+        .update({
+          participantsCount: firebase.firestore.FieldValue.increment(-1),
+        });
+
       router.push('/group');
       return true;
     } else {

@@ -1,4 +1,3 @@
-import { Grid, Box, Container } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { db } from '../../firebase/firebase';
 import { useAuth } from '../../hooks/useAuth';
@@ -10,23 +9,9 @@ import { useInterval } from '../../utils/useInterval';
 import ButtonsControl from '../buttons/ButtonsControl';
 import ButtonsType from '../buttons/ButtonsType';
 import TimeDisplay from './TimeDisplay';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles((theme: any) => ({
-  container: {
-    marginTop: theme.spacing(2),
-  },
-  paper: {
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-    padding: 4,
-    borderRadius: 8,
-  },
-}));
 
 const Pomodoro = () => {
   const { user } = useAuth();
-  const classes = useStyles();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
@@ -204,36 +189,23 @@ const Pomodoro = () => {
   ]);
 
   return (
-    <Container className={classes.container}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={7} md={8}>
-          <Box className={classes.paper}>
-            <ButtonsType
-              startPomodoro={startPomodoro}
-              startBreak={startBreak}
-              isBreak={isBreak}
-              isLongBreak={isLongBreak}
-            />
-            <TimeDisplay
-              time={time}
-              isBreak={isBreak}
-              isLongBreak={isLongBreak}
-            />
-            <ButtonsControl
-              setTimeCounting={setTimeCounting}
-              resetTimer={resetTimer}
-              skipCurrent={skipCurrent}
-              timeCounting={timeCounting}
-              startTimer={startTimer}
-              started={started}
-            />
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={5} md={4}>
-          <Box className={classes.paper}>Group List</Box>
-        </Grid>
-      </Grid>
-    </Container>
+    <>
+      <ButtonsType
+        startPomodoro={startPomodoro}
+        startBreak={startBreak}
+        isBreak={isBreak}
+        isLongBreak={isLongBreak}
+      />
+      <TimeDisplay time={time} isBreak={isBreak} isLongBreak={isLongBreak} />
+      <ButtonsControl
+        setTimeCounting={setTimeCounting}
+        resetTimer={resetTimer}
+        skipCurrent={skipCurrent}
+        timeCounting={timeCounting}
+        startTimer={startTimer}
+        started={started}
+      />
+    </>
   );
 };
 

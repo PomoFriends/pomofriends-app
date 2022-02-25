@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const Footer = () => {
   return (
@@ -10,12 +11,13 @@ const Footer = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        minHeight: '50vh',
       }}
     >
       <Box component="footer">
         <Container maxWidth="sm">
-          <Typography variant="body1">Build with 💜 by Vadim Egorov</Typography>
+          <Typography variant="body1">
+            Build with <FavoriteIcon color="primary" /> by Vadim Egorov
+          </Typography>
         </Container>
       </Box>
     </Box>

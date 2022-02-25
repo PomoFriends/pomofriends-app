@@ -86,6 +86,7 @@ export type GroupData = {
   id: string;
   name: string;
   description: string;
+  participantsCount: number;
   createdAt?: number;
   updatedAt?: number;
 };

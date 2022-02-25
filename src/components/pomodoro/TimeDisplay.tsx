@@ -1,19 +1,13 @@
-import { Container, Typography } from '@mui/material';
+import { Typography, Paper } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { extraDigit, formatTime } from '../../utils/formatTime';
 
 const useStyles = makeStyles((theme: any) => ({
-  paper: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    minHeight: '12rem',
-    height: '12rem',
-  },
   timer: {
     height: 'full',
     verticalAlign: 'middle',
+    color: theme.palette.background.default,
     [theme.breakpoints.up('sm')]: {
       fontSize: '6rem',
     },
@@ -27,6 +21,33 @@ const useStyles = makeStyles((theme: any) => ({
       fontSize: '7.2rem',
     },
   },
+  pomodoro: {
+    margin: 8,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: '13rem',
+    height: '13rem',
+    backgroundColor: theme.palette.primary.main,
+  },
+  shortBreak: {
+    margin: 8,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: '13rem',
+    height: '13rem',
+    backgroundColor: theme.palette.secondary.main,
+  },
+  longBreak: {
+    margin: 8,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: '13rem',
+    height: '13rem',
+    backgroundColor: theme.palette.secondary.main,
+  },
 }));
 
 interface TimerProps {
@@ -35,18 +56,27 @@ interface TimerProps {
   isLongBreak: boolean;
 }
 
-const TimeDisplay: React.FC<TimerProps> = ({ time }) => {
+const TimeDisplay: React.FC<TimerProps> = ({ time, isBreak, isLongBreak }) => {
   const classes = useStyles();
   const convertedTime = formatTime(time, false);
 
   return (
     <>
-      <Container className={classes.paper}>
+      <Paper
+        className={
+          !isBreak
+            ? classes.pomodoro
+            : isLongBreak
+            ? classes.longBreak
+            : classes.shortBreak
+        }
+        elevation={3}
+      >
         <Typography align="center" className={classes.timer}>
           {extraDigit(convertedTime.minutes)}:
           {extraDigit(convertedTime.seconds)}
         </Typography>
-      </Container>
+      </Paper>
     </>
   );
 };
