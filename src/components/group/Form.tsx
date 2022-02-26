@@ -1,95 +1,133 @@
 import React, { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useGroup } from '../../hooks/useGroup';
-import Button from '../buttons/SubmitButton';
-import { GroupForm as Form } from '../../utils/types';
+import { ErrorMessage, GroupForm as Form } from '../../utils/types';
+import { Container, Grid, Alert, TextField } from '@mui/material';
+import SubmitButton from '../buttons/SubmitButton';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme: any) => ({
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  textField: {
+    '& label.Mui-focused': {
+      color: theme.palette.text.primary,
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: theme.palette.text.primary,
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: theme.palette.text.disabled,
+      },
+      '&:hover fieldset': {
+        borderColor: theme.palette.text.primary,
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: theme.palette.primary.main,
+      },
+    },
+  },
+}));
 
 const GroupForm: React.FC = () => {
+  const classes = useStyles();
   const { createGroup } = useGroup();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Form>();
+  const { handleSubmit, control } = useForm<Form>();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<ErrorMessage | null>(null);
 
   const onSubmit: SubmitHandler<Form> = async (data: Form) => {
     setIsLoading(true);
-    return await createGroup(data).then(() => {
+    setError(null);
+    return await createGroup(data).then((response) => {
       setIsLoading(false);
     });
   };
 
   return (
-    <div>
-      <div className="min-h-screen flex bg-gray-200">
-        <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="rounded-md">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-5 text-gray-700"
-                >
-                  Group name
-                </label>
-                <div className="mt-1 rounded-md">
-                  <input
-                    type="text"
-                    id="name"
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 shadow-sm"
-                    {...register('name', {
-                      required: 'Please enter a group name',
-                    })}
-                  />
-                  {errors.name && (
-                    <div className="mt-2 text-xs text-red-600">
-                      {errors.name.message}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="rounded-md">
-                <label
-                  htmlFor="description"
-                  className="block text-sm font-medium leading-5 text-gray-700"
-                >
-                  Group description
-                </label>
-                <div className="mt-1 rounded-md">
-                  <input
-                    type="text"
-                    id="description"
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 shadow-sm"
-                    {...register('description', {
-                      required: 'Please enter a description of the group',
-                    })}
-                  />
-                  {errors.description && (
-                    <div className="mt-2 text-xs text-red-600">
-                      {errors.description.message}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <span className="block w-full rounded-md shadow-sm">
-                  <Button
-                    title="Create Group"
-                    type="submit"
-                    isLoading={isLoading}
-                  />
-                </span>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Container maxWidth="sm">
+      <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+        <Grid container spacing={2}>
+          {error?.message && (
+            <Grid item xs={12}>
+              <Alert severity="error" variant="filled">
+                {error.message}
+              </Alert>
+            </Grid>
+          )}
+          <Grid item xs={12}>
+            <Controller
+              name="name"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <TextField
+                  className={classes.textField}
+                  required
+                  fullWidth
+                  id="group name"
+                  name="group name"
+                  label="Group Name"
+                  autoComplete="group name"
+                  variant="outlined"
+                  value={value}
+                  onChange={onChange}
+                  error={!!error}
+                  helperText={error ? error.message : null}
+                />
+              )}
+              rules={{
+                required: 'Group Name required',
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Controller
+              name="description"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <TextField
+                  className={classes.textField}
+                  required
+                  fullWidth
+                  multiline
+                  name="description"
+                  label="Description"
+                  type="text"
+                  id="description"
+                  variant="outlined"
+                  value={value}
+                  onChange={onChange}
+                  error={!!error}
+                  helperText={error ? error.message : null}
+                  autoComplete="current-description"
+                />
+              )}
+              rules={{
+                required: 'Description required',
+              }}
+            />
+          </Grid>
+        </Grid>
+        <SubmitButton
+          title="Create a Group"
+          type="submit"
+          isLoading={isLoading}
+        />
+      </form>
+    </Container>
   );
 };
 

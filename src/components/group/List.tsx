@@ -7,6 +7,7 @@ import {
   List,
   Typography,
   Tooltip,
+  Modal,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useEffect, useState } from 'react';
@@ -14,51 +15,24 @@ import { db } from '../../firebase/firebase';
 import { GroupData } from '../../utils/types';
 import Spinner from '../images/Spinner';
 import GroupPreview from './Preview';
+import GroupForm from './Form';
 
 const useStyles = makeStyles((theme: any) => ({
-  timer: {
-    height: 'full',
-    verticalAlign: 'middle',
-    color: theme.palette.background.default,
-    [theme.breakpoints.up('sm')]: {
-      fontSize: '6rem',
+  groupList: {
+    overflow: 'auto',
+    maxHeight: '36rem',
+    '&::-webkit-scrollbar': {
+      width: '0.4em',
     },
-    [theme.breakpoints.down('md')]: {
-      fontSize: '6rem',
+    '&::-webkit-scrollbar-track': {
+      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+      webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
     },
-    [theme.breakpoints.up('md')]: {
-      fontSize: '7.2rem',
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0,0,0,.1)',
+      outline: '1px solid slategrey',
+      borderRadius: 8,
     },
-    [theme.breakpoints.up('lg')]: {
-      fontSize: '7.2rem',
-    },
-  },
-  pomodoro: {
-    margin: 8,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    minHeight: '13rem',
-    height: '13rem',
-    backgroundColor: theme.palette.primary.main,
-  },
-  shortBreak: {
-    margin: 8,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    minHeight: '13rem',
-    height: '13rem',
-    backgroundColor: theme.palette.secondary.main,
-  },
-  longBreak: {
-    margin: 8,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    minHeight: '13rem',
-    height: '13rem',
-    backgroundColor: theme.palette.secondary.main,
   },
   typography: {
     marginLeft: 16,
@@ -70,17 +44,28 @@ const useStyles = makeStyles((theme: any) => ({
   addBox: {
     paddingRight: 16,
   },
+  addGroupModal: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    border: '2px solid #000',
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 8,
+    borderColor: theme.palette.primary.main,
+  },
 }));
 
 const GroupList: React.FC = () => {
-  // const [groups, groupsLoading, groupsError] = useCollectionOnce(
-  //   collection(getFirestore(app), 'groups'),
-  //   {}
-  // );
   const classes = useStyles();
 
   const [groupList, setGroupList] = useState<GroupData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     let cancel = false;
@@ -119,7 +104,7 @@ const GroupList: React.FC = () => {
     );
   } else {
     body = (
-      <Box style={{ overflow: 'auto', maxHeight: '17rem' }}>
+      <Box className={classes.groupList}>
         <List>
           {groupList.map((group: GroupData) => (
             <div key={group.id}>
@@ -148,12 +133,26 @@ const GroupList: React.FC = () => {
             className={classes.addBox}
           >
             <Tooltip title="Create Group">
-              <IconButton edge="end" aria-label="add-group">
+              <IconButton
+                edge="end"
+                aria-label="add-group"
+                onClick={handleOpen}
+              >
                 <Avatar className={classes.addGroup}>
                   <AddIcon />
                 </Avatar>
               </IconButton>
             </Tooltip>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className={classes.addGroupModal}>
+                <GroupForm />
+              </Box>
+            </Modal>
           </Grid>
         </Grid>
       </Box>
