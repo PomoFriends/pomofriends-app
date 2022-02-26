@@ -38,6 +38,7 @@ export const useRequireAuth = (): authContextType => {
           username: user!.displayName!,
           email: user!.email!,
           profilePic: user!.photoURL!,
+          groupId: null,
         };
 
         handleAuthStateChanged(userData);

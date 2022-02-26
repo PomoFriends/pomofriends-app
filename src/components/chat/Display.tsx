@@ -1,42 +1,19 @@
 import React from 'react';
-// import Image from 'next/image';
 import { GroupMessage } from '../../utils/types';
+import { ListItem, ListItemText, Divider } from '@mui/material';
 
 interface DisplayMessageProps {
-  messages: any;
+  message: GroupMessage;
 }
 
-const DisplayMessages: React.FC<DisplayMessageProps> = ({ messages }) => {
+const DisplayMessages: React.FC<DisplayMessageProps> = ({ message }) => {
   return (
-    <div className="flex">
-      <ul>
-        {messages.map((message: GroupMessage) => (
-          <li key={message.id}>
-            {/* <section>
-              {message.profilePic ? (
-                <Image
-                  src={message.profilePic}
-                  alt="Avatar"
-                  width={45}
-                  height={45}
-                />
-              ) : null}
-            </section> */}
-
-            <section>
-              {/* display message text */}
-              <p>{message.message}</p>
-
-              {/* display user name */}
-              {message.username ? <span>{message.username}</span> : null}
-              <br />
-              {/* display message date and time */}
-              {message.createdAt ? <span>{message.createdAt}</span> : null}
-            </section>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <ListItem>
+        <ListItemText primary={message.message} />
+      </ListItem>
+      <Divider />
+    </>
   );
 };
 

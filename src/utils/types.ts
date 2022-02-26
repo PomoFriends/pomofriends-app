@@ -25,11 +25,11 @@ export type ErrorMessage = {
 export type UserData = {
   id: string;
   username: string;
-  email?: string;
-  profilePic?: string | null;
+  email: string;
+  profilePic: string | null;
   createdAt?: number;
   updatedAt?: number;
-  groupId?: string | null;
+  groupId: string | null;
 };
 
 /** User settings type */
@@ -54,6 +54,7 @@ export type authContextType = {
   signIn: ({ email, password }: SignInData) => Promise<any>;
   signOut: () => void;
   sendPasswordResetEmail: (email: string) => void;
+  setUpdate: ({}: any) => any;
 };
 
 /** Default values for useAuth */
@@ -63,6 +64,7 @@ export const authContextDefaultValues: authContextType = {
   signIn: async () => {},
   signOut: async () => {},
   sendPasswordResetEmail: async () => {},
+  setUpdate: () => {},
 };
 
 /** Type for useGroup hook */

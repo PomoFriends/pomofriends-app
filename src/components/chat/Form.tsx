@@ -1,66 +1,101 @@
-import React, { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import Button from '../buttons/SubmitButton';
-import { ChatForm as Form } from '../../utils/types';
+import SendIcon from '@mui/icons-material/Send';
+import { Box, Button, Grid, TextField } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import React from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useGroup } from '../../hooks/useGroup';
+import { ChatForm as Form } from '../../utils/types';
+
+const useStyles = makeStyles((theme: any) => ({
+  form: {
+    width: '100%', // Fix IE 11 issue.
+  },
+  textField: {
+    '& label.Mui-focused': {
+      color: theme.palette.text.primary,
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: theme.palette.text.primary,
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: theme.palette.text.disabled,
+      },
+      '&:hover fieldset': {
+        borderColor: theme.palette.text.primary,
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: theme.palette.primary.main,
+      },
+    },
+  },
+  button: {
+    minWidth: '1rem',
+    minHeight: '3.5rem',
+  },
+}));
 
 interface ChatFormProps {
   groupId: string;
 }
 
 const ChatForm: React.FC<ChatFormProps> = ({ groupId }) => {
+  const classes = useStyles();
+
   const { sendMessage } = useGroup();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<Form>();
-
-  const [isLoading, setIsLoading] = useState(false);
+  const { handleSubmit, control, reset } = useForm<Form>();
 
   const onSubmit: SubmitHandler<Form> = async (data: Form) => {
-    setIsLoading(true);
-    return await sendMessage(data).then(() => {
-      setIsLoading(false);
+    reset({
+      message: '',
+    });
+
+    return await sendMessage({
+      message: data.message,
+      groupId,
     });
   };
 
   return (
-    <div>
-      <div className="sm:mx-auto sm:w-full max-w-md">
-        <div className="bg-white shadow sm:rounded-lg p-2">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="rounded-md">
-              <div className="mt-1 rounded-md">
-                <input
-                  type="text"
-                  id="message"
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 shadow-sm"
-                  {...register('message', {
-                    required: 'Please enter a group name',
-                  })}
+    <Box>
+      <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+        <Grid container spacing={0.5}>
+          <Grid item xs={9}>
+            <Controller
+              name="message"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <TextField
+                  className={classes.textField}
+                  fullWidth
+                  label="Send message"
+                  variant="outlined"
+                  value={value}
+                  onChange={onChange}
+                  error={!!error}
+                  helperText={error ? error.message : null}
                 />
-                {errors.message && (
-                  <div className="mt-2 text-xs text-red-600">
-                    {errors.message.message}
-                  </div>
-                )}
-              </div>
-              <span className="mt-2 block w-full rounded-md shadow-sm">
-                <Button
-                  onClick={() => setValue('groupId', `${groupId}`)}
-                  title="send message"
-                  type="submit"
-                  isLoading={isLoading}
-                />
-              </span>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+              )}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+            >
+              <SendIcon />
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </Box>
   );
 };
 

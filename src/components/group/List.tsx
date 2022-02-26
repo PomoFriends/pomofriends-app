@@ -150,7 +150,7 @@ const GroupList: React.FC = () => {
               aria-describedby="modal-modal-description"
             >
               <Box className={classes.addGroupModal}>
-                <GroupForm />
+                <GroupForm handleClose={handleClose} />
               </Box>
             </Modal>
           </Grid>

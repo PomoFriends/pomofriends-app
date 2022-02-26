@@ -10,13 +10,13 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 interface ButtonProps {
-  title?: string;
+  title?: any;
   isLoading?: boolean;
 }
 
 /**
  *
- * @param {string} title
+ * @param {any} title
  * @param {isLoading} boolean
  * @return {JSF.Element}
  *

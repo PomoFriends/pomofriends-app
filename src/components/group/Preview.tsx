@@ -11,7 +11,6 @@ import {
   Box,
   Grid,
 } from '@mui/material';
-import { useRouter } from 'next/router';
 import React from 'react';
 import { useGroup } from '../../hooks/useGroup';
 import { GroupData } from '../../utils/types';
@@ -59,16 +58,13 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
   const classes = useStyles();
 
   const { joinGroup } = useGroup();
-  const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
-
   const openInfo = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const closeInfo = () => {
     setAnchorEl(null);
   };
@@ -141,7 +137,6 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
                 aria-label="join-group"
                 onClick={async () => {
                   await joinGroup(group.id);
-                  router.push(`/group/${group.id}`);
                 }}
                 className={classes.join}
               >

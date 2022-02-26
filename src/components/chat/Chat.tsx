@@ -2,19 +2,41 @@ import React, { useEffect, useState } from 'react';
 import { db } from '../../firebase/firebase';
 import { GroupMessage } from '../../utils/types';
 import DisplayMessages from './Display';
-import ChatForm from './Form';
+import { makeStyles } from '@mui/styles';
+import { Box, List } from '@mui/material';
+
+const useStyles = makeStyles((theme: any) => ({
+  messages: {
+    overflow: 'auto',
+    maxHeight: '36rem',
+    '&::-webkit-scrollbar': {
+      width: '0.4em',
+    },
+    '&::-webkit-scrollbar-track': {
+      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+      webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0,0,0,.1)',
+      outline: '1px solid slategrey',
+      borderRadius: 8,
+    },
+  },
+}));
 
 interface ChatProps {
   groupId: string;
 }
 
 const Chat: React.FC<ChatProps> = ({ groupId }) => {
-  // // initial states
-  const [messages, setMessages] = useState<GroupMessage[]>([]);
-  // const [newMessage, setNewMessage] = useState('');
+  const classes = useStyles();
 
-  // // automatically check db for new messages
+  const [messages, setMessages] = useState<GroupMessage[]>([]);
+
+  // automatically check db for new messages
   useEffect(() => {
+    let cancel = false;
+
     db.collection('messages')
       .doc(groupId)
       .collection('messages')
@@ -28,14 +50,26 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
 
         //   update state
         console.log(data);
+        if (cancel) return;
+
         setMessages(data as GroupMessage[]);
       });
-  }, [db]);
+    return () => {
+      cancel = true;
+    };
+  }, []);
 
   return (
     <>
-      <DisplayMessages messages={messages} />
-      <ChatForm groupId={groupId} />
+      <Box className={classes.messages}>
+        <List>
+          {messages.map((message: GroupMessage) => (
+            <div key={message.id}>
+              <DisplayMessages message={message} />
+            </div>
+          ))}
+        </List>
+      </Box>
     </>
   );
 };

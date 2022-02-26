@@ -32,8 +32,13 @@ const useStyles = makeStyles((theme: any) => ({
   },
 }));
 
-const GroupForm: React.FC = () => {
+interface GroupFormProps {
+  handleClose: () => void;
+}
+
+const GroupForm: React.FC<GroupFormProps> = ({ handleClose }) => {
   const classes = useStyles();
+
   const { createGroup } = useGroup();
 
   const { handleSubmit, control } = useForm<Form>();
@@ -42,6 +47,7 @@ const GroupForm: React.FC = () => {
   const [error, setError] = useState<ErrorMessage | null>(null);
 
   const onSubmit: SubmitHandler<Form> = async (data: Form) => {
+    handleClose();
     setIsLoading(true);
     setError(null);
     return await createGroup(data).then((response) => {
@@ -73,10 +79,7 @@ const GroupForm: React.FC = () => {
                   className={classes.textField}
                   required
                   fullWidth
-                  id="group name"
-                  name="group name"
                   label="Group Name"
-                  autoComplete="group name"
                   variant="outlined"
                   value={value}
                   onChange={onChange}
@@ -103,16 +106,13 @@ const GroupForm: React.FC = () => {
                   required
                   fullWidth
                   multiline
-                  name="description"
                   label="Description"
                   type="text"
-                  id="description"
                   variant="outlined"
                   value={value}
                   onChange={onChange}
                   error={!!error}
                   helperText={error ? error.message : null}
-                  autoComplete="current-description"
                 />
               )}
               rules={{

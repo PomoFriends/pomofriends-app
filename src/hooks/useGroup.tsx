@@ -12,7 +12,7 @@ import {
 import { useAuth } from './useAuth';
 
 export const useGroup = (): useGroupType => {
-  const { user } = useAuth();
+  const { user, setUpdate } = useAuth();
   const router = useRouter();
 
   /**
@@ -94,7 +94,12 @@ export const useGroup = (): useGroupType => {
           createdAt: Date.now(),
         });
 
-        await router.push(`/group/${newGroup.id}`);
+        await db
+          .collection('users')
+          .doc(user.id)
+          .update({ groupId: newGroup.id });
+
+        setUpdate(+1);
 
         return true;
       } catch {
@@ -138,14 +143,9 @@ export const useGroup = (): useGroupType => {
           participantsCount: firebase.firestore.FieldValue.increment(1),
         });
 
-      // await db
-      //   .collection('participants')
-      //   .doc(groupId)
-      //   .collection('participants')
-      //   .doc(user.id)
-      //   .add(participant);
-
       await db.collection('users').doc(user.id).update({ groupId });
+
+      setUpdate(+1);
 
       return true;
     } else {
@@ -163,9 +163,6 @@ export const useGroup = (): useGroupType => {
         .collection('participants')
         .doc(user.id)
         .delete();
-      // .update({
-      //   [`${user.id}`]: firebase.firestore.FieldValue.delete(),
-      // });
 
       await db.collection('users').doc(user.id).update({ groupId: null });
 
@@ -175,8 +172,7 @@ export const useGroup = (): useGroupType => {
         .update({
           participantsCount: firebase.firestore.FieldValue.increment(-1),
         });
-
-      router.push('/group');
+      setUpdate(+1);
       return true;
     } else {
       // Will make a pop up

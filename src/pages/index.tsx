@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/elements/Layout';
 import Pomodoro from '../components/pomodoro/Pomodoro';
 import { makeStyles } from '@mui/styles';
 import { Container, Grid, Paper } from '@mui/material';
 import GroupList from '../components/group/List';
+import { useAuth } from '../hooks/useAuth';
+import Group from '../components/group/Group';
 
 const useStyles = makeStyles((theme: any) => ({
   container: {
@@ -43,6 +45,14 @@ const useStyles = makeStyles((theme: any) => ({
 const HomePage: React.FC = (): JSX.Element => {
   const classes = useStyles();
 
+  const { user } = useAuth();
+  const [groupId, setGroupId] = useState<null | undefined | string>(null);
+
+  useEffect(() => {
+    console.log(user);
+    setGroupId(user?.groupId);
+  }, [user]);
+
   return (
     <Layout>
       <Container className={classes.container}>
@@ -64,7 +74,7 @@ const HomePage: React.FC = (): JSX.Element => {
 
           <Grid item xs={12} sm={5} md={4}>
             <Paper className={classes.paperGroup} elevation={3}>
-              <GroupList />
+              {groupId ? <Group id={groupId} /> : <GroupList />}
             </Paper>
           </Grid>
         </Grid>

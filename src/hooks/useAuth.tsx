@@ -1,20 +1,21 @@
-import React, {
-  useState,
-  useContext,
+import {
   createContext,
   ReactNode,
+  useContext,
   useEffect,
+  useState,
 } from 'react';
 import { auth, db } from '../firebase/firebase';
 import {
   authContextDefaultValues,
   authContextType,
-  SignInData,
   PomodoroSettingsDefaultValues,
+  SignInData,
   SignUpData,
   UserData,
   UserSettingsDefaultValues,
 } from '../utils/types';
+import React from 'react';
 
 const AuthContext = createContext<authContextType>(authContextDefaultValues);
 
@@ -54,6 +55,7 @@ export const useAuth = (): authContextType => {
 export const useAuthProvider = (): authContextType => {
   // Create a state for the user
   const [user, setUser] = useState<UserData | null>(null);
+  const [update, setUpdate] = useState(0);
 
   /**
    *
@@ -263,15 +265,17 @@ export const useAuthProvider = (): authContextType => {
    * we also update the user state in our application.
    */
   useEffect(() => {
+    console.log('update');
     if (user?.id) {
       // Subscribe to user document on mount
+
       const unsubscribe = db
         .collection('users')
         .doc(user.id)
         .onSnapshot((doc) => setUser(doc.data() as any));
       return () => unsubscribe();
     }
-  }, []);
+  }, [update]);
 
   return {
     user,
@@ -279,5 +283,6 @@ export const useAuthProvider = (): authContextType => {
     signIn,
     signOut,
     sendPasswordResetEmail,
+    setUpdate,
   };
 };
