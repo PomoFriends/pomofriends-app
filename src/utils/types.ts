@@ -118,7 +118,7 @@ export type GroupParticipant = {
   showTasks: boolean;
 };
 
-/** Type for useGroup hook */
+/** Type for useSettings hook */
 export type useSettingsType = {
   updateSettings: ({}: PomodoroSettings) => Promise<boolean>;
   getSettings: (
@@ -148,6 +148,17 @@ export const PomodoroSettingsDefaultValues: PomodoroSettings = {
   autoStartPomodoro: false,
   longBreakInterval: 4,
   notificationsOn: false,
+};
+
+/** Pomodoro settings form */
+export type PomodoroSettingsForm = {
+  pomodoro: number;
+  shortBreak: number;
+  longBreak: number;
+  autoStartBreak: boolean;
+  autoStartPomodoro: boolean;
+  longBreakInterval: number;
+  notificationsOn: boolean;
 };
 
 /** Task type */

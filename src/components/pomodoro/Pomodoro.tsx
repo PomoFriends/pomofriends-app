@@ -212,6 +212,8 @@ const Pomodoro = () => {
             time={time}
             isBreak={isBreak}
             isLongBreak={isLongBreak}
+            settings={settings}
+            resetTimer={resetTimer}
           />
           <ButtonsControl
             setTimeCounting={setTimeCounting}

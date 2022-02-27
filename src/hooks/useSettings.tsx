@@ -7,29 +7,11 @@ export const useSettings = (): useSettingsType => {
 
   const updateSettings = async (settings: PomodoroSettings) => {
     if (user) {
-      await db.collection('settings').doc(user.id).update(settings);
+      await db.collection('pomodoroSettings').doc(user.id).update(settings);
       return true;
     }
     return false;
   };
-
-  // const getSettings = async (userId: string) => {
-  //   try {
-  //     return await db
-  //       .collection('pomodoroSettings')
-  //       .doc(userId)
-  //       .get()
-  //       .then((settings) => {
-  //         if (settings.exists) {
-  //           return settings.data() as PomodoroSettings;
-  //         } else {
-  //           console.log('No such document!');
-  //         }
-  //       });
-  //   } catch (error) {
-  //     console.log("Couldn't get settings");
-  //   }
-  // };
 
   const getSettings = (
     userId: string,
