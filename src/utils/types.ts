@@ -74,7 +74,12 @@ export type useGroupType = {
   joinGroup: (groupId: string) => Promise<boolean>;
   leaveGroup: (groupId: string) => Promise<boolean>;
   sendMessage: (chat: ChatForm) => Promise<boolean>;
-  getMessages: (groupId: string) => void;
+  getMessages: (
+    groupId: string,
+    setMessages: any,
+    isSubscribed: boolean
+  ) => void;
+  getGroupList: (setGroupList: any, isSubscribed: boolean) => void;
 };
 
 /**  For group form */
@@ -111,6 +116,16 @@ export type GroupParticipant = {
   longBreak: boolean;
   showTimer: boolean;
   showTasks: boolean;
+};
+
+/** Type for useGroup hook */
+export type useSettingsType = {
+  updateSettings: ({}: PomodoroSettings) => Promise<boolean>;
+  getSettings: (
+    userId: string,
+    setSettings: any,
+    isSubscribed: boolean
+  ) => void;
 };
 
 /** Pomodoro settings type */

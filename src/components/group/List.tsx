@@ -11,11 +11,11 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useEffect, useState } from 'react';
-import { db } from '../../firebase/firebase';
 import { GroupData } from '../../utils/types';
 import Spinner from '../images/Spinner';
 import GroupPreview from './Preview';
 import GroupForm from './Form';
+import { useGroup } from '../../hooks/useGroup';
 
 const useStyles = makeStyles((theme: any) => ({
   groupList: {
@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme: any) => ({
 
 const GroupList: React.FC = () => {
   const classes = useStyles();
+  const { getGroupList } = useGroup();
 
   const [groupList, setGroupList] = useState<GroupData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -68,29 +69,15 @@ const GroupList: React.FC = () => {
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
-    let cancel = false;
+    let isSubscribed = true;
 
     setIsLoading(true);
 
-    db.collection('groups')
-      .orderBy('createdAt')
-      .limit(100)
-      .onSnapshot((querySnapShot) => {
-        // get all documents from collection with id
-        const data = querySnapShot.docs.map((doc) => ({
-          ...doc.data(),
-        }));
-
-        //   update state
-        if (cancel) return;
-
-        setGroupList(data as GroupData[]);
-        setIsLoading(false);
-      });
+    getGroupList(setGroupList, isSubscribed);
 
     return () => {
       setIsLoading(false);
-      cancel = true;
+      isSubscribed = false;
     };
   }, []);
 

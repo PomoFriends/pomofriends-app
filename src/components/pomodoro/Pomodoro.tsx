@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { db } from '../../firebase/firebase';
 import { useAuth } from '../../hooks/useAuth';
+import { useSettings } from '../../hooks/useSettings';
 import {
   PomodoroSettings,
   PomodoroSettingsDefaultValues,
@@ -13,6 +13,7 @@ import TimeDisplay from './TimeDisplay';
 
 const Pomodoro = () => {
   const { user } = useAuth();
+  const { getSettings } = useSettings();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
@@ -33,29 +34,19 @@ const Pomodoro = () => {
   const [fullPomodoroTime, setFullPomodoroTime] = useState(0);
   const [numberOfPomodoros, setNumberOfPomodoros] = useState(0);
 
-  // // automatically check db for updated settings
+  // automatically check db for updated settings
   useEffect(() => {
-    let cancel = false;
+    let isSubscribed = true;
 
-    setIsLoading(true);
     if (user) {
-      db.collection('pomodoroSettings')
-        .doc(user.id)
-        .get()
-        .then((settings) => {
-          //   update state
-          if (cancel) return;
-
-          setSettings(settings.data() as PomodoroSettings);
-        });
+      getSettings(user.id, setSettings, isSubscribed);
     }
-    setIsLoading(false);
 
     return () => {
       setIsLoading(false);
-      cancel = true;
+      isSubscribed = false;
     };
-  }, [user, db]);
+  }, [user]);
 
   useEffect(() => {
     setTime(settings.pomodoro);

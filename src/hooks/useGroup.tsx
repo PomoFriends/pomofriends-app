@@ -181,12 +181,6 @@ export const useGroup = (): useGroupType => {
     }
   };
 
-  // const getAdmin = async (groupId: string) => {
-
-  // }
-
-  // const deleteGroup = () => {};
-
   const sendMessage = async (chat: ChatForm) => {
     if (user) {
       const newMessage = await db
@@ -214,24 +208,49 @@ export const useGroup = (): useGroupType => {
     }
   };
 
-  const getMessages = (groupId: string) => {
-    // return await db.collection('messages').doc(groupId).get();
-    return db
-      .collection('messages')
-      .doc(groupId)
-      .collection('messages')
-      .orderBy('createdAt')
-      .limit(100)
-      .onSnapshot((querySnapShot) => {
-        // get all documents from collection with id
-        const data = querySnapShot.docs.map((doc) => ({
-          ...doc.data(),
-        }));
+  const getMessages = (
+    groupId: string,
+    setMessages: any,
+    isSubscribed: boolean
+  ) => {
+    try {
+      db.collection('messages')
+        .doc(groupId)
+        .collection('messages')
+        .orderBy('createdAt')
+        .limit(100)
+        .onSnapshot((querySnapShot) => {
+          const data = querySnapShot.docs.map((doc) => ({
+            ...doc.data(),
+          }));
+          if (isSubscribed) {
+            setMessages(data as GroupMessage[]);
+          }
+        });
+    } catch (error) {
+      console.log("Couldn't get messages");
+    }
+  };
 
-        //   update state
-        // console.log(data);
-        return data;
-      });
+  const getGroupList = (setGroupList: any, isSubscribed: boolean) => {
+    try {
+      db.collection('groups')
+        .orderBy('createdAt')
+        .limit(100)
+        .onSnapshot((querySnapShot) => {
+          // get all documents from collection with id
+          const data = querySnapShot.docs.map((doc) => ({
+            ...doc.data(),
+          }));
+
+          //   update state
+          if (isSubscribed) {
+            setGroupList(data as GroupData[]);
+          }
+        });
+    } catch (error) {
+      console.log("Couldn't get messages");
+    }
   };
 
   return {
@@ -240,5 +259,6 @@ export const useGroup = (): useGroupType => {
     leaveGroup,
     sendMessage,
     getMessages,
+    getGroupList,
   };
 };

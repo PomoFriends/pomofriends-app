@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../../firebase/firebase';
 import { GroupMessage } from '../../utils/types';
 import DisplayMessages from './Display';
 import { makeStyles } from '@mui/styles';
 import { Box, List } from '@mui/material';
+import { useGroup } from '../../hooks/useGroup';
 
 const useStyles = makeStyles((theme: any) => ({
   messages: {
@@ -30,32 +30,18 @@ interface ChatProps {
 
 const Chat: React.FC<ChatProps> = ({ groupId }) => {
   const classes = useStyles();
+  const { getMessages } = useGroup();
 
   const [messages, setMessages] = useState<GroupMessage[]>([]);
 
   // automatically check db for new messages
   useEffect(() => {
-    let cancel = false;
+    let isSubscribed = true;
 
-    db.collection('messages')
-      .doc(groupId)
-      .collection('messages')
-      .orderBy('createdAt')
-      .limit(100)
-      .onSnapshot((querySnapShot) => {
-        // get all documents from collection with id
-        const data = querySnapShot.docs.map((doc) => ({
-          ...doc.data(),
-        }));
+    getMessages(groupId, setMessages, isSubscribed);
 
-        //   update state
-        console.log(data);
-        if (cancel) return;
-
-        setMessages(data as GroupMessage[]);
-      });
     return () => {
-      cancel = true;
+      isSubscribed = false;
     };
   }, []);
 
