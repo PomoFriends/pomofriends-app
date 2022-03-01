@@ -47,6 +47,11 @@ export const UserSettingsDefaultValues: UserSettings = {
   activityVisible: true,
 };
 
+/** About you settings form */
+export type AboutYouSettingsForm = {
+  username: string;
+};
+
 /** Type for useAuth hook */
 export type authContextType = {
   user: UserData | null;
@@ -126,6 +131,7 @@ export type useSettingsType = {
     setSettings: any,
     isSubscribed: boolean
   ) => void;
+  updateAboutYou: (aboutYou: AboutYouSettingsForm) => Promise<boolean>;
 };
 
 /** Pomodoro settings type */

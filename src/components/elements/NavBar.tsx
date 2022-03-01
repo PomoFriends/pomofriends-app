@@ -29,6 +29,7 @@ const pages = ['Rating', 'About'];
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -102,12 +103,14 @@ const Navbar = () => {
             </MenuItem>
           </Link>
           <Divider />
-          <MenuItem>
-            <ListItemIcon>
-              <Settings fontSize="small" />
-            </ListItemIcon>
-            Settings
-          </MenuItem>
+          <Link href="/settings">
+            <MenuItem>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              Settings
+            </MenuItem>
+          </Link>
           <button onClick={() => signOut()} className="w-full">
             <MenuItem>
               <ListItemIcon>
@@ -141,9 +144,8 @@ const Navbar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            PomoFriends
+            <Link href="/">PomoFriends</Link>
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"

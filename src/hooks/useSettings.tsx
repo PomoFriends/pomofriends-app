@@ -1,9 +1,13 @@
 import { db } from '../firebase/firebase';
-import { PomodoroSettings, useSettingsType } from '../utils/types';
+import {
+  PomodoroSettings,
+  useSettingsType,
+  AboutYouSettingsForm,
+} from '../utils/types';
 import { useAuth } from './useAuth';
 
 export const useSettings = (): useSettingsType => {
-  const { user } = useAuth();
+  const { user, setUpdate } = useAuth();
 
   const updateSettings = async (settings: PomodoroSettings) => {
     if (user) {
@@ -35,5 +39,14 @@ export const useSettings = (): useSettingsType => {
     }
   };
 
-  return { updateSettings, getSettings };
+  const updateAboutYou = async (aboutYou: AboutYouSettingsForm) => {
+    if (user) {
+      await db.collection('users').doc(user.id).update(aboutYou);
+      setUpdate(+1);
+      return true;
+    }
+    return false;
+  };
+
+  return { updateSettings, getSettings, updateAboutYou };
 };
