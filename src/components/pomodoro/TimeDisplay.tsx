@@ -65,6 +65,9 @@ const useStyles = makeStyles((theme: any) => ({
   settingsButton: {
     backgroundColor: theme.palette.secondary.main,
   },
+  settingsButtonBreak: {
+    backgroundColor: theme.palette.primary.main,
+  },
   settingsBox: {
     marginLeft: '1.5rem',
     marginTop: '0.7rem',
@@ -114,7 +117,11 @@ const TimeDisplay: React.FC<TimerProps> = ({
             aria-label="pomodoro-settings"
             onClick={handleOpen}
           >
-            <Avatar className={classes.settingsButton}>
+            <Avatar
+              className={
+                !isBreak ? classes.settingsButton : classes.settingsButtonBreak
+              }
+            >
               <SettingsIcon />
             </Avatar>
           </IconButton>

@@ -1,17 +1,20 @@
 import {
+  Box,
   Container,
+  Divider,
   Grid,
   Paper,
-  Divider,
   Typography,
-  Box,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '../components/elements/Layout';
 import Spinner from '../components/images/Spinner';
 import AboutYouSettingsForm from '../components/settings/AboutYouSettingsForm';
+import PomodoroSettingsForm from '../components/settings/PomodoroSettingsForm';
+import { db } from '../firebase/firebase';
 import { useRequireAuth } from '../hooks/useRequireAuth';
+import { PomodoroSettings } from '../utils/types';
 
 const useStyles = makeStyles((theme: any) => ({
   container: {
@@ -28,7 +31,6 @@ const useStyles = makeStyles((theme: any) => ({
     backgroundColor: theme.palette.background.paper,
     padding: 4,
     borderRadius: 8,
-    minHeight: '20rem',
   },
   account: {
     width: '100%',
@@ -50,11 +52,29 @@ const SettingsPage: React.FC = (): JSX.Element => {
   const classes = useStyles();
 
   const { user } = useRequireAuth();
+  const [pomodoroSettings, setSettings] = useState<PomodoroSettings | null>(
+    null
+  );
+
+  const fetchPomodoro = async () => {
+    await db
+      .collection('pomodoroSettings')
+      .doc(user?.id)
+      .get()
+      .then((settings) => {
+        if (settings.exists) {
+          setSettings(settings.data() as PomodoroSettings);
+        } else {
+          console.log('No such document!');
+        }
+      });
+  };
+  fetchPomodoro();
 
   return (
     <Layout>
       <>
-        {!user ? (
+        {!user || !pomodoroSettings ? (
           <Box className="flex justify-center py-8">
             <Spinner width="40" className="animate-spin" />
           </Box>
@@ -68,6 +88,15 @@ const SettingsPage: React.FC = (): JSX.Element => {
                   </Typography>
                   <Divider />
                   <AboutYouSettingsForm user={user!} />
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Paper className={classes.pomodoro} elevation={3}>
+                  <Typography p={2} variant="h6">
+                    Pomodoro Settings
+                  </Typography>
+                  <Divider />
+                  <PomodoroSettingsForm settings={pomodoroSettings!} />
                 </Paper>
               </Grid>
             </Grid>

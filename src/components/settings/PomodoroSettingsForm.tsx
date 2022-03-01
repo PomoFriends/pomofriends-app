@@ -25,19 +25,16 @@ const useStyles = makeStyles((theme: any) => ({
   input: {
     minHeight: '3.2rem',
     height: '3.2rem',
+    width: '100%',
   },
 }));
 
 interface PomodoroSettingsFormProps {
-  handleClose: () => void;
   settings: PomodoroSettings;
-  resetTimer: () => void;
 }
 
 const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
-  handleClose,
   settings,
-  resetTimer,
 }) => {
   const classes = useStyles();
 
@@ -49,10 +46,8 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
   const [error, setError] = useState<ErrorMessage | null>(null);
 
   const onSubmit: SubmitHandler<Form> = async (data: Form) => {
-    handleClose();
     setIsLoading(true);
     setError(null);
-    resetTimer();
     return await updateSettings({
       pomodoro: data.pomodoro * 60,
       shortBreak: data.shortBreak * 60,
