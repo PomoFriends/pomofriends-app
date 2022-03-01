@@ -17,7 +17,7 @@ const Footer = () => {
       <Box component="footer">
         <Container maxWidth="sm">
           <Typography variant="body1">
-            Build with <FavoriteIcon color="primary" /> by Vadim Egorov
+            Build with <FavoriteIcon color="primary" /> by PomoFriends Team
           </Typography>
         </Container>
       </Box>
