@@ -56,7 +56,8 @@ export const useGroup = (): useGroupType => {
           .set({
             id: user.id,
             name: user.username,
-            tasks: [],
+            completedTasks: null,
+            currentTask: user.currentTaskId,
             time: 0,
             pomodoroCount: 0,
             joinedAt: Date.now(),
@@ -116,7 +117,8 @@ export const useGroup = (): useGroupType => {
       const participant: GroupParticipant = {
         id: user.id,
         name: user.username,
-        tasks: [],
+        completedTasks: null,
+        currentTask: user.currentTaskId,
         time: 0,
         pomodoroCount: 0,
         joinedAt: Date.now(),

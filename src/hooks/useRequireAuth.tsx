@@ -39,6 +39,7 @@ export const useRequireAuth = (): authContextType => {
           email: user!.email!,
           profilePic: user!.photoURL!,
           groupId: null,
+          currentTaskId: null,
         };
 
         handleAuthStateChanged(userData);

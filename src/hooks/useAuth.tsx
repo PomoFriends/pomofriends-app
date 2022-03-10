@@ -120,6 +120,7 @@ export const useAuthProvider = (): authContextType => {
             createdAt: Date.now(),
             updatedAt: Date.now(),
             groupId: null,
+            currentTaskId: null,
           });
         }
       });
@@ -151,6 +152,7 @@ export const useAuthProvider = (): authContextType => {
             createdAt: Date.now(),
             updatedAt: Date.now(),
             groupId: null,
+            currentTaskId: null,
           });
       })
       .catch((error) => {
@@ -179,6 +181,7 @@ export const useAuthProvider = (): authContextType => {
           email: userResponse!.email!,
           profilePic: userResponse!.photoURL!,
           groupId: null,
+          currentTaskId: null,
         };
 
         // setUser(userData);
@@ -251,6 +254,7 @@ export const useAuthProvider = (): authContextType => {
           email: user!.email!,
           profilePic: user!.photoURL!,
           groupId: null,
+          currentTaskId: null,
         };
 
         handleAuthStateChanged(userData);

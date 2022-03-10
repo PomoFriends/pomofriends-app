@@ -30,6 +30,7 @@ export type UserData = {
   createdAt?: number;
   updatedAt?: number;
   groupId: string | null;
+  currentTaskId: string | null;
 };
 
 /** User settings type */
@@ -112,7 +113,8 @@ export type GroupAdmin = {
 export type GroupParticipant = {
   id: string;
   name: string;
-  tasks: Task[];
+  completedTasks: string[] | null;
+  currentTask: string | null;
   time: number;
   pomodoroCount: number;
   joinedAt: number;
@@ -167,16 +169,35 @@ export type PomodoroSettingsForm = {
   notificationsOn: boolean;
 };
 
+/** Type for useTasks hook */
+export type useTasksType = {
+  createTask: ({}: TaskForm) => Promise<boolean>;
+  editTask: ({}: TaskForm, taskId: string) => Promise<boolean>;
+  deleteTask: (taskId: string) => Promise<boolean>;
+  setCurrentTask: (taskId: string) => Promise<boolean>;
+  completeTask: (taskId: string) => Promise<boolean>;
+  uncompleteTask: (taskId: string) => Promise<boolean>;
+  getTasks: (userId: string) => void;
+};
+
 /** Task type */
 export type Task = {
   id: string;
   title: string;
   description: string;
-  pomodoros: number;
+  pomodorosLeft: number;
+  pomodorosTotal: number;
   complete?: boolean;
   completedAt?: number;
   createdAt?: number;
   updatedAt?: number;
+};
+
+/** Task type */
+export type TaskForm = {
+  title: string;
+  description: string;
+  pomodorosTotal: number;
 };
 
 /** Time type */
