@@ -8,7 +8,7 @@ const Layout: React.FC = ({ children }) => {
   return (
     <Box>
       <Navbar />
-      <Container component="main" maxWidth="md">
+      <Container component="main" maxWidth="lg">
         <Box mb={8}>{children}</Box>
       </Container>
       <Footer />
