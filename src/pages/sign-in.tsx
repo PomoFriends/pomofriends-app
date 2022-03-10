@@ -3,7 +3,7 @@ import { Avatar, Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import Layout from '../components/elements/Layout';
-import SignInForm from '../components/forms/SignInForm';
+import SignInForm from '../components/auth/SignInForm';
 import FirebaseProviderAuth from '../hooks/firebaseProviderAuth';
 
 const useStyles = makeStyles((theme: any) => ({

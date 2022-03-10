@@ -84,8 +84,8 @@ const HomePage: React.FC = (): JSX.Element => {
   const { user } = useAuth();
   const [groupId, setGroupId] = useState<null | undefined | string>(null);
 
-  const [groupOpen, setGroupOpen] = useState<number>(0);
-  const [open, setOpen] = useState<boolean>(false);
+  const [groupOpen, setGroupOpen] = useState<number>(1);
+  const [open, setOpen] = useState<boolean>(true);
 
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,

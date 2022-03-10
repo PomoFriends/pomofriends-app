@@ -185,10 +185,10 @@ export type Task = {
   id: string;
   title: string;
   description: string;
-  pomodorosLeft: number;
+  pomodorosDone: number;
   pomodorosTotal: number;
   complete?: boolean;
-  completedAt?: number;
+  completedAt?: number | null;
   createdAt?: number;
   updatedAt?: number;
 };

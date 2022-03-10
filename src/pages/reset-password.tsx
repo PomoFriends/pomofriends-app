@@ -1,5 +1,5 @@
 import React from 'react';
-import ResetPasswordForm from '../components/forms/ResetPasswordForm';
+import ResetPasswordForm from '../components/auth/ResetPasswordForm';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';

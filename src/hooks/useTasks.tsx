@@ -1,29 +1,187 @@
-// import { db } from '../firebase/firebase';
+import { useRouter } from 'next/router';
+import { db } from '../firebase/firebase';
 import { TaskForm, useTasksType } from '../utils/types';
-// import { useAuth } from './useAuth';
+import { useAuth } from './useAuth';
 
 export const useTasks = (): useTasksType => {
-  // const { user, setUpdate } = useAuth();
+  const { user, setUpdate } = useAuth();
+  const router = useRouter();
 
   const createTask = async (task: TaskForm) => {
-    return false;
+    if (user) {
+      try {
+        // Create a task doc with randomly generated id
+        const newTask = db
+          .collection('tasks')
+          .doc(user.id)
+          .collection('task')
+          .doc();
+
+        // Set values to the task
+        await newTask.set({
+          id: newTask.id,
+          ...task,
+          pomodorosDone: 0,
+          complete: false,
+          completedAt: null,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        });
+
+        // Change current task for the user
+        await db
+          .collection('users')
+          .doc(user.id)
+          .update({ currentTaskId: newTask.id });
+
+        // Update user
+        setUpdate(+1);
+
+        return true;
+      } catch {
+        return false;
+      }
+    } else {
+      // Will make a pop up
+      router.push('/sign-in');
+      return false;
+    }
   };
 
   const editTask = async (task: TaskForm, taskId: string) => {
-    return false;
+    if (user) {
+      try {
+        // Set values to the task
+        await db
+          .collection('tasks')
+          .doc(user.id)
+          .collection('task')
+          .doc(taskId)
+          .update({
+            ...task,
+            updatedAt: Date.now(),
+          });
+        return true;
+      } catch {
+        return false;
+      }
+    } else {
+      // Will make a pop up
+      router.push('/sign-in');
+      return false;
+    }
   };
+
   const deleteTask = async (taskId: string) => {
-    return false;
+    if (user) {
+      try {
+        // Set values to the task
+        await db
+          .collection('tasks')
+          .doc(user.id)
+          .collection('task')
+          .doc(taskId)
+          .delete();
+
+        if (user.currentTaskId === taskId) {
+          await db
+            .collection('users')
+            .doc(user.id)
+            .update({ currentTaskId: null });
+        }
+
+        return true;
+      } catch {
+        return false;
+      }
+    } else {
+      // Will make a pop up
+      router.push('/sign-in');
+      return false;
+    }
   };
+
   const setCurrentTask = async (taskId: string) => {
-    return false;
+    if (user) {
+      try {
+        await db
+          .collection('users')
+          .doc(user.id)
+          .update({ currentTaskId: taskId });
+
+        // Update user
+        setUpdate(+1);
+
+        return true;
+      } catch {
+        return false;
+      }
+    } else {
+      // Will make a pop up
+      router.push('/sign-in');
+      return false;
+    }
   };
+
   const completeTask = async (taskId: string) => {
-    return false;
+    if (user) {
+      try {
+        // Set values to the task
+        await db
+          .collection('tasks')
+          .doc(user.id)
+          .collection('task')
+          .doc(taskId)
+          .update({
+            complete: true,
+            completedAt: Date.now(),
+            updatedAt: Date.now(),
+          });
+
+        if (user.currentTaskId === taskId) {
+          await db
+            .collection('users')
+            .doc(user.id)
+            .update({ currentTaskId: null });
+        }
+
+        return true;
+      } catch {
+        return false;
+      }
+    } else {
+      // Will make a pop up
+      router.push('/sign-in');
+      return false;
+    }
   };
+
   const uncompleteTask = async (taskId: string) => {
-    return false;
+    if (user) {
+      try {
+        // Set values to the task
+        await db
+          .collection('tasks')
+          .doc(user.id)
+          .collection('task')
+          .doc(taskId)
+          .update({
+            complete: false,
+            completedAt: null,
+            updatedAt: Date.now(),
+          });
+
+        return true;
+      } catch {
+        return false;
+      }
+    } else {
+      // Will make a pop up
+      router.push('/sign-in');
+      return false;
+    }
   };
+
   const getTasks = (userId: string) => {
     console.log(userId);
   };
