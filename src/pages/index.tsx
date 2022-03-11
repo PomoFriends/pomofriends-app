@@ -18,6 +18,7 @@ import { useAuth } from '../hooks/useAuth';
 import Group from '../components/group/Group';
 import GroupsIcon from '@mui/icons-material/Groups';
 import TimerIcon from '@mui/icons-material/Timer';
+import Tasks from '../components/tasks/Tasks';
 
 const useStyles = makeStyles((theme: any) => ({
   container: {
@@ -139,7 +140,7 @@ const HomePage: React.FC = (): JSX.Element => {
               </Grid>
               <Grid item xs={12}>
                 <Paper className={classes.paperTasks} elevation={3}>
-                  Tasks
+                  <Tasks />
                 </Paper>
               </Grid>
             </Grid>
