@@ -60,7 +60,7 @@ export type authContextType = {
   signIn: ({ email, password }: SignInData) => Promise<any>;
   signOut: () => void;
   sendPasswordResetEmail: (email: string) => void;
-  setUpdate: ({}: any) => any;
+  handleUpdate: () => void;
 };
 
 /** Default values for useAuth */
@@ -70,7 +70,7 @@ export const authContextDefaultValues: authContextType = {
   signIn: async () => {},
   signOut: async () => {},
   sendPasswordResetEmail: async () => {},
-  setUpdate: () => {},
+  handleUpdate: () => {},
 };
 
 /** Type for useGroup hook */
@@ -177,11 +177,15 @@ export type useTasksType = {
   setCurrentTask: (taskId: string) => Promise<boolean>;
   completeTask: (taskId: string) => Promise<boolean>;
   uncompleteTask: (taskId: string) => Promise<boolean>;
-  getTasks: (userId: string) => void;
+  getTasks: (
+    setTaskList: any,
+    setCurrentTaskId: any,
+    isSubscribed: boolean
+  ) => void;
 };
 
 /** Task type */
-export type Task = {
+export type TaskData = {
   id: string;
   title: string;
   description: string;

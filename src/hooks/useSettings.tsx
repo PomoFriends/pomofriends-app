@@ -7,7 +7,7 @@ import {
 import { useAuth } from './useAuth';
 
 export const useSettings = (): useSettingsType => {
-  const { user, setUpdate } = useAuth();
+  const { user, handleUpdate } = useAuth();
 
   const updateSettings = async (settings: PomodoroSettings) => {
     if (user) {
@@ -42,7 +42,7 @@ export const useSettings = (): useSettingsType => {
   const updateAboutYou = async (aboutYou: AboutYouSettingsForm) => {
     if (user) {
       await db.collection('users').doc(user.id).update(aboutYou);
-      setUpdate(+1);
+      handleUpdate();
       return true;
     }
     return false;

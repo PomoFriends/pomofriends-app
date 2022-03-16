@@ -109,7 +109,6 @@ const HomePage: React.FC = (): JSX.Element => {
   ];
 
   useEffect(() => {
-    console.log(user);
     setGroupId(user?.groupId);
   }, [user]);
 

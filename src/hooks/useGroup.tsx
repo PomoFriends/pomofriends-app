@@ -12,7 +12,7 @@ import {
 import { useAuth } from './useAuth';
 
 export const useGroup = (): useGroupType => {
-  const { user, setUpdate } = useAuth();
+  const { user, handleUpdate } = useAuth();
   const router = useRouter();
 
   /**
@@ -100,7 +100,7 @@ export const useGroup = (): useGroupType => {
           .doc(user.id)
           .update({ groupId: newGroup.id });
 
-        setUpdate(+1);
+        handleUpdate();
 
         return true;
       } catch {
@@ -147,7 +147,7 @@ export const useGroup = (): useGroupType => {
 
       await db.collection('users').doc(user.id).update({ groupId });
 
-      setUpdate(+1);
+      handleUpdate();
 
       return true;
     } else {
@@ -174,7 +174,7 @@ export const useGroup = (): useGroupType => {
         .update({
           participantsCount: firebase.firestore.FieldValue.increment(-1),
         });
-      setUpdate(+1);
+      handleUpdate();
       return true;
     } else {
       // Will make a pop up

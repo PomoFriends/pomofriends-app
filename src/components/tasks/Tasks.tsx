@@ -1,8 +1,22 @@
-import { Box, Avatar, IconButton, Typography, Tooltip } from '@mui/material';
+import {
+  Box,
+  Avatar,
+  IconButton,
+  Typography,
+  Tooltip,
+  Modal,
+  Grid,
+  List,
+} from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import Form from './Form';
+import Card from './Card';
+// import Spinner from '../images/Spinner';
+import { TaskData } from '../../utils/types';
+import { useTasks } from '../../hooks/useTasks';
+import { useAuth } from '../../hooks/useAuth';
 
 const useStyles = makeStyles((theme: any) => ({
   taskList: {
@@ -35,45 +49,119 @@ const useStyles = makeStyles((theme: any) => ({
   addTask: {
     backgroundColor: theme.palette.secondary.main,
   },
+  addBox: {
+    paddingRight: 16,
+  },
+  addTaskModal: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    border: '2px solid #000',
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 8,
+    borderColor: theme.palette.primary.main,
+  },
 }));
 
 const Tasks: React.FC = () => {
   const classes = useStyles();
+  const { getTasks } = useTasks();
+  const { user } = useAuth();
+
+  const [taskList, setTaskList] = useState<TaskData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const [currentTaskId, setCurrentTaskId] = useState<string>('1');
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  useEffect(() => {
+    let isSubscribed = true;
 
-  let addTask = null;
+    setIsLoading(true);
 
-  if (open) {
-    addTask = <Form handleClose={handleClose} />;
+    getTasks(setTaskList, setCurrentTaskId, isSubscribed);
+    // setIsLoading(false);
+
+    return () => {
+      setIsLoading(false);
+      isSubscribed = false;
+    };
+  }, [user]);
+
+  let body;
+
+  if (taskList.length === 0 && isLoading) {
+    // body = (
+    //   <div className="flex justify-center py-8">
+    //     <Spinner width="40" className="animate-spin" />
+    //   </div>
+    // );
+    body = (
+      <Typography variant="h6" className={classes.typography}>
+        No tasks, add new task!
+      </Typography>
+    );
   } else {
-    addTask = (
-      <Box className={classes.addButton}>
-        <Tooltip title="Add Task">
-          <IconButton edge="end" aria-label="add-group" onClick={handleOpen}>
-            <Avatar className={classes.addTask}>
-              <AddIcon />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
+    body = (
+      <Box className={classes.taskList}>
+        <List>
+          {taskList.map((task: TaskData) => (
+            <div key={task.id}>
+              {currentTaskId === task.id ? (
+                <Card task={task} current={true} />
+              ) : (
+                <Card task={task} current={false} />
+              )}
+            </div>
+          ))}
+        </List>
       </Box>
     );
   }
 
   return (
     <>
-      <Typography variant="h5" className={classes.typography}>
-        Tasks
-      </Typography>
-      {addTask}
+      <Box>
+        <Grid container direction="row">
+          <Grid item xs={9}>
+            <Typography variant="h5" className={classes.typography}>
+              Tasks
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            xs={3}
+            container
+            justifyContent={'right'}
+            className={classes.addBox}
+          >
+            <Tooltip title="Add Task">
+              <IconButton edge="end" aria-label="add-task" onClick={handleOpen}>
+                <Avatar className={classes.addTask}>
+                  <AddIcon />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className={classes.addTaskModal}>
+                <Form handleClose={handleClose} />
+              </Box>
+            </Modal>
+          </Grid>
+        </Grid>
+      </Box>
+
+      <>{body}</>
     </>
   );
 };

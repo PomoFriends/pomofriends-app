@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { db } from '../firebase/firebase';
-import { TaskForm, useTasksType } from '../utils/types';
+import { TaskData, TaskForm, useTasksType } from '../utils/types';
 import { useAuth } from './useAuth';
 
 export const useTasks = (): useTasksType => {
-  const { user, setUpdate } = useAuth();
+  const { user, handleUpdate } = useAuth();
   const router = useRouter();
 
   const createTask = async (task: TaskForm) => {
@@ -35,7 +35,7 @@ export const useTasks = (): useTasksType => {
           .update({ currentTaskId: newTask.id });
 
         // Update user
-        setUpdate(+1);
+        handleUpdate();
 
         return true;
       } catch {
@@ -110,7 +110,7 @@ export const useTasks = (): useTasksType => {
           .update({ currentTaskId: taskId });
 
         // Update user
-        setUpdate(+1);
+        handleUpdate();
 
         return true;
       } catch {
@@ -182,8 +182,34 @@ export const useTasks = (): useTasksType => {
     }
   };
 
-  const getTasks = (userId: string) => {
-    console.log(userId);
+  const getTasks = (
+    setTaskList: any,
+    setCurrentTaskId: any,
+    isSubscribed: boolean
+  ) => {
+    if (user) {
+      try {
+        db.collection('tasks')
+          .doc(user.id)
+          .collection('task')
+          .orderBy('createdAt')
+          .onSnapshot((querySnapShot) => {
+            // get all documents from collection with id
+            const data = querySnapShot.docs.map((doc) => ({
+              ...doc.data(),
+            }));
+
+            //   update state
+            if (isSubscribed) {
+              setTaskList(data as TaskData[]);
+            }
+          });
+
+        setCurrentTaskId(user.currentTaskId);
+      } catch (error) {
+        console.log("Couldn't get tasks");
+      }
+    }
   };
 
   return {

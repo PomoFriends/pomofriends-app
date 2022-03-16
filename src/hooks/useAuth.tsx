@@ -57,6 +57,10 @@ export const useAuthProvider = (): authContextType => {
   const [user, setUser] = useState<UserData | null>(null);
   const [update, setUpdate] = useState(0);
 
+  const handleUpdate = () => {
+    setUpdate(+1);
+  };
+
   /**
    *
    * @param {UserData} user
@@ -269,7 +273,7 @@ export const useAuthProvider = (): authContextType => {
    * we also update the user state in our application.
    */
   useEffect(() => {
-    console.log('update');
+    // console.log('update');
     if (user?.id) {
       // Subscribe to user document on mount
 
@@ -287,6 +291,6 @@ export const useAuthProvider = (): authContextType => {
     signIn,
     signOut,
     sendPasswordResetEmail,
-    setUpdate,
+    handleUpdate,
   };
 };

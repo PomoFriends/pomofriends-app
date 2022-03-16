@@ -12,7 +12,7 @@ import {
 import { makeStyles } from '@mui/styles';
 import React, { useEffect, useState } from 'react';
 import { GroupData } from '../../utils/types';
-import Spinner from '../images/Spinner';
+// import Spinner from '../images/Spinner';
 import GroupPreview from './Preview';
 import GroupForm from './Form';
 import { useGroup } from '../../hooks/useGroup';
@@ -74,6 +74,7 @@ const GroupList: React.FC = () => {
     setIsLoading(true);
 
     getGroupList(setGroupList, isSubscribed);
+    // setIsLoading(false);
 
     return () => {
       setIsLoading(false);
@@ -84,10 +85,16 @@ const GroupList: React.FC = () => {
   let body;
 
   if (groupList.length === 0 && isLoading) {
+    // body = (
+    //   <div className="flex justify-center py-8">
+    //     <Spinner width="40" className="animate-spin" />
+    //   </div>
+    // );
+
     body = (
-      <div className="flex justify-center py-8">
-        <Spinner width="40" className="animate-spin" />
-      </div>
+      <Typography variant="h6" className={classes.typography}>
+        No groups at the moment, create your own!
+      </Typography>
     );
   } else {
     body = (

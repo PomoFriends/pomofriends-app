@@ -14,8 +14,6 @@ const Group: React.FC<GroupProps> = ({ id }) => {
     doc(getFirestore(app), 'groups', `${id}`)
   );
 
-  console.log(groupData?.data());
-
   let body;
 
   if (!groupDataLoading && !groupData) {
