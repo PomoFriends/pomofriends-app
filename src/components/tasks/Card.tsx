@@ -1,4 +1,3 @@
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import {
@@ -8,19 +7,19 @@ import {
   ListItemText,
   Tooltip,
   Typography,
+  Modal,
+  Box,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTasks } from '../../hooks/useTasks';
 import { TaskData } from '../../utils/types';
+import EditForm from './EditForm';
 
 const useStyles = makeStyles((theme: any) => ({
-  detailsButton: {
-    color: theme.palette.secondary.main,
-    marginLeft: '1rem',
-  },
   editButton: {
     color: theme.palette.primary.main,
+    marginLeft: '1rem',
   },
   completeButton: {
     color: theme.palette.primary.main,
@@ -30,8 +29,19 @@ const useStyles = makeStyles((theme: any) => ({
   },
   pomodoroCount: {
     '&.Mui-disabled': {
-      color: theme.palette.primary.main,
+      color: theme.palette.secondary.main,
     },
+  },
+  editTaskModal: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    border: '2px solid #000',
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 8,
+    borderColor: theme.palette.primary.main,
   },
 }));
 
@@ -42,12 +52,15 @@ interface TaskCardProps {
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
   const classes = useStyles();
-  const { setCurrentTask, completeTask, uncompleteTask } = useTasks();
-
   const taskId = task.id;
 
-  const handleSetCurrentTask = async () => await setCurrentTask(taskId);
+  const { setCurrentTask, completeTask, uncompleteTask } = useTasks();
 
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleOpenEdit = () => setOpenEdit(true);
+  const handleCloseEdit = () => setOpenEdit(false);
+
+  const handleSetCurrentTask = async () => await setCurrentTask(taskId);
   const handleCompleteTask = async () => {
     if (task.complete !== true) {
       await completeTask(taskId);
@@ -55,10 +68,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
       await uncompleteTask(taskId);
     }
   };
-
-  // const handleDeleteTask = async () => {
-  //   await deleteTask(taskId);
-  // };
 
   return (
     <>
@@ -74,21 +83,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
                 {task.pomodorosDone} / {task.pomodorosTotal}
               </Typography>
             </IconButton>
-            <Tooltip title="Open details">
-              <IconButton
-                edge="end"
-                aria-label="open-details"
-                // onClick={openDetails}
-                className={classes.detailsButton}
-              >
-                <MoreHorizIcon />
-              </IconButton>
-            </Tooltip>
             <Tooltip title="Edit">
               <IconButton
                 edge="end"
                 aria-label="edit-task"
-                // onClick={openEditForm}
+                onClick={handleOpenEdit}
                 className={classes.editButton}
               >
                 <EditIcon />
@@ -96,11 +95,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
             </Tooltip>
           </>
         }
-        // sx={{ border: '3px solid rgba(200,200,200)' }}
         onClick={handleSetCurrentTask}
         selected={current}
       >
-        <Tooltip title="Complete">
+        <Tooltip title="Complete?">
           <IconButton
             edge="start"
             aria-label="complete-task"
@@ -116,6 +114,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
         </Tooltip>
         <ListItemText primary={task.title} secondary={task.description} />
       </ListItem>
+      <Modal
+        open={openEdit}
+        onClose={handleCloseEdit}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className={classes.editTaskModal}>
+          <EditForm handleClose={handleCloseEdit} task={task} />
+        </Box>
+      </Modal>
       <Divider />
     </>
   );

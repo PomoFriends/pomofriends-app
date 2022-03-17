@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useTasks } from '../../hooks/useTasks';
-import { ErrorMessage, TaskForm as Form } from '../../utils/types';
+import { ErrorMessage, TaskData, TaskForm as Form } from '../../utils/types';
 import {
   Container,
   Grid,
@@ -10,9 +10,12 @@ import {
   Input,
   Typography,
   Button,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import SubmitButton from '../buttons/SubmitButton';
 import { makeStyles } from '@mui/styles';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const useStyles = makeStyles((theme: any) => ({
   form: {
@@ -46,27 +49,37 @@ const useStyles = makeStyles((theme: any) => ({
   cancelButton: {
     margin: theme.spacing(3, 0, 2),
   },
+  deleteButton: {
+    color: theme.palette.error.main,
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 interface TaskFormProps {
   handleClose: () => void;
+  task: TaskData;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
+const TaskEditForm: React.FC<TaskFormProps> = ({ handleClose, task }) => {
   const classes = useStyles();
 
-  const { createTask } = useTasks();
+  const { editTask, deleteTask } = useTasks();
 
   const { handleSubmit, control } = useForm<Form>();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ErrorMessage | null>(null);
 
+  const handleDelete = async () => {
+    await deleteTask(task.id);
+    handleClose();
+  };
+
   const onSubmit: SubmitHandler<Form> = async (data: Form) => {
     handleClose();
     setIsLoading(true);
     setError(null);
-    return await createTask(data).then(() => {
+    return await editTask(data, task.id).then(() => {
       setIsLoading(false);
     });
   };
@@ -86,7 +99,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
             <Controller
               name="title"
               control={control}
-              defaultValue=""
+              defaultValue={task.title}
               render={({
                 field: { onChange, value },
                 fieldState: { error },
@@ -112,7 +125,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
             <Controller
               name="description"
               control={control}
-              defaultValue=""
+              defaultValue={task.description}
               render={({
                 field: { onChange, value },
                 fieldState: { error },
@@ -136,7 +149,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
             <Controller
               name="pomodorosTotal"
               control={control}
-              defaultValue={1}
+              defaultValue={task.pomodorosTotal}
               render={({ field: { onChange, value } }) => (
                 <Grid container spacing={2} className={classes.input}>
                   <Grid item xs={6}>
@@ -161,7 +174,18 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
           </Grid>
         </Grid>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
+            <Tooltip title="Delete task">
+              <IconButton
+                className={classes.deleteButton}
+                onClick={handleDelete}
+                edge="end"
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          <Grid item xs={4}>
             <Button
               fullWidth
               variant="contained"
@@ -172,12 +196,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
               Cancel
             </Button>
           </Grid>
-          <Grid item xs={6}>
-            <SubmitButton
-              title="Create Task"
-              type="submit"
-              isLoading={isLoading}
-            />
+          <Grid item xs={4}>
+            <SubmitButton title="Save" type="submit" isLoading={isLoading} />
           </Grid>
         </Grid>
       </form>
@@ -185,4 +205,4 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
   );
 };
 
-export default TaskForm;
+export default TaskEditForm;
