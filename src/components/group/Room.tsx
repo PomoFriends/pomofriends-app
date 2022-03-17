@@ -10,9 +10,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
-
 import { makeStyles } from '@mui/styles';
-import ChatForm from '../chat/Form';
 
 const useStyles = makeStyles((theme: any) => ({
   groupList: {
@@ -99,8 +97,6 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
       </Box>
 
       <Chat groupId={group.id} />
-
-      <ChatForm groupId={group.id} />
     </>
   );
 };

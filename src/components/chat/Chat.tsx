@@ -4,11 +4,13 @@ import DisplayMessages from './Display';
 import { makeStyles } from '@mui/styles';
 import { Box, List } from '@mui/material';
 import { useGroup } from '../../hooks/useGroup';
+import ChatForm from './Form';
 
 const useStyles = makeStyles((theme: any) => ({
   messages: {
     overflow: 'auto',
     maxHeight: '36rem',
+    height: '33.5rem',
     '&::-webkit-scrollbar': {
       width: '0.4em',
     },
@@ -56,6 +58,7 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
           ))}
         </List>
       </Box>
+      <ChatForm groupId={groupId} />
     </>
   );
 };

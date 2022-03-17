@@ -1,5 +1,5 @@
 import SendIcon from '@mui/icons-material/Send';
-import { Box, Button, Grid, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -9,6 +9,9 @@ import { ChatForm as Form } from '../../utils/types';
 const useStyles = makeStyles((theme: any) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
   },
   textField: {
     '& label.Mui-focused': {
@@ -30,6 +33,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   button: {
+    marginLeft: '0.3rem',
     minWidth: '1rem',
     minHeight: '3.5rem',
   },
@@ -60,40 +64,32 @@ const ChatForm: React.FC<ChatFormProps> = ({ groupId }) => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
-        <Grid container spacing={0.5}>
-          <Grid item xs={9}>
-            <Controller
-              name="message"
-              control={control}
-              defaultValue=""
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
-                <TextField
-                  className={classes.textField}
-                  fullWidth
-                  label="Send message"
-                  variant="outlined"
-                  value={value}
-                  onChange={onChange}
-                  error={!!error}
-                  helperText={error ? error.message : null}
-                />
-              )}
+        <Controller
+          name="message"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              className={classes.textField}
+              fullWidth
+              label="Send message"
+              variant="outlined"
+              value={value}
+              onChange={onChange}
+              error={!!error}
+              helperText={error ? error.message : null}
+              sx={{ border: 0 }}
             />
-          </Grid>
-          <Grid item xs={3}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              <SendIcon />
-            </Button>
-          </Grid>
-        </Grid>
+          )}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className={classes.button}
+        >
+          <SendIcon />
+        </Button>
       </form>
     </Box>
   );

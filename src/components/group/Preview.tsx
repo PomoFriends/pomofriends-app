@@ -171,9 +171,7 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
                 <PeopleAltIcon />
               </Box>
 
-              <Typography sx={{ marginLeft: '0.5rem' }}>
-                {group.participantsCount}
-              </Typography>
+              <Box sx={{ marginLeft: '0.5rem' }}>{group.participantsCount}</Box>
             </Box>
           }
         />
