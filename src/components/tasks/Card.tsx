@@ -32,6 +32,11 @@ const useStyles = makeStyles((theme: any) => ({
       color: theme.palette.secondary.main,
     },
   },
+  listItem: {
+    '&:hover': {
+      backgroundColor: 'rgba(187, 134, 252, 0.08)',
+    },
+  },
   editTaskModal: {
     position: 'absolute',
     top: '50%',
@@ -97,6 +102,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
         }
         onClick={handleSetCurrentTask}
         selected={current}
+        className={classes.listItem}
       >
         <Tooltip title="Complete?">
           <IconButton

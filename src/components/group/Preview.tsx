@@ -9,7 +9,7 @@ import {
   Popover,
   Typography,
   Box,
-  Grid,
+  List,
 } from '@mui/material';
 import React from 'react';
 import { useGroup } from '../../hooks/useGroup';
@@ -21,6 +21,7 @@ import moment from 'moment';
 const useStyles = makeStyles((theme: any) => ({
   join: {
     color: theme.palette.primary.main,
+    marginLeft: '1rem',
   },
   details: {
     color: theme.palette.secondary.main,
@@ -32,8 +33,6 @@ const useStyles = makeStyles((theme: any) => ({
       minWidth: '20rem',
       maxWidth: '20rem',
       widht: '20rem',
-      minHeight: '10rem',
-      // height: '10rem',
     },
   },
   participants: {
@@ -42,11 +41,18 @@ const useStyles = makeStyles((theme: any) => ({
     alignContent: 'center',
   },
   participantsIcon: {
-    marginTop: '1rem',
     color: theme.palette.primary.main,
+    '&.Mui-disabled': {
+      color: theme.palette.primary.main,
+    },
   },
   description: {
     color: theme.palette.text.secondary,
+  },
+  listItem: {
+    '&:hover': {
+      backgroundColor: 'rgba(187, 134, 252, 0.08)',
+    },
   },
 }));
 
@@ -75,6 +81,7 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
   return (
     <>
       <ListItem
+        className={classes.listItem}
         secondaryAction={
           <>
             <Tooltip title="Open details">
@@ -102,34 +109,44 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
               }}
               className={classes.popover}
             >
-              <Box>
-                <Grid container>
-                  <Grid item xs={9}>
-                    <Typography sx={{ p: 2 }}>{group.name}</Typography>
-                  </Grid>
-                  <Grid item xs={3} className={classes.participants}>
-                    <Box className={classes.participantsIcon}>
-                      <PeopleAltIcon />
-                    </Box>
-
-                    <Typography sx={{ p: 2 }}>
-                      {group.participantsCount}
-                    </Typography>
-                  </Grid>
-                </Grid>
-
+              <List>
+                <ListItem
+                  secondaryAction={
+                    <>
+                      <IconButton
+                        edge="end"
+                        className={classes.participantsIcon}
+                        disabled={true}
+                      >
+                        <PeopleAltIcon />
+                        <Typography
+                          sx={{ color: 'white', marginLeft: '0.5rem' }}
+                        >
+                          {group.participantsCount}
+                        </Typography>
+                      </IconButton>
+                    </>
+                  }
+                >
+                  <Typography>{group.name}</Typography>
+                </ListItem>
                 <Divider />
-                <Typography sx={{ p: 2 }}>
-                  Description:{' '}
-                  <span className={classes.description}>
-                    {group.description}
-                  </span>
-                </Typography>
+                <ListItem>
+                  <Typography>
+                    Description:{' '}
+                    <span className={classes.description}>
+                      {group.description}
+                    </span>
+                  </Typography>
+                </ListItem>
                 <Divider />
-                <Typography sx={{ p: 2 }}>
-                  Online for {moment(new Date(group.createdAt!)).fromNow(true)}
-                </Typography>
-              </Box>
+                <ListItem>
+                  <Typography>
+                    Online for{' '}
+                    {moment(new Date(group.createdAt!)).fromNow(true)}
+                  </Typography>
+                </ListItem>
+              </List>
             </Popover>
             <Tooltip title={`Join ${group.name}`}>
               <IconButton
@@ -146,7 +163,20 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
           </>
         }
       >
-        <ListItemText primary={group.name} />
+        <ListItemText
+          primary={group.name}
+          secondary={
+            <Box className={classes.participants}>
+              <Box className={classes.participantsIcon}>
+                <PeopleAltIcon />
+              </Box>
+
+              <Typography sx={{ marginLeft: '0.5rem' }}>
+                {group.participantsCount}
+              </Typography>
+            </Box>
+          }
+        />
       </ListItem>
       <Divider />
     </>
