@@ -28,15 +28,6 @@ const useStyles = makeStyles((theme: any) => ({
       // height: '10rem',
     },
   },
-  participants: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
-  },
-  participantsIcon: {
-    marginTop: '1rem',
-    color: theme.palette.primary.main,
-  },
   description: {
     color: theme.palette.text.secondary,
   },

@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: any) => ({
   join: {
     color: theme.palette.primary.main,
   },
-  info: {
+  details: {
     color: theme.palette.secondary.main,
   },
   popover: {
@@ -62,27 +62,27 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
-  const openInfo = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const openDetails = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const closeInfo = () => {
+  const closeDetails = () => {
     setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'group-info' : undefined;
+  const id = open ? 'group-details' : undefined;
 
   return (
     <>
       <ListItem
         secondaryAction={
           <>
-            <Tooltip title="More info">
+            <Tooltip title="Open details">
               <IconButton
                 edge="end"
-                aria-label="more-info"
-                onClick={openInfo}
-                className={classes.info}
+                aria-label="open-details"
+                onClick={openDetails}
+                className={classes.details}
               >
                 <MoreHorizIcon />
               </IconButton>
@@ -91,7 +91,7 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
               id={id}
               open={open}
               anchorEl={anchorEl}
-              onClose={closeInfo}
+              onClose={closeDetails}
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'left',

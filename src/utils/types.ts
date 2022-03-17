@@ -177,6 +177,7 @@ export type useTasksType = {
   setCurrentTask: (taskId: string) => Promise<boolean>;
   completeTask: (taskId: string) => Promise<boolean>;
   uncompleteTask: (taskId: string) => Promise<boolean>;
+  addPomodoro: (taskId: string) => Promise<boolean>;
   getTasks: (
     setTaskList: any,
     setCurrentTaskId: any,

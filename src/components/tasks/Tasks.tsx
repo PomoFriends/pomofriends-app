@@ -21,7 +21,7 @@ import { useAuth } from '../../hooks/useAuth';
 const useStyles = makeStyles((theme: any) => ({
   taskList: {
     overflow: 'auto',
-    // maxHeight: '36rem',
+    maxHeight: '16rem',
     '&::-webkit-scrollbar': {
       width: '0.4em',
     },
@@ -85,7 +85,6 @@ const Tasks: React.FC = () => {
     setIsLoading(true);
 
     getTasks(setTaskList, setCurrentTaskId, isSubscribed);
-    // setIsLoading(false);
 
     return () => {
       setIsLoading(false);

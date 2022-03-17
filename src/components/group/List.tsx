@@ -129,7 +129,7 @@ const GroupList: React.FC = () => {
             <Tooltip title="Create Group">
               <IconButton
                 edge="end"
-                aria-label="add-group"
+                aria-label="create-group"
                 onClick={handleOpen}
               >
                 <Avatar className={classes.addGroup}>

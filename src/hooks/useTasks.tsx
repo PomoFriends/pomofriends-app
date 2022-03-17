@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import firebase from 'firebase/compat/app';
 import { db } from '../firebase/firebase';
 import { TaskData, TaskForm, useTasksType } from '../utils/types';
 import { useAuth } from './useAuth';
@@ -66,7 +67,6 @@ export const useTasks = (): useTasksType => {
         return false;
       }
     } else {
-      // Will make a pop up
       router.push('/sign-in');
       return false;
     }
@@ -95,7 +95,6 @@ export const useTasks = (): useTasksType => {
         return false;
       }
     } else {
-      // Will make a pop up
       router.push('/sign-in');
       return false;
     }
@@ -117,7 +116,6 @@ export const useTasks = (): useTasksType => {
         return false;
       }
     } else {
-      // Will make a pop up
       router.push('/sign-in');
       return false;
     }
@@ -150,7 +148,6 @@ export const useTasks = (): useTasksType => {
         return false;
       }
     } else {
-      // Will make a pop up
       router.push('/sign-in');
       return false;
     }
@@ -177,6 +174,29 @@ export const useTasks = (): useTasksType => {
       }
     } else {
       // Will make a pop up
+      router.push('/sign-in');
+      return false;
+    }
+  };
+
+  const addPomodoro = async (taskId: string) => {
+    if (user) {
+      try {
+        // Set values to the task
+        await db
+          .collection('tasks')
+          .doc(user.id)
+          .collection('task')
+          .doc(taskId)
+          .update({
+            pomodorosDone: firebase.firestore.FieldValue.increment(+1),
+          });
+
+        return true;
+      } catch {
+        return false;
+      }
+    } else {
       router.push('/sign-in');
       return false;
     }
@@ -219,6 +239,7 @@ export const useTasks = (): useTasksType => {
     setCurrentTask,
     completeTask,
     uncompleteTask,
+    addPomodoro,
     getTasks,
   };
 };

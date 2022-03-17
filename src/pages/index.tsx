@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme: any) => ({
     padding: 4,
     borderRadius: 8,
     minHeight: '20rem',
+    height: '20rem',
   },
   paperGroup: {
     width: '100%',
@@ -170,7 +171,7 @@ const HomePage: React.FC = (): JSX.Element => {
             </Grid>
             <Grid item xs={12}>
               <Paper className={classes.paperTasks} elevation={3}>
-                Tasks
+                <Tasks />
               </Paper>
             </Grid>
           </Grid>
