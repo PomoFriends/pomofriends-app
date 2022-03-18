@@ -6,7 +6,7 @@ import { Box, List } from '@mui/material';
 import { useChat } from '../../hooks/useChat';
 import ChatForm from './Form';
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles(() => ({
   messages: {
     overflow: 'auto',
     maxHeight: '30rem',
@@ -39,12 +39,15 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
 
   const messageEl = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+  const scrollToBottom = () => {
     if (messageEl) {
       if (messageEl.current) {
         messageEl.current.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  }, [messages]);
+  };
 
   // automatically check db for new messages
   useEffect(() => {
@@ -59,7 +62,7 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
 
   return (
     <>
-      <Box className={classes.messages} ref={messageEl}>
+      <Box className={classes.messages}>
         <List>
           {messages.map((message: GroupMessage) => {
             return (
@@ -69,7 +72,9 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
             );
           })}
         </List>
+        <div ref={messageEl} />
       </Box>
+
       <ChatForm groupId={groupId} />
     </>
   );
