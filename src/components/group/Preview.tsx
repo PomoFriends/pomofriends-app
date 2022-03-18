@@ -8,7 +8,6 @@ import {
   Divider,
   Popover,
   Typography,
-  Box,
   List,
 } from '@mui/material';
 import React, { MouseEvent, useState } from 'react';
@@ -34,11 +33,6 @@ const useStyles = makeStyles((theme: any) => ({
       maxWidth: '20rem',
       widht: '20rem',
     },
-  },
-  participants: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
   },
   participantsIcon: {
     color: theme.palette.primary.main,
@@ -82,6 +76,23 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
         className={classes.listItem}
         secondaryAction={
           <>
+            <IconButton
+              edge="end"
+              className={classes.participantsIcon}
+              disabled={true}
+            >
+              <PeopleAltIcon />
+              <Typography
+                sx={{
+                  color: 'white',
+                  marginLeft: '0.5rem',
+                  marginRight: '1rem',
+                }}
+              >
+                {group.participantsCount}
+              </Typography>
+            </IconButton>
+
             <Tooltip title="Open details">
               <IconButton
                 edge="end"
@@ -161,18 +172,7 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
           </>
         }
       >
-        <ListItemText
-          primary={group.name}
-          secondary={
-            <Box className={classes.participants}>
-              <Box className={classes.participantsIcon}>
-                <PeopleAltIcon />
-              </Box>
-
-              <Box sx={{ marginLeft: '0.5rem' }}>{group.participantsCount}</Box>
-            </Box>
-          }
-        />
+        <ListItemText primary={group.name} />
       </ListItem>
       <Divider />
     </>
