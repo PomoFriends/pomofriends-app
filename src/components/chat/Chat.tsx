@@ -9,8 +9,9 @@ import ChatForm from './Form';
 const useStyles = makeStyles((theme: any) => ({
   messages: {
     overflow: 'auto',
-    maxHeight: '36rem',
-    height: '33.5rem',
+    maxHeight: '30rem',
+    height: '30rem',
+    marginBottom: '0.5rem',
     '&::-webkit-scrollbar': {
       width: '0.4em',
     },

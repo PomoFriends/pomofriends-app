@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGroup } from '../../hooks/useGroup';
 import Chat from '../chat/Chat';
 import {
@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { makeStyles } from '@mui/styles';
+import RoomButtons from '../buttons/RoomButtons';
 
 const useStyles = makeStyles((theme: any) => ({
   groupList: {
@@ -65,6 +66,12 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
     await leaveGroup(group.id);
   };
 
+  const [isChat, setIsChat] = useState<boolean>(true);
+
+  const changeComponent = () => {
+    setIsChat(!isChat);
+  };
+
   return (
     <>
       <Box>
@@ -95,6 +102,8 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
           </Grid>
         </Grid>
       </Box>
+
+      <RoomButtons isChat={isChat} changeComponent={changeComponent} />
 
       <Chat groupId={group.id} />
     </>
