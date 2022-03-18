@@ -61,11 +61,13 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
     <>
       <Box className={classes.messages} ref={messageEl}>
         <List>
-          {messages.map((message: GroupMessage) => (
-            <div key={message.id}>
-              <DisplayMessages message={message} groupId={groupId} />
-            </div>
-          ))}
+          {messages.map((message: GroupMessage) => {
+            return (
+              <div key={message.id}>
+                <DisplayMessages message={message} groupId={groupId} />
+              </div>
+            );
+          })}
         </List>
       </Box>
       <ChatForm groupId={groupId} />

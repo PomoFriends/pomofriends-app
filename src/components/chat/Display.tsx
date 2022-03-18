@@ -2,7 +2,7 @@ import React, { useState, MouseEvent } from 'react';
 import { GroupMessage } from '../../utils/types';
 import {
   ListItem,
-  ListItemText,
+  ListItemSecondaryAction,
   Divider,
   Tooltip,
   IconButton,
@@ -32,10 +32,27 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   listItem: {
-    fontSize: '0.90rem',
+    fontSize: '1rem',
     '&:hover': {
       backgroundColor: 'rgba(187, 134, 252, 0.08)',
     },
+  },
+  list: {
+    minHeight: '1.5rem',
+    '&:hover': {
+      backgroundColor: 'rgba(187, 134, 252, 0.08)',
+    },
+    '&:hover $listItemSecondaryAction': {
+      visibility: 'inherit',
+    },
+  },
+  listItemSecondaryAction: {
+    visibility: 'hidden',
+  },
+  box: {
+    display: 'flex',
+    flexDirection: 'row',
+    // justifyContent: 'center',
   },
 }));
 interface DisplayMessageProps {
@@ -69,66 +86,71 @@ const DisplayMessages: React.FC<DisplayMessageProps> = ({
   return (
     <>
       <ListItem
-        secondaryAction={
-          <>
-            <Tooltip title="action">
-              <IconButton
-                edge="end"
-                onClick={openDetails}
-                aria-label="action-button"
-                className={classes.actionButton}
-              >
-                <MoreHorizIcon />
-              </IconButton>
-            </Tooltip>
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={closeDetails}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              className={classes.popover}
-            >
-              <List>
-                <ListItem className={classes.listItem}>
-                  Report
-                  <Box className={classes.actionButton}>
-                    <FlagIcon />
-                  </Box>
-                </ListItem>
-
-                {user!.id === message.userId ? (
-                  <>
-                    <Divider />
-                    <ListItem
-                      className={classes.listItem}
-                      onClick={handleDelete}
-                    >
-                      Delete
-                      <Box className={classes.deleteButton}>
-                        <DeleteIcon />
-                      </Box>
-                    </ListItem>
-                  </>
-                ) : null}
-              </List>
-            </Popover>
-          </>
-        }
+        sx={{ paddingTop: 0, paddingBottom: 0 }}
+        classes={{
+          container: classes.list,
+        }}
       >
-        <Box sx={{ color: message.color, marginRight: '0.25rem' }}>
-          {message.username}:
+        <Box className={classes.box}>
+          <Box
+            sx={{
+              color: message.color,
+              marginRight: '0.25rem',
+            }}
+          >
+            {message.username}:
+          </Box>
+          <Box>{message.message}</Box>
         </Box>
-        <ListItemText primary={message.message} />
+        <ListItemSecondaryAction className={classes.listItemSecondaryAction}>
+          <Tooltip title="action">
+            <IconButton
+              edge="end"
+              onClick={openDetails}
+              aria-label="action-button"
+              className={classes.actionButton}
+            >
+              <MoreHorizIcon />
+            </IconButton>
+          </Tooltip>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={closeDetails}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            className={classes.popover}
+          >
+            <List>
+              <ListItem className={classes.listItem}>
+                Report
+                <Box className={classes.actionButton}>
+                  <FlagIcon />
+                </Box>
+              </ListItem>
+
+              {user!.id === message.userId ? (
+                <>
+                  <Divider />
+                  <ListItem className={classes.listItem} onClick={handleDelete}>
+                    Delete
+                    <Box className={classes.deleteButton}>
+                      <DeleteIcon />
+                    </Box>
+                  </ListItem>
+                </>
+              ) : null}
+            </List>
+          </Popover>
+        </ListItemSecondaryAction>
       </ListItem>
-      <Divider />
     </>
   );
 };
