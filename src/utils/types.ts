@@ -105,9 +105,11 @@ export type GroupAdmin = {
 /** Participant of the group type */
 export type GroupParticipant = {
   id: string;
-  name: string;
-  completedTasks: string[] | null;
-  currentTask: string | null;
+  username: string;
+  profilePic: string | null;
+  color: string;
+  completedTasks: TaskData[] | null;
+  currentTaskId: string | null;
   time: number;
   pomodoroCount: number;
   joinedAt: number;
@@ -228,6 +230,15 @@ export type useChatType = {
   getMessages: (
     groupId: string,
     setMessages: any,
+    isSubscribed: boolean
+  ) => void;
+};
+
+/** Type for useParticipants hook */
+export type useParticipantsType = {
+  getParticipants: (
+    groupId: string,
+    setParticipants: any,
     isSubscribed: boolean
   ) => void;
 };

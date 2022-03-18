@@ -12,6 +12,7 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout';
 import { makeStyles } from '@mui/styles';
 import RoomButtons from '../buttons/RoomButtons';
+import Participants from '../participants/Participants';
 
 const useStyles = makeStyles((theme: any) => ({
   groupList: {
@@ -105,7 +106,12 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
 
       <RoomButtons isChat={isChat} changeComponent={changeComponent} />
 
-      <Chat groupId={group.id} />
+      {/* <Chat groupId={group.id} /> */}
+      {isChat ? (
+        <Chat groupId={group.id} />
+      ) : (
+        <Participants groupId={group.id} />
+      )}
     </>
   );
 };

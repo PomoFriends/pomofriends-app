@@ -6,6 +6,7 @@ import {
   GroupForm,
   GroupParticipant,
   useGroupType,
+  UserSettings,
 } from '../utils/types';
 import { useAuth } from './useAuth';
 
@@ -112,11 +113,22 @@ export const useGroup = (): useGroupType => {
 
   const joinGroup = async (groupId: string) => {
     if (user) {
+      const userColor = await db
+        .collection('userSettings')
+        .doc(user.id)
+        .get()
+        .then((response) => {
+          const userSettings = response.data() as UserSettings;
+          return userSettings.color;
+        });
+
       const participant: GroupParticipant = {
         id: user.id,
-        name: user.username,
+        username: user.username,
+        profilePic: user.profilePic,
+        color: userColor,
         completedTasks: null,
-        currentTask: user.currentTaskId,
+        currentTaskId: user.currentTaskId,
         time: 0,
         pomodoroCount: 0,
         joinedAt: Date.now(),
