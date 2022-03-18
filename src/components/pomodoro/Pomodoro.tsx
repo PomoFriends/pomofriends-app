@@ -49,7 +49,16 @@ const Pomodoro = () => {
   }, [user]);
 
   useEffect(() => {
-    setTime(settings.pomodoro);
+    console.log('update timer');
+    if (timeCounting === false) {
+      if (isPomodoro) {
+        setTime(settings.pomodoro);
+      } else if (isBreak && isLongBreak) {
+        setTime(settings.longBreak);
+      } else if (isBreak && !isLongBreak) {
+        setTime(settings.shortBreak);
+      }
+    }
   }, [settings]);
 
   useInterval(
