@@ -2,10 +2,8 @@ import firebase from 'firebase/compat/app';
 import { useRouter } from 'next/router';
 import { db } from '../firebase/firebase';
 import {
-  ChatForm,
   GroupData,
   GroupForm,
-  GroupMessage,
   GroupParticipant,
   useGroupType,
 } from '../utils/types';
@@ -88,9 +86,9 @@ export const useGroup = (): useGroupType => {
 
         await firstMessage.set({
           id: firstMessage.id,
-          userId: firstMessage.id,
+          userId: '5wLyG0ZNob0pq4M2sgSXpomoBot',
           username: 'PomoBot',
-          profilePic: `https://avatars.dicebear.com/api/jdenticon/${firstMessage.id}.svg`,
+          color: '#bb86fc',
           message: 'yo',
           createdAt: Date.now(),
         });
@@ -183,57 +181,6 @@ export const useGroup = (): useGroupType => {
     }
   };
 
-  const sendMessage = async (chat: ChatForm) => {
-    if (user) {
-      const newMessage = await db
-        .collection('messages')
-        .doc(chat.groupId)
-        .collection('messages')
-        .doc();
-
-      const message: GroupMessage = {
-        id: newMessage.id,
-        userId: user.id,
-        username: user.username,
-        profilePic: user.profilePic,
-        message: chat.message,
-        createdAt: Date.now(),
-      };
-
-      await newMessage.set(message);
-
-      return true;
-    } else {
-      // Will make a pop up
-      await router.push('/sign-in');
-      return false;
-    }
-  };
-
-  const getMessages = (
-    groupId: string,
-    setMessages: any,
-    isSubscribed: boolean
-  ) => {
-    try {
-      db.collection('messages')
-        .doc(groupId)
-        .collection('messages')
-        .orderBy('createdAt')
-        .limit(100)
-        .onSnapshot((querySnapShot) => {
-          const data = querySnapShot.docs.map((doc) => ({
-            ...doc.data(),
-          }));
-          if (isSubscribed) {
-            setMessages(data as GroupMessage[]);
-          }
-        });
-    } catch (error) {
-      console.log("Couldn't get messages");
-    }
-  };
-
   const getGroupList = (setGroupList: any, isSubscribed: boolean) => {
     try {
       db.collection('groups')
@@ -259,8 +206,6 @@ export const useGroup = (): useGroupType => {
     createGroup,
     joinGroup,
     leaveGroup,
-    sendMessage,
-    getMessages,
     getGroupList,
   };
 };

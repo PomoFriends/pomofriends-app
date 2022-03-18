@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { GroupMessage } from '../../utils/types';
 import DisplayMessages from './Display';
 import { makeStyles } from '@mui/styles';
 import { Box, List } from '@mui/material';
-import { useGroup } from '../../hooks/useGroup';
+import { useChat } from '../../hooks/useChat';
 import ChatForm from './Form';
 
 const useStyles = makeStyles((theme: any) => ({
@@ -32,9 +32,18 @@ interface ChatProps {
 
 const Chat: React.FC<ChatProps> = ({ groupId }) => {
   const classes = useStyles();
-  const { getMessages } = useGroup();
+  const { getMessages } = useChat();
 
   const [messages, setMessages] = useState<GroupMessage[]>([]);
+
+  const messageEl = useRef<null | HTMLDivElement>(null);
+  useEffect(() => {
+    if (messageEl) {
+      if (messageEl.current) {
+        messageEl.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [messages]);
 
   // automatically check db for new messages
   useEffect(() => {
@@ -49,11 +58,11 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
 
   return (
     <>
-      <Box className={classes.messages}>
+      <Box className={classes.messages} ref={messageEl}>
         <List>
           {messages.map((message: GroupMessage) => (
             <div key={message.id}>
-              <DisplayMessages message={message} />
+              <DisplayMessages message={message} groupId={groupId} />
             </div>
           ))}
         </List>

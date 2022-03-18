@@ -42,7 +42,7 @@ export type UserSettings = {
 };
 
 export const UserSettingsDefaultValues: UserSettings = {
-  color: '#000000',
+  color: '#ffffff',
   tasksVisible: true,
   timerVisible: true,
   activityVisible: true,
@@ -75,16 +75,9 @@ export const authContextDefaultValues: authContextType = {
 
 /** Type for useGroup hook */
 export type useGroupType = {
-  // getGroups: () => Promise<GroupData[]>;
   createGroup: ({ name, description }: GroupForm) => Promise<boolean>;
   joinGroup: (groupId: string) => Promise<boolean>;
   leaveGroup: (groupId: string) => Promise<boolean>;
-  sendMessage: (chat: ChatForm) => Promise<boolean>;
-  getMessages: (
-    groupId: string,
-    setMessages: any,
-    isSubscribed: boolean
-  ) => void;
   getGroupList: (setGroupList: any, isSubscribed: boolean) => void;
 };
 
@@ -216,14 +209,25 @@ export type Time = {
 export type GroupMessage = {
   id: string;
   userId: string;
-  username: string;
-  profilePic?: string | null;
   message: string;
-  createdAt?: number;
+  username: string;
+  color: string;
+  createdAt: number;
 };
 
 /**  Chat input */
 export type ChatForm = {
   groupId: string;
   message: string;
+};
+
+/** Type for useGroup hook */
+export type useChatType = {
+  sendMessage: (chat: ChatForm) => Promise<boolean>;
+  deleteMessage: (message: GroupMessage, groupId: string) => Promise<void>;
+  getMessages: (
+    groupId: string,
+    setMessages: any,
+    isSubscribed: boolean
+  ) => void;
 };

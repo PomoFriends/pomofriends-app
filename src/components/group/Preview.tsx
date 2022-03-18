@@ -11,7 +11,7 @@ import {
   Box,
   List,
 } from '@mui/material';
-import React from 'react';
+import React, { MouseEvent, useState } from 'react';
 import { useGroup } from '../../hooks/useGroup';
 import { GroupData } from '../../utils/types';
 import { makeStyles } from '@mui/styles';
@@ -65,10 +65,8 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
 
   const { joinGroup } = useGroup();
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
-  const openDetails = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const openDetails = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const closeDetails = () => {

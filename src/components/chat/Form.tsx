@@ -3,7 +3,7 @@ import { Box, Button, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useGroup } from '../../hooks/useGroup';
+import { useChat } from '../../hooks/useChat';
 import { ChatForm as Form } from '../../utils/types';
 
 const useStyles = makeStyles((theme: any) => ({
@@ -46,7 +46,7 @@ interface ChatFormProps {
 const ChatForm: React.FC<ChatFormProps> = ({ groupId }) => {
   const classes = useStyles();
 
-  const { sendMessage } = useGroup();
+  const { sendMessage } = useChat();
 
   const { handleSubmit, control, reset } = useForm<Form>();
 
