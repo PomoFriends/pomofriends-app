@@ -2,9 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { GroupMessage } from '../../utils/types';
 import DisplayMessages from './Display';
 import { makeStyles } from '@mui/styles';
-import { Box, List } from '@mui/material';
+import { Box, Fab, List, Tooltip } from '@mui/material';
 import { useChat } from '../../hooks/useChat';
 import ChatForm from './Form';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const useStyles = makeStyles(() => ({
   messages: {
@@ -25,6 +26,13 @@ const useStyles = makeStyles(() => ({
       borderRadius: 8,
     },
   },
+  fab: {
+    // margin: 0,
+    top: 'auto',
+    left: 'auto',
+    right: '1rem',
+    bottom: '4rem',
+  },
 }));
 
 interface ChatProps {
@@ -35,6 +43,7 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
   const classes = useStyles();
   const { getMessages } = useChat();
 
+  const [scrollUp, setScrollUp] = useState(false);
   const [messages, setMessages] = useState<GroupMessage[]>([]);
 
   const messageEl = useRef<null | HTMLDivElement>(null);
@@ -42,9 +51,36 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
     scrollToBottom();
   }, [messages]);
   const scrollToBottom = () => {
+    if (!scrollUp) {
+      if (messageEl) {
+        if (messageEl.current) {
+          messageEl.current.scrollIntoView({ behavior: 'auto' });
+        }
+      }
+    }
+  };
+
+  const handleScroll = (e: any) => {
+    const element = e.target;
+    if (
+      element.scrollHeight - element.scrollTop - 200 >=
+      element.clientHeight
+    ) {
+      if (!scrollUp) {
+        setScrollUp(true);
+      }
+    }
+    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      if (scrollUp) {
+        setScrollUp(false);
+      }
+    }
+  };
+
+  const toggleAutoScroll = () => {
     if (messageEl) {
       if (messageEl.current) {
-        messageEl.current.scrollIntoView({ behavior: 'smooth' });
+        messageEl.current.scrollIntoView({ behavior: 'auto' });
       }
     }
   };
@@ -61,8 +97,12 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
   }, []);
 
   return (
-    <>
-      <Box className={classes.messages}>
+    <Box
+      sx={{
+        position: 'relative',
+      }}
+    >
+      <Box className={classes.messages} onScroll={handleScroll}>
         <List>
           {messages.map((message: GroupMessage) => {
             return (
@@ -73,10 +113,23 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
           })}
         </List>
         <div ref={messageEl} />
+        {scrollUp ? (
+          <Tooltip title="Auto Scroll">
+            <Fab
+              className={classes.fab}
+              sx={{ position: 'absolute' }}
+              aria-label="auto-scroll"
+              color="primary"
+              onClick={toggleAutoScroll}
+            >
+              <KeyboardArrowDownIcon />
+            </Fab>
+          </Tooltip>
+        ) : null}
       </Box>
 
       <ChatForm groupId={groupId} />
-    </>
+    </Box>
   );
 };
 

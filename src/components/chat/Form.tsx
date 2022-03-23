@@ -70,6 +70,7 @@ const ChatForm: React.FC<ChatFormProps> = ({ groupId }) => {
           defaultValue=""
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
+              autoComplete="off"
               className={classes.textField}
               fullWidth
               label="Send message"
