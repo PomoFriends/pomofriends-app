@@ -79,6 +79,7 @@ export type useGroupType = {
   joinGroup: (groupId: string) => Promise<boolean>;
   leaveGroup: (groupId: string) => Promise<boolean>;
   getGroupList: (setGroupList: any, isSubscribed: boolean) => void;
+  getAdmin: (groupId: string, setAdmin: any, isSubscribed: boolean) => void;
 };
 
 /**  For group form */

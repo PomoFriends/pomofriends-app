@@ -198,9 +198,9 @@ export const useGroup = (): useGroupType => {
       db.collection('groups')
         .orderBy('createdAt')
         .limit(100)
-        .onSnapshot((querySnapShot) => {
+        .onSnapshot((querySnapshot) => {
           // get all documents from collection with id
-          const data = querySnapShot.docs.map((doc) => ({
+          const data = querySnapshot.docs.map((doc) => ({
             ...doc.data(),
           }));
 
@@ -214,10 +214,27 @@ export const useGroup = (): useGroupType => {
     }
   };
 
+  const getAdmin = (groupId: string, setAdmin: any, isSubscribed: boolean) => {
+    try {
+      db.collection('admins')
+        .doc(groupId)
+        .onSnapshot((querySnapshot) => {
+          const data = querySnapshot.data();
+
+          if (isSubscribed && data) {
+            setAdmin(data?.userId);
+          }
+        });
+    } catch (error) {
+      console.log("Couldn't get admin");
+    }
+  };
+
   return {
     createGroup,
     joinGroup,
     leaveGroup,
     getGroupList,
+    getAdmin,
   };
 };

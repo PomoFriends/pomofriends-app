@@ -15,6 +15,7 @@ import { GroupParticipant } from '../../utils/types';
 import { makeStyles } from '@mui/styles';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FlagIcon from '@mui/icons-material/Flag';
+import TimerIcon from '@mui/icons-material/Timer';
 
 const useStyles = makeStyles((theme: any) => ({
   actionButton: {
@@ -50,15 +51,13 @@ const useStyles = makeStyles((theme: any) => ({
     justifyContent: 'center',
   },
 }));
+
 interface DisplayProps {
   participant: GroupParticipant;
-  groupId: string;
+  admin?: boolean;
 }
 
-const DisplayParticipant: React.FC<DisplayProps> = ({
-  participant,
-  groupId,
-}) => {
+const DisplayParticipant: React.FC<DisplayProps> = ({ participant, admin }) => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -83,14 +82,26 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
           <Avatar alt={participant.username} src={participant.profilePic!} />
           <Typography
             sx={{
-              color: participant.color,
               marginLeft: '0.5rem',
               marginTop: '0.2rem',
+              color: participant.color,
             }}
             variant="h6"
           >
             {participant.username}
           </Typography>
+          {admin ? (
+            <Box
+              sx={{
+                marginTop: '0.3rem',
+              }}
+              className={classes.actionButton}
+            >
+              <Tooltip title="admin">
+                <TimerIcon />
+              </Tooltip>
+            </Box>
+          ) : null}
         </Box>
 
         <ListItemSecondaryAction className={classes.listItemSecondaryAction}>

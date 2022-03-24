@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParticipants } from '../../hooks/useParticipants';
+import { useGroup } from '../../hooks/useGroup';
 import { GroupParticipant } from '../../utils/types';
 import DisplayParticipant from './Display';
 import { makeStyles } from '@mui/styles';
@@ -25,6 +26,7 @@ const useStyles = makeStyles(() => ({
     },
   },
 }));
+
 interface ParticipantsProps {
   groupId: string;
 }
@@ -32,14 +34,17 @@ interface ParticipantsProps {
 const Participants: React.FC<ParticipantsProps> = ({ groupId }) => {
   const classes = useStyles();
   const { getParticipants } = useParticipants();
+  const { getAdmin } = useGroup();
 
   const [participants, setParticipants] = useState<GroupParticipant[]>([]);
+  const [adminId, setAdminId] = useState<string>('');
 
   // automatically check db for new participants
   useEffect(() => {
     let isSubscribed = true;
 
     getParticipants(groupId, setParticipants, isSubscribed);
+    getAdmin(groupId, setAdminId, isSubscribed);
 
     return () => {
       isSubscribed = false;
@@ -53,10 +58,11 @@ const Participants: React.FC<ParticipantsProps> = ({ groupId }) => {
           {participants.map((participant: GroupParticipant) => {
             return (
               <div key={participant.id}>
-                <DisplayParticipant
-                  participant={participant}
-                  groupId={groupId}
-                />
+                {adminId === participant.id ? (
+                  <DisplayParticipant participant={participant} admin={true} />
+                ) : (
+                  <DisplayParticipant participant={participant} />
+                )}
               </div>
             );
           })}

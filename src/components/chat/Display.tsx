@@ -3,7 +3,6 @@ import { GroupMessage } from '../../utils/types';
 import {
   ListItem,
   ListItemSecondaryAction,
-  Divider,
   Tooltip,
   IconButton,
   List,
@@ -129,16 +128,8 @@ const DisplayMessages: React.FC<DisplayMessageProps> = ({
             className={classes.popover}
           >
             <List>
-              <ListItem className={classes.listItem}>
-                Report
-                <Box className={classes.actionButton}>
-                  <FlagIcon />
-                </Box>
-              </ListItem>
-
               {user!.id === message.userId ? (
                 <>
-                  <Divider />
                   <ListItem className={classes.listItem} onClick={handleDelete}>
                     Delete
                     <Box className={classes.deleteButton}>
@@ -146,7 +137,16 @@ const DisplayMessages: React.FC<DisplayMessageProps> = ({
                     </Box>
                   </ListItem>
                 </>
-              ) : null}
+              ) : (
+                <>
+                  <ListItem className={classes.listItem}>
+                    Report
+                    <Box className={classes.actionButton}>
+                      <FlagIcon />
+                    </Box>
+                  </ListItem>
+                </>
+              )}
             </List>
           </Popover>
         </ListItemSecondaryAction>
