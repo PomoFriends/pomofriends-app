@@ -1,7 +1,9 @@
-import { useRouter } from 'next/router';
 import firebase from 'firebase/compat/app';
+import { useRouter } from 'next/router';
 import { db } from '../firebase/firebase';
-import { TaskData, TaskForm, useTasksType } from '../utils/types';
+import { TaskForm } from '../utils/types/formTypes';
+import { useTasksType } from '../utils/types/hookTypes';
+import { TaskData } from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
 
 export const useTasks = (): useTasksType => {

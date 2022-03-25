@@ -14,7 +14,7 @@ import AboutYouSettingsForm from '../components/settings/AboutYouSettingsForm';
 import PomodoroSettingsForm from '../components/settings/PomodoroSettingsForm';
 import { db } from '../firebase/firebase';
 import { useRequireAuth } from '../hooks/useRequireAuth';
-import { PomodoroSettings } from '../utils/types';
+import { PomodoroSettings } from '../utils/types/userTypes';
 
 const useStyles = makeStyles((theme: any) => ({
   container: {
@@ -75,7 +75,7 @@ const SettingsPage: React.FC = (): JSX.Element => {
     <Layout>
       <>
         {!user || !pomodoroSettings ? (
-          <Box className="flex justify-center py-8">
+          <Box>
             <Spinner width="40" className="animate-spin" />
           </Box>
         ) : (

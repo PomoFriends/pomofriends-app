@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { useGroup } from '../../hooks/useGroup';
-import Chat from '../chat/Chat';
+import LogoutIcon from '@mui/icons-material/Logout';
 import {
   Avatar,
   Box,
   Grid,
   IconButton,
-  Typography,
   Tooltip,
+  Typography,
 } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { makeStyles } from '@mui/styles';
+import { useState } from 'react';
+import { useGroup } from '../../hooks/useGroup';
 import RoomButtons from '../buttons/RoomButtons';
+import Chat from '../chat/Chat';
 import Participants from '../participants/Participants';
 
 const useStyles = makeStyles((theme: any) => ({

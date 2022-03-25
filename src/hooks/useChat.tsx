@@ -1,11 +1,9 @@
 import { useRouter } from 'next/router';
 import { db } from '../firebase/firebase';
-import {
-  ChatForm,
-  GroupMessage,
-  useChatType,
-  UserSettings,
-} from '../utils/types';
+import { ChatForm } from '../utils/types/formTypes';
+import { GroupMessage } from '../utils/types/groupTypes';
+import { useChatType } from '../utils/types/hookTypes';
+import { UserSettings } from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
 
 export const useChat = (): useChatType => {

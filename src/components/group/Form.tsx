@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { useGroup } from '../../hooks/useGroup';
-import { ErrorMessage, GroupForm as Form } from '../../utils/types';
-import { Container, Grid, Alert, TextField } from '@mui/material';
-import SubmitButton from '../buttons/SubmitButton';
+import { Alert, Container, Grid, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useGroup } from '../../hooks/useGroup';
+import { ErrorMessage, GroupForm as Form } from '../../utils/types/formTypes';
+import SubmitButton from '../buttons/SubmitButton';
 
 const useStyles = makeStyles((theme: any) => ({
   form: {

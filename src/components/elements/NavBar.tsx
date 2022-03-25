@@ -1,11 +1,10 @@
-/* eslint-disable @next/next/link-passhref */
+import Dashboard from '@mui/icons-material/Dashboard';
 import Info from '@mui/icons-material/Info';
 import Logout from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
+import Person from '@mui/icons-material/Person';
 import Settings from '@mui/icons-material/Settings';
 import Star from '@mui/icons-material/Star';
-import Dashboard from '@mui/icons-material/Dashboard';
-import Person from '@mui/icons-material/Person';
 import {
   AppBar,
   Avatar,
@@ -21,7 +20,7 @@ import {
   Typography,
 } from '@mui/material';
 import Link from 'next/link';
-import React from 'react';
+import { MouseEvent, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import StyledMenu from './StyledMenu';
 
@@ -30,17 +29,13 @@ const pages = ['Rating', 'About'];
 const Navbar = () => {
   const { user, signOut } = useAuth();
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
@@ -94,7 +89,7 @@ const Navbar = () => {
             </ListItemIcon>
             My Profile
           </MenuItem>
-          <Link href="/dashboard">
+          <Link href="/dashboard" passHref={true}>
             <MenuItem>
               <ListItemIcon>
                 <Dashboard fontSize="small" />
@@ -103,7 +98,7 @@ const Navbar = () => {
             </MenuItem>
           </Link>
           <Divider />
-          <Link href="/settings">
+          <Link href="/settings" passHref={true}>
             <MenuItem>
               <ListItemIcon>
                 <Settings fontSize="small" />
@@ -125,7 +120,7 @@ const Navbar = () => {
   } else {
     rightSide = (
       <Box sx={{ flexGrow: 0 }}>
-        <Link href="/sign-in">
+        <Link href="/sign-in" passHref={true}>
           <Button variant="contained" color="secondary">
             Sign In
           </Button>

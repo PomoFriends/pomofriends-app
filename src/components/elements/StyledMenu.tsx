@@ -1,6 +1,5 @@
 import { Menu, MenuProps } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
-import React from 'react';
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu

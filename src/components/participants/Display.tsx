@@ -1,21 +1,21 @@
-import React, { useState, MouseEvent } from 'react';
+import FlagIcon from '@mui/icons-material/Flag';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import TimerIcon from '@mui/icons-material/Timer';
 import {
-  ListItem,
-  ListItemSecondaryAction,
+  Avatar,
+  Box,
   Divider,
-  Tooltip,
   IconButton,
   List,
+  ListItem,
+  ListItemSecondaryAction,
   Popover,
-  Box,
+  Tooltip,
   Typography,
-  Avatar,
 } from '@mui/material';
-import { GroupParticipant } from '../../utils/types';
 import { makeStyles } from '@mui/styles';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import FlagIcon from '@mui/icons-material/Flag';
-import TimerIcon from '@mui/icons-material/Timer';
+import { MouseEvent, useState } from 'react';
+import { GroupParticipant } from '../../utils/types/groupTypes';
 
 const useStyles = makeStyles((theme: any) => ({
   actionButton: {

@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router';
-import { ResetPasswordData } from '../../utils/types';
-import { useAuth } from '../../hooks/useAuth';
 import { Container, Grid, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useAuth } from '../../hooks/useAuth';
+import { ResetPasswordData } from '../../utils/types/formTypes';
 import SubmitButton from '../buttons/SubmitButton';
 
 const useStyles = makeStyles((theme: any) => ({

@@ -1,20 +1,19 @@
-import React from 'react';
+import { CacheProvider } from '@emotion/react';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import Head from 'next/head';
 import PropTypes from 'prop-types';
-import { CacheProvider } from '@emotion/react';
+import { Fragment, useEffect } from 'react';
 import { AuthProvider } from '../hooks/useAuth';
-
-import createEmotionCache from '../utils/createEmotionCache';
-import theme from '../styles/theme/theme';
 import '../styles/global.css';
-import { CssBaseline, ThemeProvider } from '@mui/material';
+import theme from '../styles/theme/theme';
+import createEmotionCache from '../utils/createEmotionCache';
 
 const clientSideEmotionCache = createEmotionCache();
 
 const MyApp = (props: any) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
@@ -23,7 +22,7 @@ const MyApp = (props: any) => {
   }, []);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Head>
         <title>PomoFriends</title>
         <meta
@@ -40,7 +39,7 @@ const MyApp = (props: any) => {
           </AuthProvider>
         </ThemeProvider>
       </CacheProvider>
-    </React.Fragment>
+    </Fragment>
   );
 };
 

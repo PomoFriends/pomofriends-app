@@ -1,19 +1,19 @@
-import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EditIcon from '@mui/icons-material/Edit';
 import {
+  Box,
   Divider,
   IconButton,
   ListItem,
   ListItemText,
+  Modal,
   Tooltip,
   Typography,
-  Modal,
-  Box,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTasks } from '../../hooks/useTasks';
-import { TaskData } from '../../utils/types';
+import { TaskData } from '../../utils/types/userTypes';
 import EditForm from './EditForm';
 
 const useStyles = makeStyles((theme: any) => ({

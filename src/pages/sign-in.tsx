@@ -1,9 +1,8 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React from 'react';
-import Layout from '../components/elements/Layout';
 import SignInForm from '../components/auth/SignInForm';
+import Layout from '../components/elements/Layout';
 import FirebaseProviderAuth from '../hooks/firebaseProviderAuth';
 
 const useStyles = makeStyles((theme: any) => ({

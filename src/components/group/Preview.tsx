@@ -1,21 +1,21 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import {
+  Divider,
   IconButton,
+  List,
   ListItem,
   ListItemText,
-  Tooltip,
-  Divider,
   Popover,
+  Tooltip,
   Typography,
-  List,
 } from '@mui/material';
-import React, { MouseEvent, useState } from 'react';
-import { useGroup } from '../../hooks/useGroup';
-import { GroupData } from '../../utils/types';
 import { makeStyles } from '@mui/styles';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import moment from 'moment';
+import { MouseEvent, useState } from 'react';
+import { useGroup } from '../../hooks/useGroup';
+import { GroupData } from '../../utils/types/groupTypes';
 
 const useStyles = makeStyles((theme: any) => ({
   join: {

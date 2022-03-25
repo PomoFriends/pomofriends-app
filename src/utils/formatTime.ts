@@ -1,4 +1,4 @@
-import { Time } from './types';
+import { Time } from './types/miskTypes';
 
 export const extraDigit = (n: number): string =>
   Math.floor(n).toString().padStart(2, '0');

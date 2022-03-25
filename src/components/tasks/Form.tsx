@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { useTasks } from '../../hooks/useTasks';
-import { ErrorMessage, TaskForm as Form } from '../../utils/types';
 import {
+  Alert,
+  Button,
   Container,
   Grid,
-  Alert,
-  TextField,
   Input,
+  TextField,
   Typography,
-  Button,
 } from '@mui/material';
-import SubmitButton from '../buttons/SubmitButton';
 import { makeStyles } from '@mui/styles';
+import { useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useTasks } from '../../hooks/useTasks';
+import { ErrorMessage, TaskForm as Form } from '../../utils/types/formTypes';
+import SubmitButton from '../buttons/SubmitButton';
 
 const useStyles = makeStyles((theme: any) => ({
   form: {

@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useSettings } from '../../hooks/useSettings';
 import {
   PomodoroSettings,
   PomodoroSettingsDefaultValues,
-} from '../../utils/types';
+} from '../../utils/types/userTypes';
 import { useInterval } from '../../utils/useInterval';
 import ButtonsControl from '../buttons/ButtonsControl';
 import ButtonsType from '../buttons/ButtonsType';
@@ -206,7 +206,7 @@ const Pomodoro = () => {
   return (
     <>
       {isLoading ? (
-        <div className="flex justify-center py-8">
+        <div>
           <Spinner width="40" className="animate-spin" />
         </div>
       ) : (

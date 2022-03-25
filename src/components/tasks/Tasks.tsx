@@ -1,22 +1,21 @@
+import AddIcon from '@mui/icons-material/Add';
 import {
-  Box,
   Avatar,
-  IconButton,
-  Typography,
-  Tooltip,
-  Modal,
+  Box,
   Grid,
+  IconButton,
   List,
+  Modal,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useEffect, useState } from 'react';
-import AddIcon from '@mui/icons-material/Add';
-import Form from './Form';
-import Card from './Card';
-// import Spinner from '../images/Spinner';
-import { TaskData } from '../../utils/types';
-import { useTasks } from '../../hooks/useTasks';
 import { useAuth } from '../../hooks/useAuth';
+import { useTasks } from '../../hooks/useTasks';
+import { TaskData } from '../../utils/types/userTypes';
+import Card from './Card';
+import Form from './Form';
 
 const useStyles = makeStyles((theme: any) => ({
   taskList: {

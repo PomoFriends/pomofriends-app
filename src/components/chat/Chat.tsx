@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { GroupMessage } from '../../utils/types';
-import DisplayMessages from './Display';
-import { makeStyles } from '@mui/styles';
-import { Box, Fab, List, Tooltip } from '@mui/material';
-import { useChat } from '../../hooks/useChat';
-import ChatForm from './Form';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Box, Fab, List, Tooltip } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { useEffect, useRef, useState } from 'react';
+import { useChat } from '../../hooks/useChat';
+import { GroupMessage } from '../../utils/types/groupTypes';
+import DisplayMessages from './Display';
+import ChatForm from './Form';
 
 const useStyles = makeStyles(() => ({
   messages: {

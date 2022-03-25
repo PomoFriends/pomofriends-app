@@ -1,9 +1,7 @@
 import { db } from '../firebase/firebase';
-import {
-  PomodoroSettings,
-  useSettingsType,
-  AboutYouSettingsForm,
-} from '../utils/types';
+import { AboutYouSettingsForm } from '../utils/types/formTypes';
+import { useSettingsType } from '../utils/types/hookTypes';
+import { PomodoroSettings } from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
 
 export const useSettings = (): useSettingsType => {

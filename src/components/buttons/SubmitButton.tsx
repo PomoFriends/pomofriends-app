@@ -1,7 +1,6 @@
-import React from 'react';
-import Spinner from '../images/Spinner';
 import { Button as CoolButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import Spinner from '../images/Spinner';
 
 const useStyles = makeStyles((theme: any) => ({
   submit: {
@@ -27,7 +26,6 @@ const SubmitButton = ({
   isLoading,
   title,
   children,
-  ...buttonProps
 }: ButtonProps &
   React.ButtonHTMLAttributes<HTMLButtonElement>): JSX.Element => {
   const classes = useStyles();

@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { useTasks } from '../../hooks/useTasks';
-import { ErrorMessage, TaskData, TaskForm as Form } from '../../utils/types';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
+  Alert,
+  Button,
   Container,
   Grid,
-  Alert,
-  TextField,
-  Input,
-  Typography,
-  Button,
   IconButton,
+  Input,
+  TextField,
   Tooltip,
+  Typography,
 } from '@mui/material';
-import SubmitButton from '../buttons/SubmitButton';
 import { makeStyles } from '@mui/styles';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useTasks } from '../../hooks/useTasks';
+import { ErrorMessage, TaskForm as Form } from '../../utils/types/formTypes';
+import { TaskData } from '../../utils/types/userTypes';
+import SubmitButton from '../buttons/SubmitButton';
 
 const useStyles = makeStyles((theme: any) => ({
   form: {

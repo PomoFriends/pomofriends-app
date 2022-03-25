@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useParticipants } from '../../hooks/useParticipants';
-import { useGroup } from '../../hooks/useGroup';
-import { GroupParticipant } from '../../utils/types';
-import DisplayParticipant from './Display';
-import { makeStyles } from '@mui/styles';
 import { Box, List } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { useEffect, useState } from 'react';
+import { useGroup } from '../../hooks/useGroup';
+import { useParticipants } from '../../hooks/useParticipants';
+import { GroupParticipant } from '../../utils/types/groupTypes';
+import DisplayParticipant from './Display';
 
 const useStyles = makeStyles(() => ({
   participants: {

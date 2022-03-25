@@ -3,11 +3,11 @@ import { Alert, Container, Grid, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '../../hooks/useAuth';
 import { getErrorMessage } from '../../utils/getErrorMessage';
-import { ErrorMessage, SignInData } from '../../utils/types';
+import { ErrorMessage, SignInData } from '../../utils/types/formTypes';
 import SubmitButton from '../buttons/SubmitButton';
 
 const useStyles = makeStyles((theme: any) => ({
@@ -64,7 +64,7 @@ const SignInForm: React.FC = (): JSX.Element => {
       if (response.error) {
         setError(getErrorMessage(response.error));
       } else {
-        router.push('/dashboard');
+        router.push('/');
       }
     });
   };

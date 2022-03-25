@@ -5,17 +5,16 @@ import {
   Grid,
   IconButton,
   List,
-  Typography,
-  Tooltip,
   Modal,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React, { useEffect, useState } from 'react';
-import { GroupData } from '../../utils/types';
-// import Spinner from '../images/Spinner';
-import GroupPreview from './Preview';
-import GroupForm from './Form';
+import { useEffect, useState } from 'react';
 import { useGroup } from '../../hooks/useGroup';
+import { GroupData } from '../../utils/types/groupTypes';
+import GroupForm from './Form';
+import GroupPreview from './Preview';
 
 const useStyles = makeStyles((theme: any) => ({
   groupList: {
@@ -64,7 +63,7 @@ const GroupList: React.FC = () => {
   const [groupList, setGroupList] = useState<GroupData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -74,7 +73,6 @@ const GroupList: React.FC = () => {
     setIsLoading(true);
 
     getGroupList(setGroupList, isSubscribed);
-    // setIsLoading(false);
 
     return () => {
       setIsLoading(false);

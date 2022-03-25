@@ -1,13 +1,10 @@
 import firebase from 'firebase/compat/app';
 import { useRouter } from 'next/router';
 import { db } from '../firebase/firebase';
-import {
-  GroupData,
-  GroupForm,
-  GroupParticipant,
-  useGroupType,
-  UserSettings,
-} from '../utils/types';
+import { GroupForm } from '../utils/types/formTypes';
+import { GroupData, GroupParticipant } from '../utils/types/groupTypes';
+import { useGroupType } from '../utils/types/hookTypes';
+import { UserSettings } from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
 
 export const useGroup = (): useGroupType => {

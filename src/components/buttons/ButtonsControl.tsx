@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from './ButtonPomodoro';
 import StopIcon from '@mui/icons-material/Stop';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';

@@ -1,10 +1,9 @@
 import SendIcon from '@mui/icons-material/Send';
 import { Box, Button, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useChat } from '../../hooks/useChat';
-import { ChatForm as Form } from '../../utils/types';
+import { ChatForm as Form } from '../../utils/types/formTypes';
 
 const useStyles = makeStyles((theme: any) => ({
   form: {

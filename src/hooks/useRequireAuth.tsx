@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { auth } from '../firebase/firebase';
-import { authContextType, UserData } from '../utils/types';
+import { authContextType } from '../utils/types/hookTypes';
+import { UserData } from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
 
 /**

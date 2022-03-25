@@ -6,16 +6,16 @@ import {
   useState,
 } from 'react';
 import { auth, db } from '../firebase/firebase';
+import { SignInData, SignUpData } from '../utils/types/formTypes';
 import {
   authContextDefaultValues,
   authContextType,
+} from '../utils/types/hookTypes';
+import {
   PomodoroSettingsDefaultValues,
-  SignInData,
-  SignUpData,
   UserData,
   UserSettingsDefaultValues,
-} from '../utils/types';
-import React from 'react';
+} from '../utils/types/userTypes';
 
 const AuthContext = createContext<authContextType>(authContextDefaultValues);
 
@@ -69,15 +69,12 @@ export const useAuthProvider = (): authContextType => {
    * Function that creates a doc for the user in database.
    */
   const createUser = async (user: UserData): Promise<any> => {
-    console.log('createUser', user);
     const newUser = await db
       .collection('users')
       .doc(user.id)
       .set(user)
       .then(() => {
-        // Change the state of the user
         setUser(user);
-        // console.log('User:', user);
         return user;
       });
 

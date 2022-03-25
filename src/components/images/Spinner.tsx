@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  *
  * @param {React.SVGProps<SVGSVGElement>} props

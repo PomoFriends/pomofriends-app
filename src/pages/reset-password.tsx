@@ -1,8 +1,7 @@
-import React from 'react';
-import ResetPasswordForm from '../components/auth/ResetPasswordForm';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import ResetPasswordForm from '../components/auth/ResetPasswordForm';
 import Layout from '../components/elements/Layout';
 
 const useStyles = makeStyles((theme: any) => ({

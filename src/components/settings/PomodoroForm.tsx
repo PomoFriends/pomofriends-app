@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import {
+  Alert,
+  Container,
+  Grid,
+  Input,
+  Switch,
+  Typography,
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useSettings } from '../../hooks/useSettings';
 import {
   ErrorMessage,
-  PomodoroSettings,
   PomodoroSettingsForm as Form,
-} from '../../utils/types';
-import {
-  Container,
-  Grid,
-  Alert,
-  Typography,
-  Switch,
-  Input,
-} from '@mui/material';
+} from '../../utils/types/formTypes';
+import { PomodoroSettings } from '../../utils/types/userTypes';
 import SubmitButton from '../buttons/SubmitButton';
-import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme: any) => ({
   form: {

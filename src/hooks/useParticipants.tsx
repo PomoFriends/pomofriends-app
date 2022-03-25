@@ -1,5 +1,6 @@
 import { db } from '../firebase/firebase';
-import { useParticipantsType, GroupParticipant } from '../utils/types';
+import { GroupParticipant } from '../utils/types/groupTypes';
+import { useParticipantsType } from '../utils/types/hookTypes';
 
 export const useParticipants = (): useParticipantsType => {
   const getParticipants = (

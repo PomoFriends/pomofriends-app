@@ -1,7 +1,6 @@
 import { Box, Container } from '@mui/material';
-import React from 'react';
-import Navbar from './NavBar';
 import Footer from './Footer';
+import Navbar from './NavBar';
 
 // Layout for every page that doesnt need a sidebar
 const Layout: React.FC = ({ children }) => {

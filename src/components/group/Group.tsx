@@ -1,9 +1,8 @@
 import { doc, getFirestore } from 'firebase/firestore';
-import React from 'react';
 import { useDocumentOnce } from 'react-firebase-hooks/firestore';
+import Room from '../../components/group/Room';
 import Spinner from '../../components/images/Spinner';
 import { app } from '../../firebase/firebase';
-import Room from '../../components/group/Room';
 
 interface GroupProps {
   id: string;
@@ -27,7 +26,7 @@ const Group: React.FC<GroupProps> = ({ id }) => {
     body = (
       <>
         {!groupData && groupDataLoading ? (
-          <div className="flex justify-center py-8">
+          <div>
             <Spinner width="40" className="animate-spin" />
           </div>
         ) : (

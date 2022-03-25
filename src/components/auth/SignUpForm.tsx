@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import {
   Alert,
   Checkbox,
@@ -10,11 +9,11 @@ import {
 import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '../../hooks/useAuth';
 import { getErrorMessage } from '../../utils/getErrorMessage';
-import { ErrorMessage, SignUpData } from '../../utils/types';
+import { ErrorMessage, SignUpData } from '../../utils/types/formTypes';
 import SubmitButton from '../buttons/SubmitButton';
 
 const useStyles = makeStyles((theme: any) => ({
@@ -71,7 +70,7 @@ const SignUpForm: React.FC = (): JSX.Element => {
         console.log(response.error);
         setError(getErrorMessage(response.error));
       } else {
-        router.push('/dashboard');
+        router.push('/');
       }
     });
   };

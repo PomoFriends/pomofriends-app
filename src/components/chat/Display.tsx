@@ -1,20 +1,20 @@
-import React, { useState, MouseEvent } from 'react';
-import { GroupMessage } from '../../utils/types';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FlagIcon from '@mui/icons-material/Flag';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {
-  ListItem,
-  ListItemSecondaryAction,
-  Tooltip,
+  Box,
   IconButton,
   List,
+  ListItem,
+  ListItemSecondaryAction,
   Popover,
-  Box,
+  Tooltip,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import FlagIcon from '@mui/icons-material/Flag';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { MouseEvent, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useChat } from '../../hooks/useChat';
+import { GroupMessage } from '../../utils/types/groupTypes';
 
 const useStyles = makeStyles((theme: any) => ({
   actionButton: {

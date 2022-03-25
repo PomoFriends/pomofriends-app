@@ -1,17 +1,17 @@
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
-  Typography,
-  Paper,
   Avatar,
-  IconButton,
-  Tooltip,
   Box,
+  IconButton,
   Modal,
+  Paper,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React from 'react';
+import { useState } from 'react';
 import { extraDigit, formatTime } from '../../utils/formatTime';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { PomodoroSettings } from '../../utils/types';
+import { PomodoroSettings } from '../../utils/types/userTypes';
 import SettingsForm from '../settings/PomodoroForm';
 
 const useStyles = makeStyles((theme: any) => ({
@@ -104,7 +104,7 @@ const TimeDisplay: React.FC<TimerProps> = ({
   const classes = useStyles();
   const convertedTime = formatTime(time, false);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
