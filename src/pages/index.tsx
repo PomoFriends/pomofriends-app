@@ -12,13 +12,16 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/elements/Layout';
 import Group from '../components/group/Group';
 import GroupList from '../components/group/List';
 import Pomodoro from '../components/pomodoro/Pomodoro';
+import AdminPomodoro from '../components/pomodoro/AdminPomodoro';
+import GroupPomodoro from '../components/pomodoro/GroupPomodoro';
 import Tasks from '../components/tasks/Tasks';
 import { useAuth } from '../hooks/useAuth';
+import { useGroup } from '../hooks/useGroup';
 
 const useStyles = makeStyles((theme: any) => ({
   container: {
@@ -84,7 +87,21 @@ const HomePage: React.FC = (): JSX.Element => {
   const theme = useTheme();
 
   const { user } = useAuth();
+  const { getAdmin } = useGroup();
+
   const [groupId, setGroupId] = useState<null | undefined | string>(null);
+  const [adminId, setAdminId] = useState<string>('');
+
+  // automatically check db for new admin
+  useEffect(() => {
+    let isSubscribed = true;
+
+    if (groupId) getAdmin(groupId, setAdminId, isSubscribed);
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [groupId]);
 
   const [groupOpen, setGroupOpen] = useState<number>(1);
   const [open, setOpen] = useState<boolean>(true);
@@ -121,6 +138,17 @@ const HomePage: React.FC = (): JSX.Element => {
   };
 
   let body = null;
+  let pomodoroType = null;
+
+  if (groupId && user) {
+    if (adminId === user.id) {
+      pomodoroType = <AdminPomodoro groupId={groupId} />;
+    } else {
+      pomodoroType = <GroupPomodoro groupId={groupId} adminId={adminId} />;
+    }
+  } else {
+    pomodoroType = <Pomodoro />;
+  }
 
   if (groupOpen === 1) {
     body = (
@@ -135,7 +163,7 @@ const HomePage: React.FC = (): JSX.Element => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Paper className={classes.paperPomodoro} elevation={3}>
-                  <Pomodoro />
+                  {pomodoroType}
                 </Paper>
               </Grid>
               <Grid item xs={12}>
@@ -166,7 +194,7 @@ const HomePage: React.FC = (): JSX.Element => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Paper className={classes.paperPomodoro} elevation={3}>
-                <Pomodoro />
+                {pomodoroType}
               </Paper>
             </Grid>
             <Grid item xs={12}>

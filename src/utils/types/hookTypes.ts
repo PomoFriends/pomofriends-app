@@ -2,6 +2,7 @@ import {
   AboutYouSettingsForm,
   ChatForm,
   GroupForm,
+  GroupSettingsForm,
   SignInData,
   SignUpData,
   TaskForm,
@@ -31,33 +32,48 @@ export const authContextDefaultValues: authContextType = {
 
 /** Type for useGroup hook */
 export type useGroupType = {
-  createGroup: ({ name, description }: GroupForm) => Promise<boolean>;
-  joinGroup: (groupId: string) => Promise<boolean>;
-  leaveGroup: (groupId: string) => Promise<boolean>;
+  createGroup: ({ name, description }: GroupForm) => Promise<void>;
+  joinGroup: (groupId: string) => Promise<void>;
+  leaveGroup: (groupId: string) => Promise<void>;
   getGroupList: (setGroupList: any, isSubscribed: boolean) => void;
   getAdmin: (groupId: string, setAdmin: any, isSubscribed: boolean) => void;
+  getGroupSettings: (
+    groupId: string,
+    setGroupSettings: any,
+    isSubscribed: boolean
+  ) => void;
+  updateGroupSettings: (
+    groupId: string,
+    settings: GroupSettingsForm
+  ) => Promise<void>;
+  groupControl: (groupId: string, command: string) => Promise<void>;
+  getGroupCommands: (
+    groupId: string,
+    setCommand: any,
+    isSubscribed: boolean
+  ) => void;
 };
 
 /** Type for useSettings hook */
 export type useSettingsType = {
-  updateSettings: ({}: PomodoroSettings) => Promise<boolean>;
+  updateSettings: ({}: PomodoroSettings) => Promise<void>;
   getSettings: (
     userId: string,
     setSettings: any,
     isSubscribed: boolean
   ) => void;
-  updateAboutYou: (aboutYou: AboutYouSettingsForm) => Promise<boolean>;
+  updateAboutYou: (aboutYou: AboutYouSettingsForm) => Promise<void>;
 };
 
 /** Type for useTasks hook */
 export type useTasksType = {
-  createTask: ({}: TaskForm) => Promise<boolean>;
-  editTask: ({}: TaskForm, taskId: string) => Promise<boolean>;
-  deleteTask: (taskId: string) => Promise<boolean>;
-  setCurrentTask: (taskId: string) => Promise<boolean>;
-  completeTask: (taskId: string) => Promise<boolean>;
-  uncompleteTask: (taskId: string) => Promise<boolean>;
-  addPomodoro: (taskId: string) => Promise<boolean>;
+  createTask: ({}: TaskForm) => Promise<void>;
+  editTask: ({}: TaskForm, taskId: string) => Promise<void>;
+  deleteTask: (taskId: string) => Promise<void>;
+  setCurrentTask: (taskId: string) => Promise<void>;
+  completeTask: (taskId: string) => Promise<void>;
+  uncompleteTask: (taskId: string) => Promise<void>;
+  addPomodoro: (taskId: string) => Promise<void>;
   getTasks: (
     setTaskList: any,
     setCurrentTaskId: any,
@@ -67,7 +83,7 @@ export type useTasksType = {
 
 /** Type for useGroup hook */
 export type useChatType = {
-  sendMessage: (chat: ChatForm) => Promise<boolean>;
+  sendMessage: (chat: ChatForm) => Promise<void>;
   deleteMessage: (message: GroupMessage, groupId: string) => Promise<void>;
   getMessages: (
     groupId: string,

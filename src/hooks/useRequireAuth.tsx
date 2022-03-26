@@ -17,11 +17,10 @@ export const useRequireAuth = (): authContextType => {
   const contexAuth = useAuth();
   const router = useRouter();
 
-  // console.log('useRequireAuth', contexAuth);
-
   // Redirect user to the sign in page if they are not logged in
   const handleAuthStateChanged = (user: UserData | null) => {
     if (user === null) {
+      console.log('User is not logged in!');
       router.push('/sign-in');
     }
   };

@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 interface ButtonsProps {
-  setTimeCounting: (boolean: boolean) => void;
+  toggleTimeCounting: () => void;
   resetTimer: () => void;
   skipCurrent: () => void;
   startTimer: () => void;
@@ -28,7 +28,7 @@ interface ButtonsProps {
 }
 
 const ButtonsControl: React.FC<ButtonsProps> = ({
-  setTimeCounting,
+  toggleTimeCounting,
   resetTimer,
   skipCurrent,
   startTimer,
@@ -64,7 +64,7 @@ const ButtonsControl: React.FC<ButtonsProps> = ({
           if (!started) {
             startTimer();
           } else {
-            setTimeCounting(!timeCounting);
+            toggleTimeCounting();
           }
         }}
       />

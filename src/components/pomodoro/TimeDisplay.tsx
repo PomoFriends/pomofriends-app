@@ -13,6 +13,8 @@ import { useState } from 'react';
 import { extraDigit, formatTime } from '../../utils/formatTime';
 import { PomodoroSettings } from '../../utils/types/userTypes';
 import SettingsForm from '../settings/PomodoroForm';
+import GroupSettingsForm from '../settings/GroupPomodoroForm';
+import AdminSettingsForm from '../settings/AdminPomodoroForm';
 
 const useStyles = makeStyles((theme: any) => ({
   timer: {
@@ -91,7 +93,9 @@ interface TimerProps {
   isBreak: boolean;
   isLongBreak: boolean;
   settings: PomodoroSettings;
-  resetTimer: () => void;
+  groupId?: string;
+  group?: boolean;
+  admin?: boolean;
 }
 
 const TimeDisplay: React.FC<TimerProps> = ({
@@ -99,7 +103,9 @@ const TimeDisplay: React.FC<TimerProps> = ({
   isBreak,
   isLongBreak,
   settings,
-  resetTimer,
+  groupId,
+  group,
+  admin,
 }) => {
   const classes = useStyles();
   const convertedTime = formatTime(time, false);
@@ -134,11 +140,19 @@ const TimeDisplay: React.FC<TimerProps> = ({
         aria-describedby="modal-modal-description"
       >
         <Box className={classes.settingsModal}>
-          <SettingsForm
-            handleClose={handleClose}
-            settings={settings}
-            resetTimer={resetTimer}
-          />
+          {group === true ? (
+            admin === true ? (
+              <AdminSettingsForm
+                handleClose={handleClose}
+                settings={settings}
+                groupId={groupId!}
+              />
+            ) : (
+              <GroupSettingsForm settings={settings} />
+            )
+          ) : (
+            <SettingsForm handleClose={handleClose} settings={settings} />
+          )}
         </Box>
       </Modal>
 

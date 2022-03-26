@@ -9,10 +9,10 @@ import {
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useSettings } from '../../hooks/useSettings';
+import { useGroup } from '../../hooks/useGroup';
 import {
   ErrorMessage,
-  PomodoroSettingsForm as Form,
+  GroupSettingsForm as Form,
 } from '../../utils/types/formTypes';
 import { PomodoroSettings } from '../../utils/types/userTypes';
 import SubmitButton from '../buttons/SubmitButton';
@@ -31,14 +31,16 @@ const useStyles = makeStyles((theme: any) => ({
 interface PomodoroSettingsFormProps {
   handleClose: () => void;
   settings: PomodoroSettings;
+  groupId: string;
 }
 
 const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
   handleClose,
   settings,
+  groupId,
 }) => {
   const classes = useStyles();
-  const { updateSettings } = useSettings();
+  const { updateGroupSettings } = useGroup();
   const { handleSubmit, control } = useForm<Form>();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -48,14 +50,15 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
     handleClose();
     setIsLoading(true);
     setError(null);
-    return updateSettings({
+    const settings: Form = {
       pomodoro: data.pomodoro * 60,
       shortBreak: data.shortBreak * 60,
       longBreak: data.longBreak * 60,
       autoStartPomodoro: data.autoStartPomodoro,
       autoStartBreak: data.autoStartBreak,
       longBreakInterval: data.longBreakInterval,
-    });
+    };
+    return updateGroupSettings(groupId, settings);
   };
 
   return (

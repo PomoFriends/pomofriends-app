@@ -19,7 +19,7 @@ export type UserSettings = {
 };
 
 export const UserSettingsDefaultValues: UserSettings = {
-  color: '#ffffff',
+  color: '#010203',
   tasksVisible: true,
   timerVisible: true,
   activityVisible: true,
@@ -33,7 +33,6 @@ export type PomodoroSettings = {
   autoStartBreak: boolean;
   autoStartPomodoro: boolean;
   longBreakInterval: number;
-  notificationsOn: boolean;
 };
 
 /** Default values for PomodoroSettings */
@@ -44,7 +43,6 @@ export const PomodoroSettingsDefaultValues: PomodoroSettings = {
   autoStartBreak: false,
   autoStartPomodoro: false,
   longBreakInterval: 4,
-  notificationsOn: false,
 };
 
 /** Task type */

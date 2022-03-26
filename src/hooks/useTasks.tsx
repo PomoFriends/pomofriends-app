@@ -39,15 +39,12 @@ export const useTasks = (): useTasksType => {
 
         // Update user
         handleUpdate();
-
-        return true;
       } catch {
-        return false;
+        console.log("Something went wrong, couldn't create the task");
       }
     } else {
-      // Will make a pop up
-      router.push('/sign-in');
-      return false;
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
     }
   };
 
@@ -64,13 +61,12 @@ export const useTasks = (): useTasksType => {
             ...task,
             updatedAt: Date.now(),
           });
-        return true;
       } catch {
-        return false;
+        console.log("Something went wrong, couldn't update the task");
       }
     } else {
-      router.push('/sign-in');
-      return false;
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
     }
   };
 
@@ -91,14 +87,12 @@ export const useTasks = (): useTasksType => {
             .doc(user.id)
             .update({ currentTaskId: null });
         }
-
-        return true;
       } catch {
-        return false;
+        console.log("Something went wrong, couldn't delete the task");
       }
     } else {
-      router.push('/sign-in');
-      return false;
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
     }
   };
 
@@ -112,14 +106,12 @@ export const useTasks = (): useTasksType => {
 
         // Update user
         handleUpdate();
-
-        return true;
       } catch {
-        return false;
+        console.log("Something went wrong, couldn't set current task");
       }
     } else {
-      router.push('/sign-in');
-      return false;
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
     }
   };
 
@@ -144,14 +136,12 @@ export const useTasks = (): useTasksType => {
             .doc(user.id)
             .update({ currentTaskId: null });
         }
-
-        return true;
       } catch {
-        return false;
+        console.log("Something went wrong, couldn't complete the task");
       }
     } else {
-      router.push('/sign-in');
-      return false;
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
     }
   };
 
@@ -169,15 +159,12 @@ export const useTasks = (): useTasksType => {
             completedAt: null,
             updatedAt: Date.now(),
           });
-
-        return true;
       } catch {
-        return false;
+        console.log("Something went wrong, couldn't uncomplete the task");
       }
     } else {
-      // Will make a pop up
-      router.push('/sign-in');
-      return false;
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
     }
   };
 
@@ -193,14 +180,12 @@ export const useTasks = (): useTasksType => {
           .update({
             pomodorosDone: firebase.firestore.FieldValue.increment(+1),
           });
-
-        return true;
       } catch {
-        return false;
+        console.log("Something went wrong, couldn't add pomodoro");
       }
     } else {
-      router.push('/sign-in');
-      return false;
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
     }
   };
 

@@ -43,6 +43,16 @@ export type PomodoroSettingsForm = {
   notificationsOn: boolean;
 };
 
+/** Group settings form */
+export type GroupSettingsForm = {
+  pomodoro: number;
+  shortBreak: number;
+  longBreak: number;
+  autoStartBreak: boolean;
+  autoStartPomodoro: boolean;
+  longBreakInterval: number;
+};
+
 /** Task form */
 export type TaskForm = {
   title: string;

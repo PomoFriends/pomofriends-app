@@ -55,7 +55,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
       autoStartPomodoro: data.autoStartPomodoro,
       autoStartBreak: data.autoStartBreak,
       longBreakInterval: data.longBreakInterval,
-      notificationsOn: data.notificationsOn,
+      // notificationsOn: data.notificationsOn,
     }).then(() => {
       setIsLoading(false);
     });
@@ -221,7 +221,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
               )}
             />
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Controller
               name="notificationsOn"
               control={control}
@@ -240,7 +240,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
                 </Grid>
               )}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
         <SubmitButton
           title="Update Settings"

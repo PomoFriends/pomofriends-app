@@ -15,7 +15,7 @@ const FirebaseProviderAuth: React.FC = (): JSX.Element => {
   const uiConfig = {
     // Popup signin flow rather than redirect flow.
     signInFlow: 'popup',
-    signInSuccessUrl: '/dashboard',
+    signInSuccessUrl: '/',
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.GithubAuthProvider.PROVIDER_ID,

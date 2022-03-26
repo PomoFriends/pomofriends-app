@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { useSettings } from '../../hooks/useSettings';
+import { useGroup } from '../../hooks/useGroup';
 import {
   PomodoroSettings,
   PomodoroSettingsDefaultValues,
@@ -10,9 +10,13 @@ import ButtonsControl from '../buttons/ButtonsControl';
 import ButtonsType from '../buttons/ButtonsType';
 import TimeDisplay from './TimeDisplay';
 
-const Pomodoro = () => {
+interface AdminPomodoroProps {
+  groupId: string;
+}
+
+const AdminPomodoro: React.FC<AdminPomodoroProps> = ({ groupId }) => {
   const { user } = useAuth();
-  const { getSettings } = useSettings();
+  const { getGroupSettings, groupControl } = useGroup();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
@@ -36,9 +40,7 @@ const Pomodoro = () => {
   useEffect(() => {
     let isSubscribed = true;
 
-    if (user) {
-      getSettings(user.id, setSettings, isSubscribed);
-    }
+    getGroupSettings(groupId, setSettings, isSubscribed);
 
     return () => {
       isSubscribed = false;
@@ -66,15 +68,21 @@ const Pomodoro = () => {
   );
 
   const toggleTimeCounting = useCallback(async () => {
+    if (timeCounting === false)
+      await groupControl(groupId, 'toggleTimeCountingTrue');
+    if (timeCounting === true)
+      await groupControl(groupId, 'toggleTimeCountingFalse');
     setTimeCounting(!timeCounting);
-  }, [setTimeCounting, timeCounting]);
+  }, [setTimeCounting, groupControl, timeCounting]);
 
-  const startTimer = useCallback(() => {
+  const startTimer = useCallback(async () => {
+    await groupControl(groupId, 'startTimer');
     setTimeCounting(true);
     setStarted(true);
-  }, [setTimeCounting, setStarted]);
+  }, [setTimeCounting, setStarted, groupControl]);
 
-  const startPomodoro = useCallback(() => {
+  const startPomodoro = useCallback(async () => {
+    await groupControl(groupId, 'startPomodoro');
     if (settings.autoStartPomodoro) {
       startTimer();
     } else {
@@ -92,12 +100,19 @@ const Pomodoro = () => {
     setTime,
     setStarted,
     startTimer,
+    groupControl,
     settings.pomodoro,
     settings.autoStartPomodoro,
   ]);
 
   const startBreak = useCallback(
-    (long: boolean) => {
+    async (long: boolean) => {
+      if (long) {
+        await groupControl(groupId, 'startLongBreak');
+      } else {
+        await groupControl(groupId, 'startShortBreak');
+      }
+
       if (settings.autoStartBreak) {
         startTimer();
       } else {
@@ -124,13 +139,15 @@ const Pomodoro = () => {
       setIsLongBreak,
       setStarted,
       startTimer,
+      groupControl,
       settings.longBreak,
       settings.shortBreak,
       settings.autoStartBreak,
     ]
   );
 
-  const resetTimer = useCallback(() => {
+  const resetTimer = useCallback(async () => {
+    await groupControl(groupId, 'resetTimer');
     setTimeCounting(false);
     setStarted(false);
 
@@ -144,6 +161,7 @@ const Pomodoro = () => {
   }, [
     setTimeCounting,
     setStarted,
+    groupControl,
     isPomodoro,
     isBreak,
     isLongBreak,
@@ -152,7 +170,8 @@ const Pomodoro = () => {
     settings.shortBreak,
   ]);
 
-  const skipCurrent = useCallback(() => {
+  const skipCurrent = useCallback(async () => {
+    await groupControl(groupId, 'skipCurrent');
     setTimeCounting(false);
     setStarted(false);
 
@@ -172,6 +191,7 @@ const Pomodoro = () => {
     setCyclesQtdManager,
     setCompletedCycles,
     setStarted,
+    groupControl,
     isPomodoro,
     cyclesQtdManager,
   ]);
@@ -216,6 +236,9 @@ const Pomodoro = () => {
         isBreak={isBreak}
         isLongBreak={isLongBreak}
         settings={settings}
+        groupId={groupId}
+        group={true}
+        admin={true}
       />
       <ButtonsControl
         toggleTimeCounting={toggleTimeCounting}
@@ -229,4 +252,4 @@ const Pomodoro = () => {
   );
 };
 
-export default Pomodoro;
+export default AdminPomodoro;

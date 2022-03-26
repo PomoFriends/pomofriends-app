@@ -6,13 +6,35 @@ export type GroupData = {
   name: string;
   description: string;
   participantsCount: number;
-  createdAt?: number;
-  updatedAt?: number;
+  createdAt: number;
+  updatedAt: number;
+};
+
+export type GroupSettings = {
+  pomodoro: number;
+  shortBreak: number;
+  longBreak: number;
+  autoStartBreak: boolean;
+  autoStartPomodoro: boolean;
+  longBreakInterval: number;
+};
+
+export const GroupSettingsDefaultValues = {
+  pomodoro: 1500,
+  shortBreak: 300,
+  longBreak: 900,
+  autoStartBreak: true,
+  autoStartPomodoro: true,
+  longBreakInterval: 4,
 };
 
 /** Group admin Type */
 export type GroupAdmin = {
   userId: string;
+};
+
+export type GroupCommand = {
+  command: string;
 };
 
 /** Participant of the group type */

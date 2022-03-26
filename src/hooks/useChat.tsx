@@ -12,7 +12,7 @@ export const useChat = (): useChatType => {
 
   const sendMessage = async (chat: ChatForm) => {
     if (chat.message.length === 0) {
-      return false;
+      return;
     }
     if (user) {
       try {
@@ -41,16 +41,12 @@ export const useChat = (): useChatType => {
         };
 
         await newMessage.set(message);
-
-        return true;
       } catch (error) {
         console.log("Couldn't send a message");
-        return false;
       }
     } else {
-      // Will make a pop up
+      console.log('User is not logged in!');
       await router.push('/sign-in');
-      return false;
     }
   };
 

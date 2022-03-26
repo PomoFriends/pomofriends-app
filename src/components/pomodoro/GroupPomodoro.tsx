@@ -1,18 +1,22 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { useSettings } from '../../hooks/useSettings';
+import { useGroup } from '../../hooks/useGroup';
 import {
   PomodoroSettings,
   PomodoroSettingsDefaultValues,
 } from '../../utils/types/userTypes';
 import { useInterval } from '../../utils/useInterval';
-import ButtonsControl from '../buttons/ButtonsControl';
 import ButtonsType from '../buttons/ButtonsType';
 import TimeDisplay from './TimeDisplay';
 
-const Pomodoro = () => {
+interface GroupPomodoroProps {
+  groupId: string;
+  adminId: string;
+}
+
+const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
   const { user } = useAuth();
-  const { getSettings } = useSettings();
+  const { getGroupSettings, getGroupCommands } = useGroup();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
@@ -26,19 +30,49 @@ const Pomodoro = () => {
   const [cyclesQtdManager, setCyclesQtdManager] = useState(
     new Array(settings.longBreakInterval - 1).fill(true)
   );
-  const [started, setStarted] = useState(false);
 
   const [completedCycles, setCompletedCycles] = useState(0);
   const [fullPomodoroTime, setFullPomodoroTime] = useState(0);
   const [numberOfPomodoros, setNumberOfPomodoros] = useState(0);
 
+  const [command, setCommand] = useState<string>('');
+
+  // automatically check db for updated commands
+  useEffect(() => {
+    let isSubscribed = true;
+
+    getGroupCommands(groupId, setCommand, isSubscribed);
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (command === 'startPomodoro') {
+      startPomodoro();
+    } else if (command === 'startShortBreak') {
+      startBreak(false);
+    } else if (command === 'startLongBreak') {
+      startBreak(true);
+    } else if (command === 'toggleTimeCountingTrue') {
+      setTimeCounting(true);
+    } else if (command === 'toggleTimeCountingFalse') {
+      setTimeCounting(false);
+    } else if (command === 'resetTimer') {
+      resetTimer();
+    } else if (command === 'skipCurrent') {
+      skipCurrent();
+    } else if (command === 'startTimer') {
+      startTimer();
+    }
+  }, [command]);
+
   // automatically check db for updated settings
   useEffect(() => {
     let isSubscribed = true;
 
-    if (user) {
-      getSettings(user.id, setSettings, isSubscribed);
-    }
+    getGroupSettings(groupId, setSettings, isSubscribed);
 
     return () => {
       isSubscribed = false;
@@ -65,21 +99,15 @@ const Pomodoro = () => {
     timeCounting ? 1000 : null
   );
 
-  const toggleTimeCounting = useCallback(async () => {
-    setTimeCounting(!timeCounting);
-  }, [setTimeCounting, timeCounting]);
-
   const startTimer = useCallback(() => {
     setTimeCounting(true);
-    setStarted(true);
-  }, [setTimeCounting, setStarted]);
+  }, [setTimeCounting]);
 
   const startPomodoro = useCallback(() => {
     if (settings.autoStartPomodoro) {
       startTimer();
     } else {
       setTimeCounting(false);
-      setStarted(false);
     }
 
     setIsPomodoro(true);
@@ -90,7 +118,6 @@ const Pomodoro = () => {
     setIsPomodoro,
     setIsBreak,
     setTime,
-    setStarted,
     startTimer,
     settings.pomodoro,
     settings.autoStartPomodoro,
@@ -102,7 +129,6 @@ const Pomodoro = () => {
         startTimer();
       } else {
         setTimeCounting(false);
-        setStarted(false);
       }
 
       setIsPomodoro(false);
@@ -122,7 +148,6 @@ const Pomodoro = () => {
       setIsBreak,
       setTime,
       setIsLongBreak,
-      setStarted,
       startTimer,
       settings.longBreak,
       settings.shortBreak,
@@ -132,7 +157,6 @@ const Pomodoro = () => {
 
   const resetTimer = useCallback(() => {
     setTimeCounting(false);
-    setStarted(false);
 
     if (isPomodoro) {
       setTime(settings.pomodoro);
@@ -143,7 +167,6 @@ const Pomodoro = () => {
     }
   }, [
     setTimeCounting,
-    setStarted,
     isPomodoro,
     isBreak,
     isLongBreak,
@@ -154,7 +177,6 @@ const Pomodoro = () => {
 
   const skipCurrent = useCallback(() => {
     setTimeCounting(false);
-    setStarted(false);
 
     if (isPomodoro && cyclesQtdManager.length > 0) {
       startBreak(false);
@@ -171,7 +193,6 @@ const Pomodoro = () => {
     startBreak,
     setCyclesQtdManager,
     setCompletedCycles,
-    setStarted,
     isPomodoro,
     cyclesQtdManager,
   ]);
@@ -216,17 +237,10 @@ const Pomodoro = () => {
         isBreak={isBreak}
         isLongBreak={isLongBreak}
         settings={settings}
-      />
-      <ButtonsControl
-        toggleTimeCounting={toggleTimeCounting}
-        resetTimer={resetTimer}
-        skipCurrent={skipCurrent}
-        timeCounting={timeCounting}
-        startTimer={startTimer}
-        started={started}
+        group={true}
       />
     </>
   );
 };
 
-export default Pomodoro;
+export default GroupPomodoro;

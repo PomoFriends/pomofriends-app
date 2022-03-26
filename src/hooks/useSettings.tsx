@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { db } from '../firebase/firebase';
 import { AboutYouSettingsForm } from '../utils/types/formTypes';
 import { useSettingsType } from '../utils/types/hookTypes';
@@ -6,13 +7,15 @@ import { useAuth } from './useAuth';
 
 export const useSettings = (): useSettingsType => {
   const { user, handleUpdate } = useAuth();
+  const router = useRouter();
 
   const updateSettings = async (settings: PomodoroSettings) => {
     if (user) {
       await db.collection('pomodoroSettings').doc(user.id).update(settings);
-      return true;
+    } else {
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
     }
-    return false;
   };
 
   const getSettings = (
@@ -41,9 +44,10 @@ export const useSettings = (): useSettingsType => {
     if (user) {
       await db.collection('users').doc(user.id).update(aboutYou);
       handleUpdate();
-      return true;
+    } else {
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
     }
-    return false;
   };
 
   return { updateSettings, getSettings, updateAboutYou };
