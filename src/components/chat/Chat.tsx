@@ -6,26 +6,9 @@ import { useChat } from '../../hooks/useChat';
 import { GroupMessage } from '../../utils/types/groupTypes';
 import DisplayMessages from './Display';
 import ChatForm from './Form';
+import { ScrollArea } from '@mantine/core';
 
 const useStyles = makeStyles(() => ({
-  messages: {
-    overflow: 'auto',
-    maxHeight: '30rem',
-    height: '30rem',
-    marginBottom: '0.5rem',
-    '&::-webkit-scrollbar': {
-      width: '0.4em',
-    },
-    '&::-webkit-scrollbar-track': {
-      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-      webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(0,0,0,.1)',
-      outline: '1px solid slategrey',
-      borderRadius: 8,
-    },
-  },
   fab: {
     // margin: 0,
     top: 'auto',
@@ -102,17 +85,20 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
         position: 'relative',
       }}
     >
-      <Box className={classes.messages} onScroll={handleScroll}>
-        <List>
-          {messages.map((message: GroupMessage) => {
-            return (
-              <div key={message.id}>
-                <DisplayMessages message={message} groupId={groupId} />
-              </div>
-            );
-          })}
-        </List>
-        <div ref={messageEl} />
+      <Box onScroll={handleScroll}>
+        <ScrollArea style={{ height: '30rem' }} mb={'0.45rem'} offsetScrollbars>
+          <List>
+            {messages.map((message: GroupMessage) => {
+              return (
+                <div key={message.id}>
+                  <DisplayMessages message={message} groupId={groupId} />
+                </div>
+              );
+            })}
+          </List>
+
+          <div ref={messageEl} />
+        </ScrollArea>
         {scrollUp ? (
           <Tooltip title="Auto Scroll">
             <Fab

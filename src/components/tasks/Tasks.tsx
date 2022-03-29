@@ -16,34 +16,12 @@ import { useTasks } from '../../hooks/useTasks';
 import { TaskData } from '../../utils/types/userTypes';
 import Card from './Card';
 import Form from './Form';
+import { ScrollArea } from '@mantine/core';
 
 const useStyles = makeStyles((theme: any) => ({
-  taskList: {
-    overflow: 'auto',
-    maxHeight: '16rem',
-    '&::-webkit-scrollbar': {
-      width: '0.4em',
-    },
-    '&::-webkit-scrollbar-track': {
-      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-      webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(0,0,0,.1)',
-      outline: '1px solid slategrey',
-      borderRadius: 8,
-    },
-  },
   typography: {
     marginLeft: 16,
     marginTop: 12,
-  },
-  addButton: {
-    display: 'flex',
-    alignContent: 'center',
-    justifyContent: 'center',
-    maxWidth: '34rem',
-    padding: 0,
   },
   addTask: {
     backgroundColor: theme.palette.secondary.main,
@@ -106,18 +84,20 @@ const Tasks: React.FC = () => {
     );
   } else {
     body = (
-      <Box className={classes.taskList}>
-        <List>
-          {taskList.map((task: TaskData) => (
-            <div key={task.id}>
-              {currentTaskId === task.id ? (
-                <Card task={task} current={true} />
-              ) : (
-                <Card task={task} current={false} />
-              )}
-            </div>
-          ))}
-        </List>
+      <Box>
+        <ScrollArea style={{ height: '16rem' }} offsetScrollbars>
+          <List>
+            {taskList.map((task: TaskData) => (
+              <div key={task.id}>
+                {currentTaskId === task.id ? (
+                  <Card task={task} current={true} />
+                ) : (
+                  <Card task={task} current={false} />
+                )}
+              </div>
+            ))}
+          </List>
+        </ScrollArea>
       </Box>
     );
   }

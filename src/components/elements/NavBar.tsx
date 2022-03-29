@@ -18,13 +18,13 @@ import {
   Toolbar,
   Tooltip,
   Typography,
+  Menu,
 } from '@mui/material';
 import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import StyledMenu from './StyledMenu';
 
-const pages = ['Rating', 'About'];
+const pages = ['rating', 'about'];
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
@@ -65,25 +65,22 @@ const Navbar = () => {
             <Avatar alt={user?.username!} src={user?.profilePic!} />
           </IconButton>
         </Tooltip>
-        <StyledMenu
+        <Menu
           id="user-menu"
           anchorEl={anchorElUser}
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
-          <MenuItem disabled>
-            <Typography
-              variant="h6"
-              component="div"
-              color="primary"
-              // className="w-full align-middle"
-              sx={{ mx: 'auto' }}
-            >
-              {user.username}
-            </Typography>
-          </MenuItem>
+          <Typography
+            variant="h6"
+            component="div"
+            color="primary"
+            sx={{ mx: '1rem', mb: '0.45rem' }}
+          >
+            {user.username}
+          </Typography>
           <Divider />
-          <MenuItem>
+          <MenuItem sx={{ mt: '0.45rem' }}>
             <ListItemIcon>
               <Person fontSize="small" />
             </ListItemIcon>
@@ -106,15 +103,13 @@ const Navbar = () => {
               Settings
             </MenuItem>
           </Link>
-          <button onClick={() => signOut()} className="w-full">
-            <MenuItem>
-              <ListItemIcon>
-                <Logout fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          </button>
-        </StyledMenu>
+          <MenuItem onClick={() => signOut()}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Menu>
       </Box>
     );
   } else {
@@ -152,7 +147,7 @@ const Navbar = () => {
             >
               <MenuIcon />
             </IconButton>
-            <StyledMenu
+            <Menu
               id="nav-menu"
               anchorEl={anchorElNav}
               open={Boolean(anchorElNav)}
@@ -170,17 +165,15 @@ const Navbar = () => {
                 </ListItemIcon>
                 About
               </MenuItem>
-            </StyledMenu>
+            </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'black' }}
-              >
-                {page}
-              </Button>
+              <Link key={page} href={`/${page}`} passHref={true}>
+                <Button onClick={handleCloseNavMenu} sx={{ my: 2 }}>
+                  {page}
+                </Button>
+              </Link>
             ))}
           </Box>
           {rightSide}

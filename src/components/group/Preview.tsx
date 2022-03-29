@@ -27,8 +27,6 @@ const useStyles = makeStyles((theme: any) => ({
   },
   popover: {
     '& .MuiPopover-paper': {
-      border: '1px solid black',
-      borderColor: theme.palette.secondary.main,
       minWidth: '20rem',
       maxWidth: '20rem',
       widht: '20rem',

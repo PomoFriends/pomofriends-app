@@ -36,7 +36,22 @@ const MyApp = (props: any) => {
         withNormalizeCSS
         theme={{
           /** Put your mantine theme override here */
-          colorScheme: 'light',
+          colorScheme: 'dark',
+          colors: {
+            // override dark colors to change them for all components
+            dark: [
+              '#262729',
+              '#262729',
+              '#262729',
+              '#262729',
+              '#262729',
+              '#262729',
+              '#262729',
+              '#262729',
+              '#262729',
+              '#262729',
+            ],
+          },
         }}
       >
         <CacheProvider value={emotionCache}>

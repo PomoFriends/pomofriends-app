@@ -25,12 +25,7 @@ const useStyles = makeStyles((theme: any) => ({
     color: theme.palette.error.main,
     marginLeft: '0.1rem',
   },
-  popover: {
-    '& .MuiPopover-paper': {
-      border: '1px solid black',
-      borderColor: theme.palette.secondary.main,
-    },
-  },
+  popover: {},
   listItem: {
     fontSize: '1rem',
     '&:hover': {

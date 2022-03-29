@@ -11,16 +11,13 @@ const theme = createTheme({
     },
     secondary: {
       main: '#03dac6',
-      light: 'rgb(53, 225, 209)',
-      dark: 'rgb(2, 152, 138)',
-      contrastText: 'rgba(0, 0, 0, 0.87)',
     },
     error: {
       main: '#cf6679',
     },
     background: {
-      default: '#121212',
-      paper: '#424242',
+      default: '#1a1b1e',
+      paper: '#141517',
     },
     warning: {
       main: '#f7bd64',
@@ -33,9 +30,10 @@ const theme = createTheme({
     },
     text: {
       primary: '#ffffff',
-      secondary: 'rgba(255, 255, 255, 0.7)',
-      disabled: 'rgba(255, 255, 255, 0.5)',
+      secondary: 'rgba(255,255,255,0.7)',
+      disabled: 'rgba(255,255,255,0.5)',
     },
+    mode: 'dark',
   },
 });
 

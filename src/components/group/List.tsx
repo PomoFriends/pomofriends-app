@@ -15,24 +15,9 @@ import { useGroup } from '../../hooks/useGroup';
 import { GroupData } from '../../utils/types/groupTypes';
 import GroupForm from './Form';
 import GroupPreview from './Preview';
+import { ScrollArea } from '@mantine/core';
 
 const useStyles = makeStyles((theme: any) => ({
-  groupList: {
-    overflow: 'auto',
-    maxHeight: '36rem',
-    '&::-webkit-scrollbar': {
-      width: '0.4em',
-    },
-    '&::-webkit-scrollbar-track': {
-      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-      webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(0,0,0,.1)',
-      outline: '1px solid slategrey',
-      borderRadius: 8,
-    },
-  },
   typography: {
     marginLeft: 16,
     marginTop: 12,
@@ -90,14 +75,16 @@ const GroupList: React.FC = () => {
     );
   } else {
     body = (
-      <Box className={classes.groupList}>
-        <List>
-          {groupList.map((group: GroupData) => (
-            <div key={group.id}>
-              <GroupPreview group={group} />
-            </div>
-          ))}
-        </List>
+      <Box>
+        <ScrollArea style={{ height: '36rem' }} offsetScrollbars>
+          <List>
+            {groupList.map((group: GroupData) => (
+              <div key={group.id}>
+                <GroupPreview group={group} />
+              </div>
+            ))}
+          </List>
+        </ScrollArea>
       </Box>
     );
   }
