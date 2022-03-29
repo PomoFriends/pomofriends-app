@@ -16,12 +16,13 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../components/elements/Layout';
 import Group from '../components/group/Group';
 import GroupList from '../components/group/List';
-import Pomodoro from '../components/pomodoro/Pomodoro';
-import AdminPomodoro from '../components/pomodoro/AdminPomodoro';
-import GroupPomodoro from '../components/pomodoro/GroupPomodoro';
+import ChangePomodoro from '../components/pomodoro/ChangePomodoro';
 import Tasks from '../components/tasks/Tasks';
 import { useAuth } from '../hooks/useAuth';
-import { useGroup } from '../hooks/useGroup';
+import { useDocumentOnce } from 'react-firebase-hooks/firestore';
+import { getFirestore, doc } from 'firebase/firestore';
+import { app } from '../firebase/firebase';
+import { GroupAdmin } from '../utils/types/groupTypes';
 
 const useStyles = makeStyles((theme: any) => ({
   container: {
@@ -76,6 +77,21 @@ const fabStyle = {
   right: 16,
 };
 
+const fabs = [
+  {
+    color: 'primary' as 'primary',
+    sx: fabStyle as SxProps,
+    icon: <GroupsIcon />,
+    label: 'Show Group',
+  },
+  {
+    color: 'secondary' as 'secondary',
+    sx: fabStyle as SxProps,
+    icon: <TimerIcon />,
+    label: 'Hide Group',
+  },
+];
+
 /**
  *
  * @return {JSX.Element}
@@ -85,50 +101,30 @@ const fabStyle = {
 const HomePage: React.FC = (): JSX.Element => {
   const classes = useStyles();
   const theme = useTheme();
-
-  const { user } = useAuth();
-  const { getAdmin } = useGroup();
-
-  const [groupId, setGroupId] = useState<null | undefined | string>(null);
-  const [adminId, setAdminId] = useState<string>('');
-
-  // automatically check db for new admin
-  useEffect(() => {
-    let isSubscribed = true;
-
-    if (groupId) getAdmin(groupId, setAdminId, isSubscribed);
-
-    return () => {
-      isSubscribed = false;
-    };
-  }, [groupId]);
-
-  const [groupOpen, setGroupOpen] = useState<number>(1);
-  const [open, setOpen] = useState<boolean>(true);
-
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
     exit: theme.transitions.duration.leavingScreen,
   };
 
-  const fabs = [
-    {
-      color: 'primary' as 'primary',
-      sx: fabStyle as SxProps,
-      icon: <GroupsIcon />,
-      label: 'Show Group',
-    },
-    {
-      color: 'secondary' as 'secondary',
-      sx: fabStyle as SxProps,
-      icon: <TimerIcon />,
-      label: 'Hide Group',
-    },
-  ];
+  const { user } = useAuth();
+
+  const [groupId, setGroupId] = useState<null | undefined | string>(null);
+  const [groupOpen, setGroupOpen] = useState<number>(1);
+  const [open, setOpen] = useState<boolean>(true);
 
   useEffect(() => {
-    setGroupId(user?.groupId);
+    if (user) {
+      if (user.groupId) {
+        setGroupId(user.groupId);
+      } else {
+        setGroupId(null);
+      }
+    }
   }, [user]);
+
+  const [admin, loading] = useDocumentOnce(
+    doc(getFirestore(app), 'admins', `${groupId}`)
+  );
 
   const handleChange = () => {
     if (groupOpen === 0) setGroupOpen(1);
@@ -138,16 +134,18 @@ const HomePage: React.FC = (): JSX.Element => {
   };
 
   let body = null;
-  let pomodoroType = null;
+  let pomodoro = null;
 
-  if (groupId && user) {
-    if (adminId === user.id) {
-      pomodoroType = <AdminPomodoro groupId={groupId} />;
-    } else {
-      pomodoroType = <GroupPomodoro groupId={groupId} adminId={adminId} />;
-    }
+  if (!admin && loading) {
+    pomodoro = <div>Loading</div>;
   } else {
-    pomodoroType = <Pomodoro />;
+    pomodoro = (
+      <ChangePomodoro
+        groupId={groupId}
+        admin={admin?.data() as GroupAdmin}
+        user={user}
+      />
+    );
   }
 
   if (groupOpen === 1) {
@@ -163,7 +161,7 @@ const HomePage: React.FC = (): JSX.Element => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Paper className={classes.paperPomodoro} elevation={3}>
-                  {pomodoroType}
+                  {pomodoro}
                 </Paper>
               </Grid>
               <Grid item xs={12}>
@@ -194,7 +192,7 @@ const HomePage: React.FC = (): JSX.Element => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Paper className={classes.paperPomodoro} elevation={3}>
-                {pomodoroType}
+                {pomodoro}
               </Paper>
             </Grid>
             <Grid item xs={12}>

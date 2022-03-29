@@ -302,7 +302,6 @@ export const useGroup = (): useGroupType => {
       console.log('User is not logged in!');
       return;
     }
-
     console.log('command', command);
 
     const admin = await db
@@ -331,6 +330,8 @@ export const useGroup = (): useGroupType => {
       console.log('User is not logged in!');
       return;
     }
+
+    if (!isSubscribed) return;
 
     try {
       db.collection('groupControls')

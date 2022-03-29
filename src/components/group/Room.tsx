@@ -62,9 +62,13 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
   const classes = useStyles();
 
   const { leaveGroup } = useGroup();
+  const [clickedButton, setClicked] = useState<boolean>(false);
 
   const handleLeaveGroup = async () => {
-    await leaveGroup(group.id);
+    if (clickedButton === false) {
+      setClicked(true);
+      await leaveGroup(group.id);
+    }
   };
 
   const [isChat, setIsChat] = useState<boolean>(true);
@@ -106,7 +110,6 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
 
       <RoomButtons isChat={isChat} changeComponent={changeComponent} />
 
-      {/* <Chat groupId={group.id} /> */}
       {isChat ? (
         <Chat groupId={group.id} />
       ) : (

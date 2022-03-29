@@ -83,12 +83,6 @@ const GroupList: React.FC = () => {
   let body;
 
   if (groupList.length === 0 && isLoading) {
-    // body = (
-    //   <div className="flex justify-center py-8">
-    //     <Spinner width="40" className="animate-spin" />
-    //   </div>
-    // );
-
     body = (
       <Typography variant="h6" className={classes.typography}>
         No groups at the moment, create your own!

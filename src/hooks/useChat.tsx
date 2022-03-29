@@ -72,6 +72,8 @@ export const useChat = (): useChatType => {
     setMessages: any,
     isSubscribed: boolean
   ) => {
+    if (!isSubscribed) return;
+
     try {
       db.collection('messages')
         .doc(groupId)

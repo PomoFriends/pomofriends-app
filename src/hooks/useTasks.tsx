@@ -194,6 +194,8 @@ export const useTasks = (): useTasksType => {
     setCurrentTaskId: any,
     isSubscribed: boolean
   ) => {
+    if (!isSubscribed) return;
+
     if (user) {
       try {
         db.collection('tasks')

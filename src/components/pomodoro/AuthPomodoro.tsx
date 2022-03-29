@@ -1,24 +1,25 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useGroup } from '../../hooks/useGroup';
+import { useSettings } from '../../hooks/useSettings';
 import {
+  UserData,
   PomodoroSettings,
   PomodoroSettingsDefaultValues,
 } from '../../utils/types/userTypes';
 import { useInterval } from '../../utils/useInterval';
+import ButtonsControl from '../buttons/ButtonsControl';
 import ButtonsType from '../buttons/ButtonsType';
 import TimeDisplay from './TimeDisplay';
 
-interface GroupPomodoroProps {
-  groupId: string;
+interface PomodoroProps {
+  user: UserData | null;
 }
 
-const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
-  const { getGroupSettings, getGroupCommands } = useGroup();
+const Pomodoro: React.FC<PomodoroProps> = ({ user }) => {
+  const { getSettings } = useSettings();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
   );
-  const [command, setCommand] = useState<string>('');
 
   const [time, setTime] = useState(settings.pomodoro);
   const [timeCounting, setTimeCounting] = useState(false);
@@ -28,6 +29,8 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
   const [cyclesQtdManager, setCyclesQtdManager] = useState(
     new Array(settings.longBreakInterval - 1).fill(true)
   );
+  const [started, setStarted] = useState(false);
+
   const [completedCycles, setCompletedCycles] = useState(0);
   const [fullPomodoroTime, setFullPomodoroTime] = useState(0);
   const [numberOfPomodoros, setNumberOfPomodoros] = useState(0);
@@ -35,45 +38,15 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
   // automatically check db for updated settings
   useEffect(() => {
     let isSubscribed = true;
-
-    getGroupSettings(groupId, setSettings, isSubscribed);
-
-    return () => {
-      isSubscribed = false;
-    };
-  }, []);
-
-  // automatically check db for updated commands
-  useEffect(() => {
-    let isSubscribed = true;
-
-    getGroupCommands(groupId, setCommand, isSubscribed);
-
-    return () => {
-      isSubscribed = false;
-    };
-  }, []);
-
-  // Execute command
-  useEffect(() => {
-    if (command === 'startPomodoro') {
-      startPomodoro();
-    } else if (command === 'startShortBreak') {
-      startBreak(false);
-    } else if (command === 'startLongBreak') {
-      startBreak(true);
-    } else if (command === 'toggleTimeCountingTrue') {
-      setTimeCounting(true);
-    } else if (command === 'toggleTimeCountingFalse') {
-      setTimeCounting(false);
-    } else if (command === 'resetTimer') {
-      resetTimer();
-    } else if (command === 'skipCurrent') {
-      skipCurrent();
-    } else if (command === 'startTimer') {
-      startTimer();
+    if (user) {
+      if (!isSubscribed) return;
+      getSettings(user.id, setSettings, isSubscribed);
     }
-  }, [command]);
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [user]);
 
   useEffect(() => {
     if (timeCounting === false) {
@@ -95,15 +68,21 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
     timeCounting ? 1000 : null
   );
 
+  const toggleTimeCounting = useCallback(async () => {
+    setTimeCounting(!timeCounting);
+  }, [setTimeCounting, timeCounting]);
+
   const startTimer = useCallback(() => {
     setTimeCounting(true);
-  }, [setTimeCounting]);
+    setStarted(true);
+  }, [setTimeCounting, setStarted]);
 
   const startPomodoro = useCallback(() => {
     if (settings.autoStartPomodoro) {
       startTimer();
     } else {
       setTimeCounting(false);
+      setStarted(false);
     }
 
     setIsPomodoro(true);
@@ -114,6 +93,7 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
     setIsPomodoro,
     setIsBreak,
     setTime,
+    setStarted,
     startTimer,
     settings.pomodoro,
     settings.autoStartPomodoro,
@@ -125,6 +105,7 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
         startTimer();
       } else {
         setTimeCounting(false);
+        setStarted(false);
       }
 
       setIsPomodoro(false);
@@ -144,6 +125,7 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
       setIsBreak,
       setTime,
       setIsLongBreak,
+      setStarted,
       startTimer,
       settings.longBreak,
       settings.shortBreak,
@@ -153,6 +135,7 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
 
   const resetTimer = useCallback(() => {
     setTimeCounting(false);
+    setStarted(false);
 
     if (isPomodoro) {
       setTime(settings.pomodoro);
@@ -163,6 +146,7 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
     }
   }, [
     setTimeCounting,
+    setStarted,
     isPomodoro,
     isBreak,
     isLongBreak,
@@ -173,6 +157,7 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
 
   const skipCurrent = useCallback(() => {
     setTimeCounting(false);
+    setStarted(false);
 
     if (isPomodoro && cyclesQtdManager.length > 0) {
       startBreak(false);
@@ -189,6 +174,7 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
     startBreak,
     setCyclesQtdManager,
     setCompletedCycles,
+    setStarted,
     isPomodoro,
     cyclesQtdManager,
   ]);
@@ -227,17 +213,24 @@ const GroupPomodoro: React.FC<GroupPomodoroProps> = ({ groupId }) => {
         startBreak={startBreak}
         isBreak={isBreak}
         isLongBreak={isLongBreak}
-        admin={false}
+        admin={true}
       />
       <TimeDisplay
         time={time}
         isBreak={isBreak}
         isLongBreak={isLongBreak}
         settings={settings}
-        group={true}
+      />
+      <ButtonsControl
+        toggleTimeCounting={toggleTimeCounting}
+        resetTimer={resetTimer}
+        skipCurrent={skipCurrent}
+        timeCounting={timeCounting}
+        startTimer={startTimer}
+        started={started}
       />
     </>
   );
 };
 
-export default GroupPomodoro;
+export default Pomodoro;

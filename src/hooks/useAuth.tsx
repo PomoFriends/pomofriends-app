@@ -1,3 +1,4 @@
+import firebase from 'firebase/compat/app';
 import {
   createContext,
   ReactNode,
@@ -204,6 +205,27 @@ export const useAuthProvider = (): authContextType => {
    */
   const signOut = async (): Promise<void> => {
     // Change the state of the user
+    if (user === null) return;
+
+    if (user.groupId) {
+      await db
+        .collection('participants')
+        .doc(user.groupId)
+        .collection('participants')
+        .doc(user.id)
+        .delete();
+
+      await db.collection('users').doc(user.id).update({ groupId: null });
+
+      await db
+        .collection('groups')
+        .doc(user.groupId)
+        .update({
+          participantsCount: firebase.firestore.FieldValue.increment(-1),
+        });
+      handleUpdate();
+    }
+
     return await auth.signOut().then(() => setUser(null));
   };
 

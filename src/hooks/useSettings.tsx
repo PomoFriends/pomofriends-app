@@ -23,6 +23,7 @@ export const useSettings = (): useSettingsType => {
     setSettings: any,
     isSubscribed: boolean
   ) => {
+    if (!isSubscribed) return;
     try {
       db.collection('pomodoroSettings')
         .doc(userId)

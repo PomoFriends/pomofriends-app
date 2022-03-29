@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import { useSettings } from '../../hooks/useSettings';
 import {
   PomodoroSettings,
   PomodoroSettingsDefaultValues,
@@ -11,9 +9,7 @@ import ButtonsType from '../buttons/ButtonsType';
 import TimeDisplay from './TimeDisplay';
 
 const Pomodoro = () => {
-  const { user } = useAuth();
-  const { getSettings } = useSettings();
-
+  // eslint-disable-next-line no-unused-vars
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
   );
@@ -31,19 +27,6 @@ const Pomodoro = () => {
   const [completedCycles, setCompletedCycles] = useState(0);
   const [fullPomodoroTime, setFullPomodoroTime] = useState(0);
   const [numberOfPomodoros, setNumberOfPomodoros] = useState(0);
-
-  // automatically check db for updated settings
-  useEffect(() => {
-    let isSubscribed = true;
-
-    if (user) {
-      getSettings(user.id, setSettings, isSubscribed);
-    }
-
-    return () => {
-      isSubscribed = false;
-    };
-  }, [user]);
 
   useEffect(() => {
     if (timeCounting === false) {
@@ -210,6 +193,7 @@ const Pomodoro = () => {
         startBreak={startBreak}
         isBreak={isBreak}
         isLongBreak={isLongBreak}
+        admin={true}
       />
       <TimeDisplay
         time={time}

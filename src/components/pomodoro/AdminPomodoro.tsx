@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
 import { useGroup } from '../../hooks/useGroup';
 import {
   PomodoroSettings,
@@ -15,7 +14,6 @@ interface AdminPomodoroProps {
 }
 
 const AdminPomodoro: React.FC<AdminPomodoroProps> = ({ groupId }) => {
-  const { user } = useAuth();
   const { getGroupSettings, groupControl } = useGroup();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
@@ -31,7 +29,6 @@ const AdminPomodoro: React.FC<AdminPomodoroProps> = ({ groupId }) => {
     new Array(settings.longBreakInterval - 1).fill(true)
   );
   const [started, setStarted] = useState(false);
-
   const [completedCycles, setCompletedCycles] = useState(0);
   const [fullPomodoroTime, setFullPomodoroTime] = useState(0);
   const [numberOfPomodoros, setNumberOfPomodoros] = useState(0);
@@ -45,7 +42,7 @@ const AdminPomodoro: React.FC<AdminPomodoroProps> = ({ groupId }) => {
     return () => {
       isSubscribed = false;
     };
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     if (timeCounting === false) {
@@ -230,6 +227,7 @@ const AdminPomodoro: React.FC<AdminPomodoroProps> = ({ groupId }) => {
         startBreak={startBreak}
         isBreak={isBreak}
         isLongBreak={isLongBreak}
+        admin={true}
       />
       <TimeDisplay
         time={time}

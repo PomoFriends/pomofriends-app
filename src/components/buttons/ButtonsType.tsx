@@ -6,6 +6,7 @@ interface ButtonsProps {
   startBreak: (boolean: boolean) => void;
   isBreak: boolean;
   isLongBreak: boolean;
+  admin: boolean;
 }
 
 const ButtonsType: React.FC<ButtonsProps> = ({
@@ -13,6 +14,7 @@ const ButtonsType: React.FC<ButtonsProps> = ({
   startBreak,
   isBreak,
   isLongBreak,
+  admin,
 }) => {
   const [value, setValue] = useState(!isBreak ? 0 : !isLongBreak ? 1 : 2);
 
@@ -21,6 +23,7 @@ const ButtonsType: React.FC<ButtonsProps> = ({
   }, [isBreak, isLongBreak]);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    if (!admin) return;
     setValue(newValue);
     if (newValue === 0) {
       startPomodoro();
@@ -34,9 +37,9 @@ const ButtonsType: React.FC<ButtonsProps> = ({
   return (
     <Container>
       <Tabs value={value} onChange={handleChange} centered>
-        <Tab label="Pomodoro" />
-        <Tab label="Short Break" />
-        <Tab label="Long Break" />
+        <Tab label="Pomodoro" disabled={!admin} />
+        <Tab label="Short Break" disabled={!admin} />
+        <Tab label="Long Break" disabled={!admin} />
       </Tabs>
     </Container>
   );
