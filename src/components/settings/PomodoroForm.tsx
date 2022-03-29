@@ -44,11 +44,11 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ErrorMessage | null>(null);
 
-  const onSubmit: SubmitHandler<Form> = (data: Form) => {
+  const onSubmit: SubmitHandler<Form> = async (data: Form) => {
     handleClose();
     setIsLoading(true);
     setError(null);
-    return updateSettings({
+    return await updateSettings({
       pomodoro: data.pomodoro * 60,
       shortBreak: data.shortBreak * 60,
       longBreak: data.longBreak * 60,

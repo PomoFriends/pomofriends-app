@@ -208,6 +208,7 @@ const Pomodoro = () => {
         timeCounting={timeCounting}
         startTimer={startTimer}
         started={started}
+        admin={true}
       />
     </>
   );

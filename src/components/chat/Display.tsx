@@ -9,6 +9,7 @@ import {
   ListItemSecondaryAction,
   Popover,
   Tooltip,
+  Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { MouseEvent, useState } from 'react';
@@ -91,15 +92,12 @@ const DisplayMessages: React.FC<DisplayMessageProps> = ({
         }}
       >
         <Box className={classes.box}>
-          <Box
-            sx={{
-              color: message.color,
-              marginRight: '0.25rem',
-            }}
-          >
-            {message.username}:
-          </Box>
-          <Box>{message.message}</Box>
+          <Typography>
+            <Typography color={message.color} component="span" fontWeight={600}>
+              {message.username}
+            </Typography>
+            : {message.message}
+          </Typography>
         </Box>
         <ListItemSecondaryAction className={classes.listItemSecondaryAction}>
           <Tooltip title="action">

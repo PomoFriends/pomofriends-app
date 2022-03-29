@@ -93,8 +93,7 @@ interface TimerProps {
   isBreak: boolean;
   isLongBreak: boolean;
   settings: PomodoroSettings;
-  groupId?: string;
-  group?: boolean;
+  groupId?: string | null;
   admin?: boolean;
 }
 
@@ -104,7 +103,6 @@ const TimeDisplay: React.FC<TimerProps> = ({
   isLongBreak,
   settings,
   groupId,
-  group,
   admin,
 }) => {
   const classes = useStyles();
@@ -140,7 +138,7 @@ const TimeDisplay: React.FC<TimerProps> = ({
         aria-describedby="modal-modal-description"
       >
         <Box className={classes.settingsModal}>
-          {group === true ? (
+          {groupId ? (
             admin === true ? (
               <AdminSettingsForm
                 handleClose={handleClose}

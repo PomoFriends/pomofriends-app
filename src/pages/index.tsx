@@ -108,7 +108,7 @@ const HomePage: React.FC = (): JSX.Element => {
 
   const { user } = useAuth();
 
-  const [groupId, setGroupId] = useState<null | undefined | string>(null);
+  const [groupId, setGroupId] = useState<null | string>(null);
   const [groupOpen, setGroupOpen] = useState<number>(1);
   const [open, setOpen] = useState<boolean>(true);
 
@@ -138,12 +138,14 @@ const HomePage: React.FC = (): JSX.Element => {
 
   if (!admin && loading) {
     pomodoro = <div>Loading</div>;
+  } else if (admin === undefined && !loading) {
+    pomodoro = <ChangePomodoro groupId={null} admin={null} user={user} />;
   } else {
     pomodoro = (
       <ChangePomodoro
+        user={user}
         groupId={groupId}
         admin={admin?.data() as GroupAdmin}
-        user={user}
       />
     );
   }

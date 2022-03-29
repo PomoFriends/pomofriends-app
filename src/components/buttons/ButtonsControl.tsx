@@ -25,6 +25,7 @@ interface ButtonsProps {
   startTimer: () => void;
   timeCounting: boolean;
   started: boolean;
+  admin: boolean;
 }
 
 const ButtonsControl: React.FC<ButtonsProps> = ({
@@ -34,9 +35,13 @@ const ButtonsControl: React.FC<ButtonsProps> = ({
   startTimer,
   timeCounting,
   started,
+  admin,
 }) => {
   const classes = useStyles();
 
+  if (!admin) {
+    return null;
+  }
   return (
     <Box className={classes.box}>
       {started ? (
