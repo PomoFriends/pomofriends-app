@@ -16,6 +16,7 @@ import { GroupData } from '../../utils/types/groupTypes';
 import GroupForm from './Form';
 import GroupPreview from './Preview';
 import { ScrollArea } from '@mantine/core';
+import Loader from '../elements/Loader';
 
 const useStyles = makeStyles((theme: any) => ({
   typography: {
@@ -55,9 +56,8 @@ const GroupList: React.FC = () => {
   useEffect(() => {
     let isSubscribed = true;
 
-    setIsLoading(true);
-
     getGroupList(setGroupList, isSubscribed);
+    setIsLoading(false);
 
     return () => {
       setIsLoading(false);
@@ -67,7 +67,13 @@ const GroupList: React.FC = () => {
 
   let body;
 
-  if (groupList.length === 0 && isLoading) {
+  if (isLoading) {
+    body = (
+      <Box my={35}>
+        <Loader />
+      </Box>
+    );
+  } else if (groupList.length === 0 && !isLoading) {
     body = (
       <Typography variant="h6" className={classes.typography}>
         No groups at the moment, create your own!

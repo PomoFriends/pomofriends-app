@@ -69,7 +69,6 @@ export type useSettingsType = {
 
 /** Type for useTasks hook */
 export type useTasksType = {
-  loadingTasks: boolean;
   createTask: ({}: TaskForm) => Promise<void>;
   editTask: ({}: TaskForm, taskId: string) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;

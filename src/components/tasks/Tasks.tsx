@@ -61,13 +61,20 @@ const Tasks: React.FC = () => {
     let isSubscribed = true;
 
     getTasks(setTaskList, setCurrentTaskId, isSubscribed);
-    setIsLoading(false);
 
     return () => {
       setIsLoading(false);
       isSubscribed = false;
     };
   }, [user]);
+
+  useEffect(() => {
+    if (taskList.length !== 0 && !user) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+    }
+  }, [taskList]);
 
   let body;
   if (isLoading) {

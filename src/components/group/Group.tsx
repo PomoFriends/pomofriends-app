@@ -18,7 +18,7 @@ const Group: React.FC<GroupProps> = ({ id }) => {
 
   if (!groupDataLoading && !groupData) {
     body = (
-      <Box my={45}>
+      <Box my={35}>
         <div>Something went wrong!</div>
       </Box>
     );
@@ -26,7 +26,7 @@ const Group: React.FC<GroupProps> = ({ id }) => {
     body = (
       <>
         {!groupData && groupDataLoading ? (
-          <Box my={45}>
+          <Box my={35}>
             <Loader />
           </Box>
         ) : (

@@ -1,6 +1,5 @@
 import firebase from 'firebase/compat/app';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { db } from '../firebase/firebase';
 import { TaskForm } from '../utils/types/formTypes';
 import { useTasksType } from '../utils/types/hookTypes';
@@ -10,7 +9,6 @@ import { useAuth } from './useAuth';
 export const useTasks = (): useTasksType => {
   const { user, handleUpdate } = useAuth();
   const router = useRouter();
-  const [loadingTasks, setLoadingTasks] = useState<boolean>(true);
 
   const createTask = async (task: TaskForm) => {
     if (user) {
@@ -217,18 +215,13 @@ export const useTasks = (): useTasksType => {
           });
 
         setCurrentTaskId(user.currentTaskId);
-        return;
       } catch (error) {
         console.log("Couldn't get tasks");
-        return;
       }
     }
-    setLoadingTasks(false);
-    return;
   };
 
   return {
-    loadingTasks,
     createTask,
     editTask,
     deleteTask,
