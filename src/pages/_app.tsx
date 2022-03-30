@@ -8,6 +8,7 @@ import '../styles/global.css';
 import theme from '../styles/theme/theme';
 import createEmotionCache from '../utils/createEmotionCache';
 import { MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -42,7 +43,7 @@ const MyApp = (props: any) => {
             dark: [
               '#262729',
               '#262729',
-              '#262729',
+              '#ffffff',
               '#262729',
               '#262729',
               '#262729',
@@ -54,15 +55,17 @@ const MyApp = (props: any) => {
           },
         }}
       >
-        <CacheProvider value={emotionCache}>
-          <ThemeProvider theme={theme}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-            <AuthProvider>
-              <Component {...pageProps} />
-            </AuthProvider>
-          </ThemeProvider>
-        </CacheProvider>
+        <NotificationsProvider>
+          <CacheProvider value={emotionCache}>
+            <ThemeProvider theme={theme}>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+              <AuthProvider>
+                <Component {...pageProps} />
+              </AuthProvider>
+            </ThemeProvider>
+          </CacheProvider>
+        </NotificationsProvider>
       </MantineProvider>
     </Fragment>
   );

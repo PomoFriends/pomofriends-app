@@ -5,6 +5,7 @@ import { TaskForm } from '../utils/types/formTypes';
 import { useTasksType } from '../utils/types/hookTypes';
 import { TaskData } from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
+import { notification } from '../utils/notification';
 
 export const useTasks = (): useTasksType => {
   const { user, handleUpdate } = useAuth();
@@ -136,6 +137,21 @@ export const useTasks = (): useTasksType => {
             .doc(user.id)
             .update({ currentTaskId: null });
         }
+        const task: TaskData = await db
+          .collection('tasks')
+          .doc(user.id)
+          .collection('task')
+          .doc(taskId)
+          .get()
+          .then((res) => {
+            return res.data() as TaskData;
+          });
+
+        notification({
+          title: "You've complited the task:",
+          message: task.title,
+          color: 'violet',
+        });
       } catch {
         console.log("Something went wrong, couldn't complete the task");
       }
