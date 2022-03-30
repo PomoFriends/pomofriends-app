@@ -7,13 +7,13 @@ import {
   Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/elements/Layout';
-import Spinner from '../components/images/Spinner';
+import Loader from '../components/elements/Loader';
 import AboutYouSettingsForm from '../components/settings/AboutYouSettingsForm';
 import PomodoroSettingsForm from '../components/settings/PomodoroSettingsForm';
-import { db } from '../firebase/firebase';
 import { useRequireAuth } from '../hooks/useRequireAuth';
+import { useSettings } from '../hooks/useSettings';
 import { PomodoroSettings } from '../utils/types/userTypes';
 
 const useStyles = makeStyles((theme: any) => ({
@@ -52,31 +52,29 @@ const SettingsPage: React.FC = (): JSX.Element => {
   const classes = useStyles();
 
   const { user } = useRequireAuth();
+  const { getSettings } = useSettings();
   const [pomodoroSettings, setSettings] = useState<PomodoroSettings | null>(
     null
   );
 
-  const fetchPomodoro = async () => {
-    await db
-      .collection('pomodoroSettings')
-      .doc(user?.id)
-      .get()
-      .then((settings) => {
-        if (settings.exists) {
-          setSettings(settings.data() as PomodoroSettings);
-        } else {
-          console.log('No such document!');
-        }
-      });
-  };
-  fetchPomodoro();
+  // Automatically check db for updated settings
+  useEffect(() => {
+    let isSubscribed = true;
+
+    // Get user settings
+    if (user) getSettings(user.id, setSettings, isSubscribed);
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [user]);
 
   return (
     <Layout>
       <>
         {!user || !pomodoroSettings ? (
-          <Box>
-            <Spinner width="40" className="animate-spin" />
+          <Box my={45}>
+            <Loader />
           </Box>
         ) : (
           <Container className={classes.container}>

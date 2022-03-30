@@ -37,7 +37,7 @@ export const useSettings = (): useSettingsType => {
           }
         });
     } catch (error) {
-      console.log("Couldn't get messages");
+      console.log("Couldn't get settings");
     }
   };
 

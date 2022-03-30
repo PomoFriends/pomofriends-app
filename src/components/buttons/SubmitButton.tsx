@@ -1,6 +1,6 @@
 import { Button as CoolButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import Spinner from '../images/Spinner';
+import { Loader, Center } from '@mantine/core';
 
 const useStyles = makeStyles((theme: any) => ({
   submit: {
@@ -19,13 +19,12 @@ interface ButtonProps {
  * @param {isLoading} boolean
  * @return {JSF.Element}
  *
- * A button with the loading spinner.
+ * A button with loading.
  * Takes isLoading state and title
  */
 const SubmitButton = ({
   isLoading,
   title,
-  children,
 }: ButtonProps &
   React.ButtonHTMLAttributes<HTMLButtonElement>): JSX.Element => {
   const classes = useStyles();
@@ -39,7 +38,9 @@ const SubmitButton = ({
       className={classes.submit}
     >
       {isLoading ? (
-        <Spinner width="20" fill="white" className="animate-spin" />
+        <Center my={5}>
+          <Loader color="black" size="xl" variant="dots" />
+        </Center>
       ) : (
         title
       )}
