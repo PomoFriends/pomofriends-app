@@ -13,6 +13,7 @@ import { PomodoroSettings, UserData } from './userTypes';
 /** Type for useAuth hook */
 export type authContextType = {
   user: UserData | null;
+  userLoading: boolean;
   signUp: ({ username, email, password }: SignUpData) => Promise<any>;
   signIn: ({ email, password }: SignInData) => Promise<any>;
   signOut: () => void;
@@ -23,6 +24,7 @@ export type authContextType = {
 /** Default values for useAuth */
 export const authContextDefaultValues: authContextType = {
   user: null,
+  userLoading: true,
   signUp: async () => {},
   signIn: async () => {},
   signOut: async () => {},
@@ -67,6 +69,7 @@ export type useSettingsType = {
 
 /** Type for useTasks hook */
 export type useTasksType = {
+  loadingTasks: boolean;
   createTask: ({}: TaskForm) => Promise<void>;
   editTask: ({}: TaskForm, taskId: string) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;

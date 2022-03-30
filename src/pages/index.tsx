@@ -9,20 +9,18 @@ import {
   SxProps,
   Tooltip,
   Zoom,
+  Box,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Layout from '../components/elements/Layout';
 import Group from '../components/group/Group';
 import GroupList from '../components/group/List';
 import ChangePomodoro from '../components/pomodoro/ChangePomodoro';
 import Tasks from '../components/tasks/Tasks';
 import { useAuth } from '../hooks/useAuth';
-import { useDocumentOnce } from 'react-firebase-hooks/firestore';
-import { getFirestore, doc } from 'firebase/firestore';
-import { app } from '../firebase/firebase';
-import { GroupAdmin } from '../utils/types/groupTypes';
+import Loader from '../components/elements/Loader';
 
 const useStyles = makeStyles((theme: any) => ({
   container: {
@@ -52,7 +50,6 @@ const useStyles = makeStyles((theme: any) => ({
     height: '41rem',
     minHeight: '41rem',
   },
-
   closedContainer: {
     display: 'flex',
     alignContent: 'center',
@@ -60,7 +57,6 @@ const useStyles = makeStyles((theme: any) => ({
     maxWidth: '34rem',
     padding: 0,
   },
-
   fab: {
     margin: 0,
     top: 'auto',
@@ -106,25 +102,9 @@ const HomePage: React.FC = (): JSX.Element => {
     exit: theme.transitions.duration.leavingScreen,
   };
 
-  const { user } = useAuth();
-
-  const [groupId, setGroupId] = useState<null | string>(null);
+  const { user, userLoading } = useAuth();
   const [groupOpen, setGroupOpen] = useState<number>(1);
   const [open, setOpen] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (user) {
-      if (user.groupId) {
-        setGroupId(user.groupId);
-      } else {
-        setGroupId(null);
-      }
-    }
-  }, [user]);
-
-  const [admin, loading] = useDocumentOnce(
-    doc(getFirestore(app), 'admins', `${groupId}`)
-  );
 
   const handleChange = () => {
     if (groupOpen === 0) setGroupOpen(1);
@@ -136,21 +116,32 @@ const HomePage: React.FC = (): JSX.Element => {
   let body = null;
   let pomodoro = null;
 
-  if (!admin && loading) {
-    pomodoro = <div>Loading</div>;
-  } else if (admin === undefined && !loading) {
-    pomodoro = <ChangePomodoro groupId={null} admin={null} user={user} />;
-  } else {
+  if (userLoading) {
     pomodoro = (
-      <ChangePomodoro
-        user={user}
-        groupId={groupId}
-        admin={admin?.data() as GroupAdmin}
-      />
+      <Box my={18}>
+        <Loader />
+      </Box>
     );
+  } else {
+    if (user) {
+      pomodoro = <ChangePomodoro user={user} groupId={null} />;
+      if (user.groupId) {
+        pomodoro = <ChangePomodoro user={user} groupId={user.groupId} />;
+      } else {
+        pomodoro = <ChangePomodoro user={user} groupId={null} />;
+      }
+    } else {
+      pomodoro = <ChangePomodoro user={null} groupId={null} />;
+    }
   }
 
-  if (groupOpen === 1) {
+  if (!user && userLoading) {
+    body = (
+      <Box my={45}>
+        <Loader />
+      </Box>
+    );
+  } else if (!userLoading && groupOpen === 1) {
     body = (
       <Fade
         in={open}
@@ -176,7 +167,7 @@ const HomePage: React.FC = (): JSX.Element => {
 
           <Grid item xs={12} sm={6} md={6}>
             <Paper className={classes.paperGroup} elevation={3}>
-              {groupId ? <Group id={groupId} /> : <GroupList />}
+              {user?.groupId ? <Group id={user?.groupId} /> : <GroupList />}
             </Paper>
           </Grid>
         </Grid>

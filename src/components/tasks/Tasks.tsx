@@ -17,6 +17,7 @@ import { TaskData } from '../../utils/types/userTypes';
 import Card from './Card';
 import Form from './Form';
 import { ScrollArea } from '@mantine/core';
+import Loader from '../elements/Loader';
 
 const useStyles = makeStyles((theme: any) => ({
   typography: {
@@ -48,7 +49,7 @@ const Tasks: React.FC = () => {
   const { user } = useAuth();
 
   const [taskList, setTaskList] = useState<TaskData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -59,9 +60,8 @@ const Tasks: React.FC = () => {
   useEffect(() => {
     let isSubscribed = true;
 
-    setIsLoading(true);
-
     getTasks(setTaskList, setCurrentTaskId, isSubscribed);
+    setIsLoading(false);
 
     return () => {
       setIsLoading(false);
@@ -70,13 +70,13 @@ const Tasks: React.FC = () => {
   }, [user]);
 
   let body;
-
-  if (taskList.length === 0 && isLoading) {
-    // body = (
-    //   <div className="flex justify-center py-8">
-    //     <Spinner width="40" className="animate-spin" />
-    //   </div>
-    // );
+  if (isLoading) {
+    body = (
+      <Box my={11}>
+        <Loader />
+      </Box>
+    );
+  } else if (taskList.length === 0 && !isLoading) {
     body = (
       <Typography variant="h6" className={classes.typography}>
         No tasks, add new task!

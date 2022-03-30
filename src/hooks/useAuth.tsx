@@ -56,6 +56,7 @@ export const useAuth = (): authContextType => {
 export const useAuthProvider = (): authContextType => {
   // Create a state for the user
   const [user, setUser] = useState<UserData | null>(null);
+  const [userLoading, setLoading] = useState<boolean>(true);
   const [update, setUpdate] = useState(0);
 
   const handleUpdate = () => {
@@ -261,6 +262,7 @@ export const useAuthProvider = (): authContextType => {
     if (user) {
       await getUserAdditionalData(user);
     }
+    setLoading(false);
   };
 
   /**
@@ -306,6 +308,7 @@ export const useAuthProvider = (): authContextType => {
 
   return {
     user,
+    userLoading,
     signUp,
     signIn,
     signOut,
