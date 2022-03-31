@@ -57,12 +57,21 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
 
   const { joinGroup } = useGroup();
 
+  const [clickedButton, setClicked] = useState<boolean>(false);
+
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const openDetails = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const closeDetails = () => {
     setAnchorEl(null);
+  };
+
+  const handleJoin = async () => {
+    if (clickedButton === false) {
+      setClicked(true);
+      await joinGroup(group.id);
+    }
   };
 
   const open = Boolean(anchorEl);
@@ -159,9 +168,7 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
               <IconButton
                 edge="end"
                 aria-label="join-group"
-                onClick={async () => {
-                  await joinGroup(group.id);
-                }}
+                onClick={handleJoin}
                 className={classes.join}
               >
                 <ArrowForwardIosIcon />

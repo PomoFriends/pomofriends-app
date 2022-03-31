@@ -38,7 +38,6 @@ export type useGroupType = {
   joinGroup: (groupId: string) => Promise<void>;
   leaveGroup: (groupId: string) => Promise<void>;
   getGroupList: (setGroupList: any, isSubscribed: boolean) => void;
-  getAdmin: (groupId: string, setAdmin: any, isSubscribed: boolean) => void;
   getGroupSettings: (
     groupId: string,
     setGroupSettings: any,
@@ -101,4 +100,6 @@ export type useParticipantsType = {
     setParticipants: any,
     isSubscribed: boolean
   ) => void;
+  getAdmin: (groupId: string, setAdmin: any, isSubscribed: boolean) => void;
+  changeAdmin: (groupId: string, userId: string) => Promise<void>;
 };

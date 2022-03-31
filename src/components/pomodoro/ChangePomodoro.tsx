@@ -6,6 +6,8 @@ import { getFirestore, doc } from 'firebase/firestore';
 import { app } from '../../firebase/firebase';
 import { Box } from '@mui/material';
 import Loader from '../elements/Loader';
+import { useState, useEffect } from 'react';
+import { useParticipants } from '../../hooks/useParticipants';
 
 interface ChangePomodoroProps {
   user: UserData | null;
@@ -16,6 +18,20 @@ const ChangePomodoro: React.FC<ChangePomodoroProps> = ({ user, groupId }) => {
   const [adminData, adminLoading] = useDocumentOnce(
     doc(getFirestore(app), 'admins', `${groupId}`)
   );
+  const { getAdmin } = useParticipants();
+  const [adminId, setAdminId] = useState<string>('');
+
+  // automatically check db for new participants
+  useEffect(() => {
+    let isSubscribed = true;
+
+    if (groupId) getAdmin(groupId, setAdminId, isSubscribed);
+    else setAdminId('');
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, []);
 
   let body = null;
 
@@ -30,8 +46,8 @@ const ChangePomodoro: React.FC<ChangePomodoroProps> = ({ user, groupId }) => {
       if (adminData !== undefined && groupId) {
         const admin: GroupAdmin = adminData.data() as GroupAdmin;
 
-        if (admin) {
-          if (admin.userId === user.id) {
+        if (admin && adminId) {
+          if (adminId === user.id) {
             console.log('admin');
             body = (
               <Pomodoro
@@ -53,6 +69,7 @@ const ChangePomodoro: React.FC<ChangePomodoroProps> = ({ user, groupId }) => {
             );
           }
         } else {
+          console.log('loading herre');
           body = (
             <Box my={18}>
               <Loader />

@@ -198,6 +198,43 @@ export const useGroup = (): useGroupType => {
         .update({
           participantsCount: firebase.firestore.FieldValue.increment(-1),
         });
+
+      // Get admin of the group
+      const admin: GroupAdmin = await db
+        .collection('admins')
+        .doc(groupId)
+        .get()
+        .then((res) => {
+          return res.data() as GroupAdmin;
+        });
+
+      // Get participants
+      const snapshot = await db
+        .collection('participants')
+        .doc(groupId)
+        .collection('participants')
+        .get();
+
+      const participants: GroupParticipant[] = snapshot.docs.map(
+        (doc) => doc.data() as GroupParticipant
+      );
+
+      if (participants.length !== 0) {
+        if (admin) {
+          // Get a random participant
+          const participant =
+            participants[Math.floor(Math.random() * participants.length)];
+          // set new admin
+          await db
+            .collection('admins')
+            .doc(groupId)
+            .set({ userId: participant.id });
+        }
+      } else {
+        // delete group since there is no participants
+        await db.collection('groups').doc(groupId).delete();
+      }
+
       handleUpdate();
     } else {
       console.log('User is not logged in!');
@@ -208,7 +245,6 @@ export const useGroup = (): useGroupType => {
     try {
       db.collection('groups')
         .orderBy('createdAt')
-        .limit(100)
         .onSnapshot((querySnapshot) => {
           // get all documents from collection with id
           const data = querySnapshot.docs.map((doc) => ({
@@ -222,22 +258,6 @@ export const useGroup = (): useGroupType => {
         });
     } catch (error) {
       console.log("Couldn't get messages");
-    }
-  };
-
-  const getAdmin = (groupId: string, setAdmin: any, isSubscribed: boolean) => {
-    try {
-      db.collection('admins')
-        .doc(groupId)
-        .onSnapshot((querySnapshot) => {
-          const data = querySnapshot.data();
-
-          if (isSubscribed && data) {
-            setAdmin(data?.userId);
-          }
-        });
-    } catch (error) {
-      console.log("Couldn't get admin");
     }
   };
 
@@ -354,7 +374,6 @@ export const useGroup = (): useGroupType => {
     joinGroup,
     leaveGroup,
     getGroupList,
-    getAdmin,
     getGroupSettings,
     updateGroupSettings,
     groupControl,

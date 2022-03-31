@@ -26,7 +26,34 @@ export const useParticipants = (): useParticipantsType => {
     }
   };
 
+  const getAdmin = (groupId: string, setAdmin: any, isSubscribed: boolean) => {
+    try {
+      db.collection('admins')
+        .doc(groupId)
+        .onSnapshot((querySnapshot) => {
+          const data = querySnapshot.data();
+
+          if (isSubscribed && data) {
+            setAdmin(data?.userId);
+          }
+        });
+    } catch (error) {
+      console.log("Couldn't get admin");
+    }
+  };
+
+  const changeAdmin = async (groupId: string, userId: string) => {
+    try {
+      await db.collection('admins').doc(groupId).set({ userId: userId });
+      console.log('make admin');
+    } catch (error) {
+      console.log("Couldn't set admin");
+    }
+  };
+
   return {
     getParticipants,
+    getAdmin,
+    changeAdmin,
   };
 };
