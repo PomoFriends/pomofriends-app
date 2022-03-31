@@ -24,13 +24,20 @@ const Pomodoro: React.FC<PomodoroProps> = ({
   isGroup,
   isAdmin,
 }) => {
-  const { getGroupSettings, groupControl, getGroupCommands } = useGroup();
+  const {
+    getGroupSettings,
+    groupControl,
+    getGroupCommands,
+    updateGroupTime,
+    getGroupTime,
+  } = useGroup();
   const { getSettings } = useSettings();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
   );
   const [command, setCommand] = useState<string>('');
+  const [justJoined, setJustJoined] = useState(true);
 
   const [time, setTime] = useState(settings.pomodoro);
   const [timeCounting, setTimeCounting] = useState(false);
@@ -80,7 +87,7 @@ const Pomodoro: React.FC<PomodoroProps> = ({
 
   // Execute recieved command | if not admin
   useEffect(() => {
-    if (!isAdmin && isGroup) {
+    if (!isAdmin && isGroup && groupId) {
       if (command === 'startPomodoro') {
         startPomodoro();
       } else if (command === 'startShortBreak') {
@@ -98,6 +105,10 @@ const Pomodoro: React.FC<PomodoroProps> = ({
       } else if (command === 'startTimer') {
         startTimer();
       }
+      if (groupId && justJoined) {
+        setJustJoined(false);
+        getGroupTime(groupId, setTime);
+      }
     }
   }, [command]);
 
@@ -113,10 +124,17 @@ const Pomodoro: React.FC<PomodoroProps> = ({
     }
   }, [settings]);
 
+  const sendTimeData = async () => {
+    if (groupId) {
+      if (time > 0 && started) await updateGroupTime(groupId, time - 1);
+    }
+  };
+
   useInterval(
     () => {
       setTime(time - 1);
       if (isPomodoro) setFullPomodoroTime(fullPomodoroTime + 1);
+      if (isAdmin) sendTimeData();
     },
     timeCounting ? 1000 : null
   );

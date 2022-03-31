@@ -53,6 +53,8 @@ export type useGroupType = {
     setCommand: any,
     isSubscribed: boolean
   ) => void;
+  updateGroupTime: (groupId: string, time: number) => Promise<void>;
+  getGroupTime: (groupId: string, setTime: any) => Promise<void>;
 };
 
 /** Type for useSettings hook */

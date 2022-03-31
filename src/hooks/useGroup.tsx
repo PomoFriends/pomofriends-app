@@ -7,6 +7,7 @@ import {
   GroupData,
   GroupParticipant,
   GroupSettingsDefaultValues,
+  GroupTime,
 } from '../utils/types/groupTypes';
 import { useGroupType } from '../utils/types/hookTypes';
 import { UserSettings } from '../utils/types/userTypes';
@@ -48,6 +49,12 @@ export const useGroup = (): useGroupType => {
           .collection('groupControls')
           .doc(newGroup.id)
           .set({ command: 'resetTimer' });
+
+        // Create group time doc
+        await db
+          .collection('groupTime')
+          .doc(newGroup.id)
+          .set({ time: GroupSettingsDefaultValues.pomodoro });
 
         // Create participants doc with the same id as the group
         await db.collection('participants').doc(newGroup.id).set({});
@@ -369,6 +376,23 @@ export const useGroup = (): useGroupType => {
     }
   };
 
+  const updateGroupTime = async (groupId: string, time: number) => {
+    await db.collection('groupTime').doc(groupId).set({ time });
+  };
+
+  const getGroupTime = async (groupId: string, setTime: any) => {
+    await db
+      .collection('groupTime')
+      .doc(groupId)
+      .get()
+      .then((res) => {
+        const timer = res.data() as GroupTime;
+        setTime(timer.time);
+      });
+
+    console.log('get time');
+  };
+
   return {
     createGroup,
     joinGroup,
@@ -378,5 +402,7 @@ export const useGroup = (): useGroupType => {
     updateGroupSettings,
     groupControl,
     getGroupCommands,
+    updateGroupTime,
+    getGroupTime,
   };
 };

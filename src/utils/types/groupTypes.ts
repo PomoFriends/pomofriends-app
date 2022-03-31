@@ -64,3 +64,7 @@ export type GroupMessage = {
   color: string;
   createdAt: number;
 };
+
+export type GroupTime = {
+  time: number;
+};
