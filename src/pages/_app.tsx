@@ -4,7 +4,6 @@ import Head from 'next/head';
 import PropTypes from 'prop-types';
 import { Fragment, useEffect } from 'react';
 import { AuthProvider } from '../hooks/useAuth';
-import '../styles/global.css';
 import theme from '../styles/theme/theme';
 import createEmotionCache from '../utils/createEmotionCache';
 import { MantineProvider } from '@mantine/core';

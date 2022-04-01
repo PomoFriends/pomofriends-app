@@ -240,6 +240,22 @@ export const useGroup = (): useGroupType => {
       } else {
         // delete group since there is no participants
         await db.collection('groups').doc(groupId).delete();
+        await db.collection('groupControls').doc(groupId).delete();
+        await db.collection('groupSettings').doc(groupId).delete();
+        await db.collection('groupTime').doc(groupId).delete();
+        await db.collection('admins').doc(groupId).delete();
+        await db.collection('participants').doc(groupId).delete();
+        db.collection('messages')
+          .doc(groupId)
+          .collection('messages')
+          .onSnapshot((querySnapshot) => {
+            // get all documents from collection with id
+            querySnapshot.docs.map((doc) => {
+              doc.ref.delete();
+            });
+
+            db.collection('messages').doc(groupId).delete();
+          });
       }
 
       handleUpdate();

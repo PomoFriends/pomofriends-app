@@ -31,7 +31,7 @@ const ChangePomodoro: React.FC<ChangePomodoroProps> = ({ user, groupId }) => {
     return () => {
       isSubscribed = false;
     };
-  }, []);
+  }, [adminData]);
 
   let body = null;
 
@@ -70,6 +70,8 @@ const ChangePomodoro: React.FC<ChangePomodoroProps> = ({ user, groupId }) => {
           }
         } else {
           console.log('loading herre');
+          console.log('admin', admin);
+          console.log('adminId', adminId);
           body = (
             <Box my={18}>
               <Loader />
