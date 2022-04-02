@@ -104,4 +104,5 @@ export type useParticipantsType = {
   ) => void;
   getAdmin: (groupId: string, setAdmin: any, isSubscribed: boolean) => void;
   changeAdmin: (groupId: string, userId: string) => Promise<void>;
+  kickUser: (groupId: string, userId: string) => Promise<void>;
 };

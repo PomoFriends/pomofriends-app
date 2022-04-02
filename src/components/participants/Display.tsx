@@ -15,9 +15,11 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { MouseEvent, useState } from 'react';
-import { GroupParticipant } from '../../utils/types/groupTypes';
-import { useParticipants } from '../../hooks/useParticipants';
 import { useAuth } from '../../hooks/useAuth';
+import { useParticipants } from '../../hooks/useParticipants';
+import { GroupParticipant } from '../../utils/types/groupTypes';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const useStyles = makeStyles((theme: any) => ({
   actionButton: {
@@ -63,7 +65,7 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
   groupId,
 }) => {
   const classes = useStyles();
-  const { changeAdmin } = useParticipants();
+  const { changeAdmin, kickUser } = useParticipants();
   const { user } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -78,6 +80,11 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
 
   const handleChangeAdmin = () => {
     changeAdmin(groupId, participant.id);
+    closeDetails();
+  };
+
+  const handleKickUser = () => {
+    kickUser(groupId, participant.id);
     closeDetails();
   };
 
@@ -96,15 +103,15 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
         </ListItem>
         <ListItem className={classes.listItem}>
           <Box className={classes.actionButton}>
-            <FlagIcon />
+            <VisibilityOffIcon />
           </Box>
           <Typography position={'inherit'} ml={'0.5rem'}>
             Mute
           </Typography>
         </ListItem>
-        <ListItem className={classes.listItem}>
+        <ListItem className={classes.listItem} onClick={handleKickUser}>
           <Box className={classes.actionButton}>
-            <FlagIcon />
+            <PersonRemoveIcon />
           </Box>
           <Typography position={'inherit'} ml={'0.5rem'}>
             Kick
@@ -134,7 +141,7 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
         </ListItem>
         <ListItem className={classes.listItem}>
           <Box className={classes.actionButton}>
-            <FlagIcon />
+            <VisibilityOffIcon />
           </Box>
           <Typography position={'inherit'} ml={'0.5rem'}>
             Mute

@@ -120,16 +120,38 @@ exports.onFirebaseStatusUpdate = functions.firestore
                 await db.doc(`admins/${groupId}`).delete();
                 console.log('deleting participants');
                 await db.doc(`participants/${groupId}`).delete();
+
                 console.log('deleting messages');
                 const messages = await db
                   .doc(`messages/${groupId}`)
                   .listCollections();
+
                 messages.map(async (message) => {
-                  await db
-                    .doc(`messages/${groupId}/messages/${message.id}`)
-                    .delete();
+                  const messageDocs = await message.listDocuments();
+                  messageDocs.map(async (messageDoc) => {
+                    await db
+                      .doc(`messages/${groupId}/messages/${messageDoc.id}`)
+                      .delete();
+                  });
                 });
                 await db.doc(`messages/${groupId}`).delete();
+
+                console.log('deleting kicked users list');
+                const kickedUsers = await db
+                  .doc(`kickedUsers/${groupId}`)
+                  .listCollections();
+
+                kickedUsers.map(async (kickedUser) => {
+                  const kickedUsersDocs = await kickedUser.listDocuments();
+                  kickedUsersDocs.map(async (kickedUsersDoc) => {
+                    await db
+                      .doc(
+                        `kickedUsers/${groupId}/kickedUsers/${kickedUsersDoc.id}`
+                      )
+                      .delete();
+                  });
+                });
+                await db.doc(`kickedUsers/${groupId}`).delete();
               }
             }
           }

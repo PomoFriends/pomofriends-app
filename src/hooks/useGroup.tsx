@@ -8,6 +8,7 @@ import {
   GroupParticipant,
   GroupSettingsDefaultValues,
   GroupTime,
+  KickedUser,
 } from '../utils/types/groupTypes';
 import { useGroupType } from '../utils/types/hookTypes';
 import { UserSettings } from '../utils/types/userTypes';
@@ -55,6 +56,18 @@ export const useGroup = (): useGroupType => {
           .collection('groupTime')
           .doc(newGroup.id)
           .set({ time: GroupSettingsDefaultValues.pomodoro });
+
+        // Create kickedUsers doc with the same id as the group
+        await db.collection('kickedUsers').doc(newGroup.id).set({});
+
+        // Create first kickedUser
+        const firstKickedUser = db
+          .collection('kickedUsers')
+          .doc(newGroup.id)
+          .collection('kickedUsers')
+          .doc();
+
+        await firstKickedUser.set({ id: firstKickedUser.id, kicked: true });
 
         // Create participants doc with the same id as the group
         await db.collection('participants').doc(newGroup.id).set({});
@@ -137,6 +150,25 @@ export const useGroup = (): useGroupType => {
 
   const joinGroup = async (groupId: string) => {
     if (user) {
+      const kicked = await db
+        .collection('kickedUsers')
+        .doc(groupId)
+        .collection('kickedUsers')
+        .doc(user.id)
+        .get()
+        .then((res) => {
+          if (res.exists) {
+            const kickedRef = res.data() as KickedUser;
+            if (kickedRef) {
+              console.log('you were kicked from the group');
+              return kickedRef.kicked;
+            }
+          }
+          return false;
+        });
+
+      if (kicked) return;
+
       const userColor = await db
         .collection('userSettings')
         .doc(user.id)
@@ -255,6 +287,17 @@ export const useGroup = (): useGroupType => {
             });
 
             db.collection('messages').doc(groupId).delete();
+          });
+        db.collection('kickedUsers')
+          .doc(groupId)
+          .collection('kickedUsers')
+          .onSnapshot((querySnapshot) => {
+            // get all documents from collection with id
+            querySnapshot.docs.map((doc) => {
+              doc.ref.delete();
+            });
+
+            db.collection('kickedUsers').doc(groupId).delete();
           });
       }
 

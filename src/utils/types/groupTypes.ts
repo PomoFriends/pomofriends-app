@@ -68,3 +68,7 @@ export type GroupMessage = {
 export type GroupTime = {
   time: number;
 };
+
+export type KickedUser = {
+  kicked: boolean;
+};

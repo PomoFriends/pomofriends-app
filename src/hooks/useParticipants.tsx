@@ -1,6 +1,7 @@
 import { db } from '../firebase/firebase';
 import { GroupParticipant } from '../utils/types/groupTypes';
 import { useParticipantsType } from '../utils/types/hookTypes';
+import firebase from 'firebase/compat/app';
 
 export const useParticipants = (): useParticipantsType => {
   const getParticipants = (
@@ -51,9 +52,39 @@ export const useParticipants = (): useParticipantsType => {
     }
   };
 
+  const kickUser = async (groupId: string, userId: string) => {
+    try {
+      await db
+        .collection('participants')
+        .doc(groupId)
+        .collection('participants')
+        .doc(userId)
+        .delete();
+
+      await db.collection('users').doc(userId).update({ groupId: null });
+
+      await db
+        .collection('groups')
+        .doc(groupId)
+        .update({
+          participantsCount: firebase.firestore.FieldValue.increment(-1),
+        });
+
+      await db
+        .collection('kickedUsers')
+        .doc(groupId)
+        .collection('kickedUsers')
+        .doc(userId)
+        .set({ id: userId, kicked: true });
+    } catch (error) {
+      console.log("Couldn't kick user");
+    }
+  };
+
   return {
     getParticipants,
     getAdmin,
     changeAdmin,
+    kickUser,
   };
 };
