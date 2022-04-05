@@ -20,6 +20,7 @@ import { useParticipants } from '../../hooks/useParticipants';
 import { GroupParticipant } from '../../utils/types/groupTypes';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { UnstyledButton } from '@mantine/core';
 
 const useStyles = makeStyles((theme: any) => ({
   actionButton: {
@@ -93,60 +94,80 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
   if (user!.id === adminId) {
     popover = (
       <>
-        <ListItem className={classes.listItem}>
-          <Box className={classes.actionButton}>
-            <FlagIcon />
-          </Box>
-          <Typography position={'inherit'} ml={'0.5rem'}>
-            Report
-          </Typography>
-        </ListItem>
-        <ListItem className={classes.listItem}>
-          <Box className={classes.actionButton}>
-            <VisibilityOffIcon />
-          </Box>
-          <Typography position={'inherit'} ml={'0.5rem'}>
-            Mute
-          </Typography>
-        </ListItem>
-        <ListItem className={classes.listItem} onClick={handleKickUser}>
-          <Box className={classes.actionButton}>
-            <PersonRemoveIcon />
-          </Box>
-          <Typography position={'inherit'} ml={'0.5rem'}>
-            Kick
-          </Typography>
-        </ListItem>
+        <UnstyledButton style={{ width: '100%' }}>
+          <ListItem className={classes.listItem}>
+            <Box className={classes.actionButton}>
+              <FlagIcon />
+            </Box>
+            <Typography position={'inherit'} ml={'0.5rem'} color={'primary'}>
+              Report
+            </Typography>
+          </ListItem>
+        </UnstyledButton>
+        <UnstyledButton style={{ width: '100%' }}>
+          <ListItem className={classes.listItem}>
+            <Box className={classes.actionButton}>
+              <VisibilityOffIcon sx={{ color: 'yellow' }} />
+            </Box>
+            <Typography position={'inherit'} ml={'0.5rem'} color={'yellow'}>
+              Mute
+            </Typography>
+          </ListItem>
+        </UnstyledButton>
+        <UnstyledButton style={{ width: '100%' }}>
+          <ListItem
+            className={classes.listItem}
+            onClick={handleKickUser}
+            sx={{ mb: '0.45rem' }}
+          >
+            <Box className={classes.actionButton}>
+              <PersonRemoveIcon color={'error'} />
+            </Box>
+            <Typography position={'inherit'} ml={'0.5rem'} color={'error'}>
+              Kick
+            </Typography>
+          </ListItem>
+        </UnstyledButton>
         <Divider />
-        <ListItem className={classes.listItem} onClick={handleChangeAdmin}>
-          <Box className={classes.actionButton}>
-            <TimerIcon />
-          </Box>
-          <Typography position={'inherit'} ml={'0.5rem'}>
-            Make Admin
-          </Typography>
-        </ListItem>
+        <UnstyledButton style={{ width: '100%' }}>
+          <ListItem
+            className={classes.listItem}
+            onClick={handleChangeAdmin}
+            sx={{ mt: '0.45rem' }}
+          >
+            <Box className={classes.actionButton}>
+              <TimerIcon color={'primary'} />
+            </Box>
+            <Typography position={'inherit'} ml={'0.5rem'} color={'primary'}>
+              Make Admin
+            </Typography>
+          </ListItem>
+        </UnstyledButton>
       </>
     );
   } else {
     popover = (
       <>
-        <ListItem className={classes.listItem}>
-          <Box className={classes.actionButton}>
-            <FlagIcon />
-          </Box>
-          <Typography position={'inherit'} ml={'0.5rem'}>
-            Report
-          </Typography>
-        </ListItem>
-        <ListItem className={classes.listItem}>
-          <Box className={classes.actionButton}>
-            <VisibilityOffIcon />
-          </Box>
-          <Typography position={'inherit'} ml={'0.5rem'}>
-            Mute
-          </Typography>
-        </ListItem>
+        <UnstyledButton style={{ width: '100%' }}>
+          <ListItem className={classes.listItem}>
+            <Box className={classes.actionButton}>
+              <FlagIcon />
+            </Box>
+            <Typography position={'inherit'} ml={'0.5rem'} color={'primary'}>
+              Report
+            </Typography>
+          </ListItem>
+        </UnstyledButton>
+        <UnstyledButton style={{ width: '100%' }}>
+          <ListItem className={classes.listItem}>
+            <Box className={classes.actionButton}>
+              <VisibilityOffIcon sx={{ color: 'yellow' }} />
+            </Box>
+            <Typography position={'inherit'} ml={'0.5rem'} color={'yellow'}>
+              Mute
+            </Typography>
+          </ListItem>
+        </UnstyledButton>
       </>
     );
   }
@@ -211,7 +232,7 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
                 }}
                 className={classes.popover}
               >
-                <List>{popover}</List>
+                <List sx={{ width: '10rem' }}>{popover}</List>
               </Popover>
             </>
           )}

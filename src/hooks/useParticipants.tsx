@@ -2,8 +2,12 @@ import { db } from '../firebase/firebase';
 import { GroupParticipant } from '../utils/types/groupTypes';
 import { useParticipantsType } from '../utils/types/hookTypes';
 import firebase from 'firebase/compat/app';
+import { useAuth } from './useAuth';
 
 export const useParticipants = (): useParticipantsType => {
+  const { user } = useAuth();
+  const FieldValue = firebase.firestore.FieldValue;
+
   const getParticipants = (
     groupId: string,
     setParticipants: any,
@@ -67,7 +71,7 @@ export const useParticipants = (): useParticipantsType => {
         .collection('groups')
         .doc(groupId)
         .update({
-          participantsCount: firebase.firestore.FieldValue.increment(-1),
+          participantsCount: FieldValue.increment(-1),
         });
 
       await db
@@ -81,10 +85,42 @@ export const useParticipants = (): useParticipantsType => {
     }
   };
 
+  const muteUser = async (userId: string) => {
+    if (user) {
+      try {
+        await db
+          .collection('mutedUsers')
+          .doc(user.id)
+          .update({
+            mutedUserIds: FieldValue.arrayUnion(userId),
+          });
+      } catch (error) {
+        console.log("Couldn't kick user");
+      }
+    }
+  };
+
+  const unmuteUser = async (userId: string) => {
+    if (user) {
+      try {
+        await db
+          .collection('mutedUsers')
+          .doc(user.id)
+          .update({
+            mutedUserIds: FieldValue.arrayRemove(userId),
+          });
+      } catch (error) {
+        console.log("Couldn't kick user");
+      }
+    }
+  };
+
   return {
     getParticipants,
     getAdmin,
     changeAdmin,
     kickUser,
+    muteUser,
+    unmuteUser,
   };
 };

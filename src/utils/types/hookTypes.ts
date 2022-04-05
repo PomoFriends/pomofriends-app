@@ -105,4 +105,6 @@ export type useParticipantsType = {
   getAdmin: (groupId: string, setAdmin: any, isSubscribed: boolean) => void;
   changeAdmin: (groupId: string, userId: string) => Promise<void>;
   kickUser: (groupId: string, userId: string) => Promise<void>;
+  muteUser: (userId: string) => Promise<void>;
+  unmuteUser: (userId: string) => Promise<void>;
 };

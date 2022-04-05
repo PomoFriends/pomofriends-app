@@ -1,4 +1,5 @@
 import firebase from 'firebase/compat/app';
+import { useRouter } from 'next/router';
 import {
   createContext,
   ReactNode,
@@ -17,19 +18,12 @@ import {
   UserData,
   UserSettingsDefaultValues,
 } from '../utils/types/userTypes';
-import { useRouter } from 'next/router';
 
 const AuthContext = createContext<authContextType>(authContextDefaultValues);
 
-/**
- *
- * @param {{ children: ReactNode }} props
- * @return {JSX.Element}
- *
- * AuthProvider is a wrapper that provides a way to share
- * values between components without having to explicitly pass a prop
- * through every level of the tree. Or simply a context.
- */
+// AuthProvider is a wrapper that provides a way to share
+// values between components without having to explicitly pass a prop
+// through every level of the tree. Or simply a context.
 export const AuthProvider = (props: { children: ReactNode }): JSX.Element => {
   const auth = useAuthProvider();
   // console.log('useAuthProviderrrrr', auth.user);
@@ -38,33 +32,24 @@ export const AuthProvider = (props: { children: ReactNode }): JSX.Element => {
   );
 };
 
-/**
- *
- * @return {authContextType}
- *
- * Context hook
- */
+// Context hook
 export const useAuth = (): authContextType => {
   return useContext(AuthContext);
 };
 
-/**
- *
- * @return {authContextType}
- *
- * Provider hook that creates an auth object and handles it's state.
- */
+// Provider hook that creates an auth object and handles it's state.
 export const useAuthProvider = (): authContextType => {
   const router = useRouter();
-  // Create a state for the user
   const [user, setUser] = useState<UserData | null>(null);
   const [userLoading, setLoading] = useState<boolean>(true);
   const [update, setUpdate] = useState(0);
 
+  // Update state of the user
   const handleUpdate = () => {
     setUpdate(+1);
   };
 
+  // Update state of users connection in db
   const onConnect = (uid: string) => {
     const userStatusDatabaseRef = realtimedb.ref('/status/' + uid);
     const userStatusFirestoreRef = firebase.firestore().doc('/status/' + uid);
@@ -103,9 +88,7 @@ export const useAuthProvider = (): authContextType => {
         .set(isOfflineForDatabase)
         .then(() => {
           // The promise returned from .onDisconnect().set() will
-          // resolve as soon as the server acknowledges the onDisconnect()
-          // request, NOT once we've actually disconnected:
-          // https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect
+          // resolve as soon as the server acknowledges the onDisconnect() request
 
           // We can now safely set ourselves as 'online' knowing that the
           // server will mark us as offline once we lose connection.
@@ -115,13 +98,7 @@ export const useAuthProvider = (): authContextType => {
     });
   };
 
-  /**
-   *
-   * @param {UserData} user
-   * @return {Promise<any>} user or error
-   *
-   * Function that creates a doc for the user in database.
-   */
+  // Function that creates a doc for the user in database.
   const createUser = async (user: UserData): Promise<any> => {
     const newUser = await db
       .collection('users')
@@ -138,6 +115,7 @@ export const useAuthProvider = (): authContextType => {
         .doc(newUser.id)
         .set(UserSettingsDefaultValues);
       db.collection('tasks').doc(newUser.id).set({});
+      db.collection('mutedUsers').doc(newUser.id).set({});
       db.collection('pomodoroSettings')
         .doc(newUser.id)
         .set(PomodoroSettingsDefaultValues);
@@ -148,13 +126,7 @@ export const useAuthProvider = (): authContextType => {
     return newUser;
   };
 
-  /**
-   *
-   * @param {UserData} user
-   * @return {Promise<void>} return user or change the state of the user
-   *
-   * Returns user data from the firestore db.
-   */
+  // Returns user data from the firestore db.
   const getUserAdditionalData = async (user: UserData): Promise<void> => {
     return await db
       .collection('users')
@@ -182,14 +154,7 @@ export const useAuthProvider = (): authContextType => {
       });
   };
 
-  /**
-   *
-   * @param {SignUpData} { username, email, password }
-   * @return {Promise<any>} user or error
-   *
-   * Sign up the user and create a doc for the user.
-   *
-   */
+  // Sign up the user and create a doc for the user.
   const signUp = async ({
     username,
     email,
@@ -216,14 +181,7 @@ export const useAuthProvider = (): authContextType => {
       });
   };
 
-  /**
-   *
-   * @param {SignInData} { email, password }
-   * @return {Promise<any>} user or error
-   *
-   * Sign in the user and get additional data of the user.
-   *
-   */
+  // Sign in the user and get additional data of the user.
   const signIn = async ({ email, password }: SignInData): Promise<any> => {
     return await auth
       .signInWithEmailAndPassword(email, password)
@@ -249,36 +207,11 @@ export const useAuthProvider = (): authContextType => {
       });
   };
 
-  /**
-   *
-   * @return {Promise<void>}
-   *
-   * Sign out the user.
-   * Change the state of the user to null.
-   *
-   */
+  // Sign out the user.
+  // Change the state of the user to null.
   const signOut = async (): Promise<void> => {
     // Change the state of the user
     if (user === null) return;
-
-    // if (user.groupId) {
-    //   await db
-    //     .collection('participants')
-    //     .doc(user.groupId)
-    //     .collection('participants')
-    //     .doc(user.id)
-    //     .delete();
-
-    //   await db.collection('users').doc(user.id).update({ groupId: null });
-
-    //   await db
-    //     .collection('groups')
-    //     .doc(user.groupId)
-    //     .update({
-    //       participantsCount: firebase.firestore.FieldValue.increment(-1),
-    //     });
-    //   handleUpdate();
-    // }
 
     return await auth.signOut().then(async () => {
       await realtimedb.ref('/status/' + user.id).set({
@@ -290,44 +223,25 @@ export const useAuthProvider = (): authContextType => {
     });
   };
 
-  /**
-   *
-   * @param {string} email
-   * @return {Promise<void>}
-   *
-   * Send password reset email.
-   *
-   */
+  // Send password reset email.
   const sendPasswordResetEmail = async (email: string): Promise<void> => {
     return await auth.sendPasswordResetEmail(email).then((response) => {
       return response;
     });
   };
 
-  /**
-   *
-   * @param {UserData} user
-   * @return {Promise<void>}
-   *
-   * Keeps user logged in.
-   * When user re-enters the application, we need to fetch additional data again.
-   *
-   */
+  // Keeps user logged in.
+  // When user re-enters the application, we need to fetch additional data again.
   const handleAuthStateChanged = async (
     user: UserData | null
   ): Promise<void> => {
-    // console.log('handleAuthStateChanged', user);
-    // Change the state of the user
-    // setUser(user);
     if (user) {
       await getUserAdditionalData(user);
     }
     setLoading(false);
   };
 
-  /**
-   *  Observer for changes to the user's sign-in state
-   */
+  // Observer for changes to the user's sign-in state
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((user) => {
       if (user === null) {
@@ -348,10 +262,8 @@ export const useAuthProvider = (): authContextType => {
     return () => unsub();
   }, []);
 
-  /**
-   * Makes sure that whenever the user’s document is updated,
-   * we also update the user state in our application.
-   */
+  // Makes sure that whenever the user’s document is updated,
+  // we also update the user state in our application.
   useEffect(() => {
     // console.log('update');
     if (user?.id) {

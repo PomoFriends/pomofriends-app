@@ -1,4 +1,4 @@
-const functions = require('firebase-functions');
+import * as functions from 'firebase-functions';
 const admin = require('firebase-admin');
 admin.initializeApp();
 const db = admin.firestore();
@@ -8,7 +8,7 @@ exports.onUserStatusChanged = functions.database
   .ref('/status/{uid}')
   .onUpdate(async (change, context) => {
     // Get the data written to Realtime Database
-    const eventStatus = change.after.val();
+    const eventStatus: any = change.after.val();
 
     // Then use other event data to create a reference to the
     // corresponding Firestore document.
@@ -40,7 +40,7 @@ exports.onFirebaseStatusUpdate = functions.firestore
     // Get an object representing the document
     const newValue = change.after.data();
     const state = newValue.state;
-    const userId = context.params.userId;
+    const userId: string = context.params.userId;
 
     console.log('state: ', state);
 
@@ -48,7 +48,7 @@ exports.onFirebaseStatusUpdate = functions.firestore
     return await db
       .doc(`users/${userId}`)
       .get()
-      .then(async (res) => {
+      .then(async (res: any) => {
         const user = res.data();
         // if user is in a group
         if (user) {
@@ -79,32 +79,48 @@ exports.onFirebaseStatusUpdate = functions.firestore
               const admin = await db
                 .doc(`admins/${groupId}`)
                 .get()
-                .then((res) => {
+                .then((res: any) => {
                   return res.data();
                 });
 
               console.log('getting participants');
               // Get participants
-              const participants = await db
-                .doc(`participants/${groupId}`)
-                .listCollections();
+              //   const participants = await db
+              //     .doc(`participants/${groupId}`)
+              //     .listCollections();
 
-              console.log('Got participants');
-              const participantIds = participants.map((doc) => doc.id);
-              console.log('participants: ', participantIds);
+              //   const participantIds = participants.map(async (participantsCol: any) => {
+              //       const participantsDocs = await participantsCol.listDocuments();
+              //       return participantsDocs.map(
+              //         (participantDoc: any) => participantDoc.id
+              //       );
+              //     }
+              //   );
+              //   console.log('Got participants: ', participantIds);
+              // Get participants
+              // Get participants
+              const snapshot = await db
+                .collection('participants')
+                .doc(groupId)
+                .collection('participants')
+                .get();
 
-              if (participantIds.length !== 0) {
+              const participants = snapshot.docs.map((doc: any) => doc.data());
+
+              console.log('Got participants: ', participants[0]);
+
+              if (participants.length !== 0) {
                 if (admin) {
                   // Get a random participant
-                  const participantId =
-                    participantIds[
-                      Math.floor(Math.random() * participantIds.length)
+                  const participant =
+                    participants[
+                      Math.floor(Math.random() * participants.length)
                     ];
                   // set new admin
-                  console.log('settings new admin');
+                  console.log('setting new admin');
                   await db
                     .doc(`admins/${groupId}`)
-                    .set({ userId: participantId });
+                    .set({ userId: participant.id });
                 }
               } else {
                 // delete group since there is no participants
@@ -126,9 +142,9 @@ exports.onFirebaseStatusUpdate = functions.firestore
                   .doc(`messages/${groupId}`)
                   .listCollections();
 
-                messages.map(async (message) => {
+                messages.map(async (message: any) => {
                   const messageDocs = await message.listDocuments();
-                  messageDocs.map(async (messageDoc) => {
+                  messageDocs.map(async (messageDoc: any) => {
                     await db
                       .doc(`messages/${groupId}/messages/${messageDoc.id}`)
                       .delete();
@@ -141,9 +157,9 @@ exports.onFirebaseStatusUpdate = functions.firestore
                   .doc(`kickedUsers/${groupId}`)
                   .listCollections();
 
-                kickedUsers.map(async (kickedUser) => {
+                kickedUsers.map(async (kickedUser: any) => {
                   const kickedUsersDocs = await kickedUser.listDocuments();
-                  kickedUsersDocs.map(async (kickedUsersDoc) => {
+                  kickedUsersDocs.map(async (kickedUsersDoc: any) => {
                     await db
                       .doc(
                         `kickedUsers/${groupId}/kickedUsers/${kickedUsersDoc.id}`
@@ -157,105 +173,4 @@ exports.onFirebaseStatusUpdate = functions.firestore
           }
         }
       });
-
-    // if (state === 'offline') {
-    //   console.log('state is offline ');
-    //   // get user
-    //   return await db
-    //     .collection('users')
-    //     .doc(userId)
-    //     .get()
-    //     .then(async (res) => {
-    //       const user = res.data();
-    //       console.log('get user: ', user);
-
-    //       if (user) {
-    //         // if user is in a group
-    //         const groupId = user.groupId;
-    //         if (groupId) {
-    //           console.log('groupId: ', groupId);
-
-    //           // delete user from participants
-    //           await db
-    //             .collection('participants')
-    //             .doc(groupId)
-    //             .collection('participants')
-    //             .doc(userId)
-    //             .delete();
-
-    //           // set groupId to null
-    //           await db
-    //             .collection('users')
-    //             .doc(userId)
-    //             .update({ groupId: null });
-
-    //           // -1 from groups participants
-    //           await db
-    //             .collection('groups')
-    //             .doc(groupId)
-    //             .update({
-    //               participantsCount:
-    //                 firebase.firestore.FieldValue.increment(-1),
-    //             });
-
-    //           // Get admin of the group
-    //           const admin = await db
-    //             .collection('admins')
-    //             .doc(groupId)
-    //             .get()
-    //             .then((res) => {
-    //               return res.data();
-    //             });
-
-    //           // Get participants
-    //           const snapshot = await db
-    //             .collection('participants')
-    //             .doc(groupId)
-    //             .collection('participants')
-    //             .get();
-
-    //           const participants = snapshot.docs.map((doc) => doc.data());
-
-    //           if (participants.length !== 0) {
-    //             if (admin) {
-    //               // Get a random participant
-    //               const participant =
-    //                 participants[
-    //                   Math.floor(Math.random() * participants.length)
-    //                 ];
-    //               // set new admin
-    //               await db
-    //                 .collection('admins')
-    //                 .doc(groupId)
-    //                 .set({ userId: participant.id });
-    //             }
-    //           } else {
-    //             // delete group since there is no participants
-    //             await db.collection('groups').doc(groupId).delete();
-    //             await db.collection('groupControls').doc(groupId).delete();
-    //             await db.collection('groupSettings').doc(groupId).delete();
-    //             await db.collection('groupTime').doc(groupId).delete();
-    //             await db.collection('admins').doc(groupId).delete();
-    //             await db.collection('participants').doc(groupId).delete();
-    //             db.collection('messages')
-    //               .doc(groupId)
-    //               .collection('messages')
-    //               .onSnapshot(async (querySnapshot) => {
-    //                 // get all documents from collection with id
-    //                 querySnapshot.docs.map((doc) => {
-    //                   doc.ref.delete();
-    //                 });
-
-    //                 await db.collection('messages').doc(groupId).delete();
-    //               });
-    //           }
-    //         }
-    //       }
-
-    //       return;
-    //     });
-    // }
-    console.log('state is online ');
-
-    return;
   });

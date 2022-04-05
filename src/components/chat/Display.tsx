@@ -1,3 +1,4 @@
+import { UnstyledButton } from '@mantine/core';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FlagIcon from '@mui/icons-material/Flag';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -122,23 +123,38 @@ const DisplayMessages: React.FC<DisplayMessageProps> = ({
           >
             <List>
               {user!.id === message.userId ? (
-                <>
-                  <ListItem className={classes.listItem} onClick={handleDelete}>
-                    Delete
-                    <Box className={classes.deleteButton}>
+                <UnstyledButton
+                  style={{ width: '100%' }}
+                  onClick={handleDelete}
+                >
+                  <ListItem className={classes.listItem}>
+                    <Box className={classes.actionButton}>
                       <DeleteIcon />
                     </Box>
+                    <Typography
+                      position={'inherit'}
+                      ml={'0.5rem'}
+                      color={'primary'}
+                    >
+                      Delete
+                    </Typography>
                   </ListItem>
-                </>
+                </UnstyledButton>
               ) : (
-                <>
+                <UnstyledButton style={{ width: '100%' }}>
                   <ListItem className={classes.listItem}>
-                    Report
                     <Box className={classes.actionButton}>
-                      <FlagIcon />
+                      <FlagIcon color={'error'} />
                     </Box>
+                    <Typography
+                      position={'inherit'}
+                      ml={'0.5rem'}
+                      color={'error'}
+                    >
+                      Report
+                    </Typography>
                   </ListItem>
-                </>
+                </UnstyledButton>
               )}
             </List>
           </Popover>
