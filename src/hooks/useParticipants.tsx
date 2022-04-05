@@ -133,6 +133,23 @@ export const useParticipants = (): useParticipantsType => {
     }
   };
 
+  const reportUser = async (userId: string, reason: string) => {
+    if (user) {
+      try {
+        const report = db.collection('reportedUsers').doc();
+        await report.set({
+          id: report.id,
+          reason: reason,
+          reportedUser: userId,
+          reportBy: user.id,
+          reportedAt: Date.now(),
+        });
+      } catch (error) {
+        console.log("Couldn't report user");
+      }
+    }
+  };
+
   return {
     getParticipants,
     getAdmin,
@@ -141,5 +158,6 @@ export const useParticipants = (): useParticipantsType => {
     muteUser,
     unmuteUser,
     getMutedUser,
+    reportUser,
   };
 };

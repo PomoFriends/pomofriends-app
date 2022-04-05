@@ -9,6 +9,7 @@ import {
   List,
   ListItem,
   ListItemSecondaryAction,
+  Modal,
   Popover,
   Tooltip,
   Typography,
@@ -21,6 +22,7 @@ import { GroupParticipant } from '../../utils/types/groupTypes';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { UnstyledButton } from '@mantine/core';
+import ReportForm from './ReportForm';
 
 const useStyles = makeStyles((theme: any) => ({
   actionButton: {
@@ -49,6 +51,17 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+  },
+  reportModal: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    border: '2px solid #000',
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 8,
+    borderColor: theme.palette.primary.main,
   },
 }));
 
@@ -100,31 +113,18 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
     closeDetails();
   };
 
+  const [openReport, setOpenReport] = useState(false);
+  const handleOpen = () => setOpenReport(true);
+  const handleClose = () => {
+    setOpenReport(false);
+    closeDetails();
+  };
+
   let popover = null;
 
   if (user!.id === adminId) {
     popover = (
       <>
-        <UnstyledButton style={{ width: '100%' }}>
-          <ListItem className={classes.listItem}>
-            <Box className={classes.actionButton}>
-              <FlagIcon />
-            </Box>
-            <Typography position={'inherit'} ml={'0.5rem'} color={'primary'}>
-              Report
-            </Typography>
-          </ListItem>
-        </UnstyledButton>
-        <UnstyledButton style={{ width: '100%' }}>
-          <ListItem className={classes.listItem} onClick={handleMute}>
-            <Box className={classes.actionButton}>
-              <VisibilityOffIcon sx={{ color: 'yellow' }} />
-            </Box>
-            <Typography position={'inherit'} ml={'0.5rem'} color={'yellow'}>
-              {muted ? 'Unmute' : 'Mute'}
-            </Typography>
-          </ListItem>
-        </UnstyledButton>
         <UnstyledButton style={{ width: '100%' }}>
           <ListItem
             className={classes.listItem}
@@ -156,32 +156,8 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
         </UnstyledButton>
       </>
     );
-  } else {
-    popover = (
-      <>
-        <UnstyledButton style={{ width: '100%' }}>
-          <ListItem className={classes.listItem}>
-            <Box className={classes.actionButton}>
-              <FlagIcon />
-            </Box>
-            <Typography position={'inherit'} ml={'0.5rem'} color={'primary'}>
-              Report
-            </Typography>
-          </ListItem>
-        </UnstyledButton>
-        <UnstyledButton style={{ width: '100%' }}>
-          <ListItem className={classes.listItem} onClick={handleMute}>
-            <Box className={classes.actionButton}>
-              <VisibilityOffIcon sx={{ color: 'yellow' }} />
-            </Box>
-            <Typography position={'inherit'} ml={'0.5rem'} color={'yellow'}>
-              {muted ? 'Unmute' : 'Mute'}
-            </Typography>
-          </ListItem>
-        </UnstyledButton>
-      </>
-    );
   }
+
   return (
     <>
       <ListItem
@@ -243,13 +219,52 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
                 }}
                 className={classes.popover}
               >
-                <List sx={{ width: '10rem' }}>{popover}</List>
+                <List sx={{ width: '10rem' }}>
+                  <UnstyledButton style={{ width: '100%' }}>
+                    <ListItem className={classes.listItem} onClick={handleOpen}>
+                      <Box className={classes.actionButton}>
+                        <FlagIcon />
+                      </Box>
+                      <Typography
+                        position={'inherit'}
+                        ml={'0.5rem'}
+                        color={'primary'}
+                      >
+                        Report
+                      </Typography>
+                    </ListItem>
+                  </UnstyledButton>
+                  <UnstyledButton style={{ width: '100%' }}>
+                    <ListItem className={classes.listItem} onClick={handleMute}>
+                      <Box className={classes.actionButton}>
+                        <VisibilityOffIcon sx={{ color: 'yellow' }} />
+                      </Box>
+                      <Typography
+                        position={'inherit'}
+                        ml={'0.5rem'}
+                        color={'yellow'}
+                      >
+                        {muted ? 'Unmute' : 'Mute'}
+                      </Typography>
+                    </ListItem>
+                  </UnstyledButton>
+                  {popover}
+                </List>
               </Popover>
             </>
           )}
         </ListItemSecondaryAction>
       </ListItem>
-      <Divider />
+      <Modal
+        open={openReport}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className={classes.reportModal}>
+          <ReportForm handleClose={handleClose} userId={participant.id} />
+        </Box>
+      </Modal>
     </>
   );
 };
