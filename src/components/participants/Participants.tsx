@@ -7,20 +7,25 @@ import { ScrollArea } from '@mantine/core';
 
 interface ParticipantsProps {
   groupId: string;
+  adminId: string;
+  mutedUsers: string[];
 }
 
-const Participants: React.FC<ParticipantsProps> = ({ groupId }) => {
-  const { getParticipants, getAdmin } = useParticipants();
+const Participants: React.FC<ParticipantsProps> = ({
+  groupId,
+  adminId,
+  mutedUsers,
+}) => {
+  const { getParticipants } = useParticipants();
 
   const [participants, setParticipants] = useState<GroupParticipant[]>([]);
-  const [adminId, setAdminId] = useState<string>('');
 
   // automatically check db for new participants
   useEffect(() => {
     let isSubscribed = true;
 
     getParticipants(groupId, setParticipants, isSubscribed);
-    getAdmin(groupId, setAdminId, isSubscribed);
+    console.log();
 
     return () => {
       isSubscribed = false;
@@ -36,19 +41,45 @@ const Participants: React.FC<ParticipantsProps> = ({ groupId }) => {
               return (
                 <div key={participant.id}>
                   {adminId === participant.id ? (
-                    <DisplayParticipant
-                      participant={participant}
-                      admin={true}
-                      adminId={adminId}
-                      groupId={groupId}
-                    />
+                    <>
+                      {mutedUsers.includes(participant.id) ? (
+                        <DisplayParticipant
+                          participant={participant}
+                          admin={true}
+                          muted={true}
+                          adminId={adminId}
+                          groupId={groupId}
+                        />
+                      ) : (
+                        <DisplayParticipant
+                          participant={participant}
+                          admin={true}
+                          muted={false}
+                          adminId={adminId}
+                          groupId={groupId}
+                        />
+                      )}
+                    </>
                   ) : (
-                    <DisplayParticipant
-                      participant={participant}
-                      admin={false}
-                      adminId={adminId}
-                      groupId={groupId}
-                    />
+                    <>
+                      {mutedUsers.includes(participant.id) ? (
+                        <DisplayParticipant
+                          participant={participant}
+                          admin={false}
+                          muted={true}
+                          adminId={adminId}
+                          groupId={groupId}
+                        />
+                      ) : (
+                        <DisplayParticipant
+                          participant={participant}
+                          admin={false}
+                          muted={false}
+                          adminId={adminId}
+                          groupId={groupId}
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               );

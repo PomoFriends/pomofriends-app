@@ -115,7 +115,7 @@ export const useAuthProvider = (): authContextType => {
         .doc(newUser.id)
         .set(UserSettingsDefaultValues);
       db.collection('tasks').doc(newUser.id).set({});
-      db.collection('mutedUsers').doc(newUser.id).set({});
+      db.collection('mutedUsers').doc(newUser.id).set({ mutedUserIds: [] });
       db.collection('pomodoroSettings')
         .doc(newUser.id)
         .set(PomodoroSettingsDefaultValues);

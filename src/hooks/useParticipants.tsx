@@ -95,7 +95,7 @@ export const useParticipants = (): useParticipantsType => {
             mutedUserIds: FieldValue.arrayUnion(userId),
           });
       } catch (error) {
-        console.log("Couldn't kick user");
+        console.log("Couldn't mute user");
       }
     }
   };
@@ -110,7 +110,25 @@ export const useParticipants = (): useParticipantsType => {
             mutedUserIds: FieldValue.arrayRemove(userId),
           });
       } catch (error) {
-        console.log("Couldn't kick user");
+        console.log("Couldn't unmunte user");
+      }
+    }
+  };
+
+  const getMutedUser = (setMuted: any, isSubscribed: boolean) => {
+    if (user) {
+      try {
+        db.collection('mutedUsers')
+          .doc(user.id)
+          .onSnapshot((querySnapshot) => {
+            const data = querySnapshot.data();
+
+            if (isSubscribed && data) {
+              setMuted(data.mutedUserIds);
+            }
+          });
+      } catch (error) {
+        console.log("Couldn't get admin");
       }
     }
   };
@@ -122,5 +140,6 @@ export const useParticipants = (): useParticipantsType => {
     kickUser,
     muteUser,
     unmuteUser,
+    getMutedUser,
   };
 };

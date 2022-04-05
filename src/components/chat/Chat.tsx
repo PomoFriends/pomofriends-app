@@ -20,9 +20,10 @@ const useStyles = makeStyles(() => ({
 
 interface ChatProps {
   groupId: string;
+  mutedUsers: string[];
 }
 
-const Chat: React.FC<ChatProps> = ({ groupId }) => {
+const Chat: React.FC<ChatProps> = ({ groupId, mutedUsers }) => {
   const classes = useStyles();
   const { getMessages } = useChat();
 
@@ -37,7 +38,7 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
     if (!scrollUp) {
       if (messageEl) {
         if (messageEl.current) {
-          messageEl.current.scrollIntoView({ behavior: 'auto' });
+          // messageEl.current.scrollIntoView({ behavior: 'auto' });
         }
       }
     }
@@ -88,13 +89,13 @@ const Chat: React.FC<ChatProps> = ({ groupId }) => {
       <Box onScroll={handleScroll}>
         <ScrollArea style={{ height: '30rem' }} mb={'0.45rem'} offsetScrollbars>
           <List>
-            {messages.map((message: GroupMessage) => {
-              return (
-                <div key={message.id}>
+            {messages.map((message: GroupMessage) => (
+              <div key={message.id}>
+                {mutedUsers.includes(message.userId) ? null : (
                   <DisplayMessages message={message} groupId={groupId} />
-                </div>
-              );
-            })}
+                )}
+              </div>
+            ))}
           </List>
 
           <div ref={messageEl} />

@@ -107,4 +107,5 @@ export type useParticipantsType = {
   kickUser: (groupId: string, userId: string) => Promise<void>;
   muteUser: (userId: string) => Promise<void>;
   unmuteUser: (userId: string) => Promise<void>;
+  getMutedUser: (setMuted: any, isSubscribed: boolean) => void;
 };

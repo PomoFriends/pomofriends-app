@@ -50,9 +50,10 @@ const useStyles = makeStyles((theme: any) => ({
 
 interface GroupPreviewProps {
   group: GroupData;
+  joining: boolean;
 }
 
-const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
+const GroupPreview: React.FC<GroupPreviewProps> = ({ group, joining }) => {
   const classes = useStyles();
 
   const { joinGroup } = useGroup();
@@ -68,9 +69,11 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group }) => {
   };
 
   const handleJoin = async () => {
-    if (clickedButton === false) {
-      setClicked(true);
-      await joinGroup(group.id);
+    if (!joining) {
+      if (!clickedButton) {
+        setClicked(true);
+        await joinGroup(group.id);
+      }
     }
   };
 

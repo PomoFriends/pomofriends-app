@@ -167,7 +167,11 @@ const HomePage: React.FC = (): JSX.Element => {
 
           <Grid item xs={12} sm={6} md={6}>
             <Paper className={classes.paperGroup} elevation={3}>
-              {user?.groupId ? <Group id={user?.groupId} /> : <GroupList />}
+              {user?.groupId ? (
+                <Group id={user?.groupId} />
+              ) : (
+                <GroupList user={user} />
+              )}
             </Paper>
           </Grid>
         </Grid>

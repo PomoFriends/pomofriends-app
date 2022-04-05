@@ -74,6 +74,8 @@ exports.onFirebaseStatusUpdate = functions.firestore
                 participantsCount: FieldValue.increment(-1),
               });
 
+              await db.doc(`mutedUsers/${userId}`).update({ mutedUserIds: [] });
+
               console.log('getting admin');
               // Get admin of the group
               const admin = await db

@@ -201,15 +201,18 @@ export const useGroup = (): useGroupType => {
         .collection('participants')
         .doc(user.id);
 
+      await newParticipant.get().then(async (res) => {
+        if (!res.exists) {
+          // Add one to participantsCount
+          await db
+            .collection('groups')
+            .doc(groupId)
+            .update({
+              participantsCount: firebase.firestore.FieldValue.increment(1),
+            });
+        }
+      });
       await newParticipant.set(participant);
-
-      // Add one to participantsCount
-      await db
-        .collection('groups')
-        .doc(groupId)
-        .update({
-          participantsCount: firebase.firestore.FieldValue.increment(1),
-        });
 
       await db.collection('users').doc(user.id).update({ groupId });
 
@@ -230,6 +233,10 @@ export const useGroup = (): useGroupType => {
         .delete();
 
       await db.collection('users').doc(user.id).update({ groupId: null });
+      await db
+        .collection('mutedUsers')
+        .doc(user.id)
+        .update({ mutedUserIds: [] });
 
       await db
         .collection('groups')

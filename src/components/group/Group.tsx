@@ -3,6 +3,7 @@ import { doc, getFirestore } from 'firebase/firestore';
 import { useDocumentOnce } from 'react-firebase-hooks/firestore';
 import Room from '../../components/group/Room';
 import { app } from '../../firebase/firebase';
+import { GroupData } from '../../utils/types/groupTypes';
 import Loader from '../elements/Loader';
 
 interface GroupProps {
@@ -31,7 +32,7 @@ const Group: React.FC<GroupProps> = ({ id }) => {
           </Box>
         ) : (
           <>
-            <Room group={groupData?.data()} />
+            <Room group={groupData?.data() as GroupData} />
           </>
         )}
       </>

@@ -8,29 +8,15 @@ import {
   Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGroup } from '../../hooks/useGroup';
+import { useParticipants } from '../../hooks/useParticipants';
+import { GroupData } from '../../utils/types/groupTypes';
 import RoomButtons from '../buttons/RoomButtons';
 import Chat from '../chat/Chat';
 import Participants from '../participants/Participants';
 
 const useStyles = makeStyles((theme: any) => ({
-  groupList: {
-    overflow: 'auto',
-    maxHeight: '36rem',
-    '&::-webkit-scrollbar': {
-      width: '0.4em',
-    },
-    '&::-webkit-scrollbar-track': {
-      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-      webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(0,0,0,.1)',
-      outline: '1px solid slategrey',
-      borderRadius: 8,
-    },
-  },
   typography: {
     marginLeft: 16,
     marginTop: 12,
@@ -55,13 +41,14 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 interface GroupProps {
-  group: any;
+  group: GroupData;
 }
 
 const GroupRoom: React.FC<GroupProps> = ({ group }) => {
   const classes = useStyles();
 
   const { leaveGroup } = useGroup();
+  const { getAdmin, getMutedUser } = useParticipants();
   const [clickedButton, setClicked] = useState<boolean>(false);
 
   const handleLeaveGroup = async () => {
@@ -76,6 +63,31 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
   const changeComponent = () => {
     setIsChat(!isChat);
   };
+
+  const [adminId, setAdminId] = useState<string>('');
+  const [mutedUsers, setMutedUsers] = useState<string[]>([]);
+
+  // automatically check db for new participants
+  useEffect(() => {
+    let isSubscribed = true;
+
+    getMutedUser(setMutedUsers, isSubscribed);
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, []);
+
+  // automatically check db for new participants
+  useEffect(() => {
+    let isSubscribed = true;
+
+    getAdmin(group.id, setAdminId, isSubscribed);
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, []);
 
   return (
     <>
@@ -111,9 +123,13 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
       <RoomButtons isChat={isChat} changeComponent={changeComponent} />
 
       {isChat ? (
-        <Chat groupId={group.id} />
+        <Chat groupId={group.id} mutedUsers={mutedUsers} />
       ) : (
-        <Participants groupId={group.id} />
+        <Participants
+          groupId={group.id}
+          adminId={adminId}
+          mutedUsers={mutedUsers}
+        />
       )}
     </>
   );

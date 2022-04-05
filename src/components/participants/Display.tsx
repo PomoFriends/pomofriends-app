@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme: any) => ({
 interface DisplayProps {
   participant: GroupParticipant;
   admin?: boolean;
+  muted?: boolean;
   adminId: string;
   groupId: string;
 }
@@ -62,11 +63,12 @@ interface DisplayProps {
 const DisplayParticipant: React.FC<DisplayProps> = ({
   participant,
   admin,
+  muted,
   adminId,
   groupId,
 }) => {
   const classes = useStyles();
-  const { changeAdmin, kickUser } = useParticipants();
+  const { changeAdmin, kickUser, muteUser, unmuteUser } = useParticipants();
   const { user } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -89,6 +91,15 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
     closeDetails();
   };
 
+  const handleMute = () => {
+    if (muted) {
+      unmuteUser(participant.id);
+    } else {
+      muteUser(participant.id);
+    }
+    closeDetails();
+  };
+
   let popover = null;
 
   if (user!.id === adminId) {
@@ -105,12 +116,12 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
           </ListItem>
         </UnstyledButton>
         <UnstyledButton style={{ width: '100%' }}>
-          <ListItem className={classes.listItem}>
+          <ListItem className={classes.listItem} onClick={handleMute}>
             <Box className={classes.actionButton}>
               <VisibilityOffIcon sx={{ color: 'yellow' }} />
             </Box>
             <Typography position={'inherit'} ml={'0.5rem'} color={'yellow'}>
-              Mute
+              {muted ? 'Unmute' : 'Mute'}
             </Typography>
           </ListItem>
         </UnstyledButton>
@@ -159,12 +170,12 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
           </ListItem>
         </UnstyledButton>
         <UnstyledButton style={{ width: '100%' }}>
-          <ListItem className={classes.listItem}>
+          <ListItem className={classes.listItem} onClick={handleMute}>
             <Box className={classes.actionButton}>
               <VisibilityOffIcon sx={{ color: 'yellow' }} />
             </Box>
             <Typography position={'inherit'} ml={'0.5rem'} color={'yellow'}>
-              Mute
+              {muted ? 'Unmute' : 'Mute'}
             </Typography>
           </ListItem>
         </UnstyledButton>

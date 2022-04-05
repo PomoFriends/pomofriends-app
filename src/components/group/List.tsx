@@ -17,6 +17,7 @@ import GroupForm from './Form';
 import GroupPreview from './Preview';
 import { ScrollArea } from '@mantine/core';
 import Loader from '../elements/Loader';
+import { UserData } from '../../utils/types/userTypes';
 
 const useStyles = makeStyles((theme: any) => ({
   typography: {
@@ -42,15 +43,22 @@ const useStyles = makeStyles((theme: any) => ({
   },
 }));
 
-const GroupList: React.FC = () => {
+interface GroupListProps {
+  user: UserData | null;
+}
+
+const GroupList: React.FC<GroupListProps> = ({ user }) => {
   const classes = useStyles();
   const { getGroupList } = useGroup();
 
   const [groupList, setGroupList] = useState<GroupData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [joining, setJoining] = useState<boolean>(false);
 
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    if (!joining) setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
@@ -86,7 +94,7 @@ const GroupList: React.FC = () => {
           <List>
             {groupList.map((group: GroupData) => (
               <div key={group.id}>
-                <GroupPreview group={group} />
+                <GroupPreview group={group} joining={joining} />
               </div>
             ))}
           </List>
@@ -129,7 +137,7 @@ const GroupList: React.FC = () => {
               aria-describedby="modal-modal-description"
             >
               <Box className={classes.addGroupModal}>
-                <GroupForm handleClose={handleClose} />
+                <GroupForm handleClose={handleClose} setJoining={setJoining} />
               </Box>
             </Modal>
           </Grid>

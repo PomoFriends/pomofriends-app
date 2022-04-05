@@ -34,9 +34,10 @@ const useStyles = makeStyles((theme: any) => ({
 
 interface GroupFormProps {
   handleClose: () => void;
+  setJoining: any;
 }
 
-const GroupForm: React.FC<GroupFormProps> = ({ handleClose }) => {
+const GroupForm: React.FC<GroupFormProps> = ({ handleClose, setJoining }) => {
   const classes = useStyles();
 
   const { createGroup } = useGroup();
@@ -50,7 +51,8 @@ const GroupForm: React.FC<GroupFormProps> = ({ handleClose }) => {
     handleClose();
     setIsLoading(true);
     setError(null);
-    return await createGroup(data).then((response) => {
+    setJoining(true);
+    return await createGroup(data).then(() => {
       setIsLoading(false);
     });
   };
