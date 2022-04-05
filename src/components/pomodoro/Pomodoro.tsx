@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useGroup } from '../../hooks/useGroup';
 import { useSettings } from '../../hooks/useSettings';
+import { useTasks } from '../../hooks/useTasks';
 import {
   PomodoroSettings,
   PomodoroSettingsDefaultValues,
@@ -32,6 +33,7 @@ const Pomodoro: React.FC<PomodoroProps> = ({
     getGroupTime,
   } = useGroup();
   const { getSettings } = useSettings();
+  const { addPomodoro, updateTaskTime } = useTasks();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
@@ -130,6 +132,11 @@ const Pomodoro: React.FC<PomodoroProps> = ({
     }
   };
 
+  const sendTaskData = () => {
+    updateTaskTime(fullPomodoroTime);
+    setFullPomodoroTime(0);
+  };
+
   useInterval(
     () => {
       setTime(time - 1);
@@ -226,6 +233,7 @@ const Pomodoro: React.FC<PomodoroProps> = ({
 
     if (isPomodoro) {
       setTime(settings.pomodoro);
+      sendTaskData();
     } else if (isBreak && isLongBreak) {
       setTime(settings.longBreak);
     } else if (isBreak && !isLongBreak) {
@@ -248,13 +256,18 @@ const Pomodoro: React.FC<PomodoroProps> = ({
     setTimeCounting(false);
     setStarted(false);
 
-    if (isPomodoro && cyclesQtdManager.length > 0) {
-      startBreak(false);
-      cyclesQtdManager.pop();
-    } else if (isPomodoro && cyclesQtdManager.length <= 0) {
-      startBreak(true);
-      setCyclesQtdManager(new Array(settings.longBreakInterval - 1).fill(true));
-      setCompletedCycles(completedCycles + 1);
+    if (isPomodoro) {
+      if (cyclesQtdManager.length > 0) {
+        startBreak(false);
+        cyclesQtdManager.pop();
+      } else if (cyclesQtdManager.length <= 0) {
+        startBreak(true);
+        setCyclesQtdManager(
+          new Array(settings.longBreakInterval - 1).fill(true)
+        );
+        setCompletedCycles(completedCycles + 1);
+      }
+      sendTaskData();
     }
 
     if (isBreak) startPomodoro();
@@ -272,16 +285,22 @@ const Pomodoro: React.FC<PomodoroProps> = ({
   useEffect(() => {
     if (time > 0) return;
 
-    if (isPomodoro && cyclesQtdManager.length > 0) {
-      startBreak(false);
-      cyclesQtdManager.pop();
-    } else if (isPomodoro && cyclesQtdManager.length <= 0) {
-      startBreak(true);
-      setCyclesQtdManager(new Array(settings.longBreakInterval - 1).fill(true));
-      setCompletedCycles(completedCycles + 1);
+    if (isPomodoro) {
+      if (cyclesQtdManager.length > 0) {
+        startBreak(false);
+        cyclesQtdManager.pop();
+      } else if (isPomodoro && cyclesQtdManager.length <= 0) {
+        startBreak(true);
+        setCyclesQtdManager(
+          new Array(settings.longBreakInterval - 1).fill(true)
+        );
+        setCompletedCycles(completedCycles + 1);
+      }
+      setNumberOfPomodoros(numberOfPomodoros + 1);
+      addPomodoro();
+      sendTaskData();
     }
 
-    if (isPomodoro) setNumberOfPomodoros(numberOfPomodoros + 1);
     if (isBreak) startPomodoro();
   }, [time]);
 

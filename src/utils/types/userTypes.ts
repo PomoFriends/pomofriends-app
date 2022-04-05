@@ -52,6 +52,7 @@ export type TaskData = {
   description: string;
   pomodorosDone: number;
   pomodorosTotal: number;
+  timeSpend: number;
   complete?: boolean;
   completedAt?: number | null;
   createdAt?: number;

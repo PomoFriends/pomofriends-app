@@ -18,7 +18,7 @@ export const useTasks = (): useTasksType => {
         const newTask = db
           .collection('tasks')
           .doc(user.id)
-          .collection('task')
+          .collection('tasks')
           .doc();
 
         // Set values to the task
@@ -26,6 +26,7 @@ export const useTasks = (): useTasksType => {
           id: newTask.id,
           ...task,
           pomodorosDone: 0,
+          timeSpend: 0,
           complete: false,
           completedAt: null,
           createdAt: Date.now(),
@@ -56,7 +57,7 @@ export const useTasks = (): useTasksType => {
         await db
           .collection('tasks')
           .doc(user.id)
-          .collection('task')
+          .collection('tasks')
           .doc(taskId)
           .update({
             ...task,
@@ -78,7 +79,7 @@ export const useTasks = (): useTasksType => {
         await db
           .collection('tasks')
           .doc(user.id)
-          .collection('task')
+          .collection('tasks')
           .doc(taskId)
           .delete();
 
@@ -123,7 +124,7 @@ export const useTasks = (): useTasksType => {
         await db
           .collection('tasks')
           .doc(user.id)
-          .collection('task')
+          .collection('tasks')
           .doc(taskId)
           .update({
             complete: true,
@@ -140,7 +141,7 @@ export const useTasks = (): useTasksType => {
         const task: TaskData = await db
           .collection('tasks')
           .doc(user.id)
-          .collection('task')
+          .collection('tasks')
           .doc(taskId)
           .get()
           .then((res) => {
@@ -168,7 +169,7 @@ export const useTasks = (): useTasksType => {
         await db
           .collection('tasks')
           .doc(user.id)
-          .collection('task')
+          .collection('tasks')
           .doc(taskId)
           .update({
             complete: false,
@@ -184,18 +185,28 @@ export const useTasks = (): useTasksType => {
     }
   };
 
-  const addPomodoro = async (taskId: string) => {
-    if (user) {
+  const addPomodoro = async () => {
+    if (user && user.currentTaskId) {
       try {
-        // Set values to the task
-        await db
+        const taskId = user.currentTaskId;
+        const taskRef = db
           .collection('tasks')
           .doc(user.id)
-          .collection('task')
-          .doc(taskId)
-          .update({
-            pomodorosDone: firebase.firestore.FieldValue.increment(+1),
-          });
+          .collection('tasks')
+          .doc(taskId);
+
+        // Increment pomodoro
+        await taskRef.update({
+          pomodorosDone: firebase.firestore.FieldValue.increment(+1),
+        });
+
+        // Complete task if pomodorosDone and pomodorosTotal is the same
+        await taskRef.get().then(async (res) => {
+          const task = res.data() as TaskData;
+          if (task.pomodorosDone === task.pomodorosTotal) {
+            await completeTask(taskId);
+          }
+        });
       } catch {
         console.log("Something went wrong, couldn't add pomodoro");
       }
@@ -216,7 +227,7 @@ export const useTasks = (): useTasksType => {
       try {
         db.collection('tasks')
           .doc(user.id)
-          .collection('task')
+          .collection('tasks')
           .orderBy('createdAt')
           .onSnapshot((querySnapShot) => {
             // get all documents from collection with id
@@ -237,6 +248,29 @@ export const useTasks = (): useTasksType => {
     }
   };
 
+  const updateTaskTime = async (time: number) => {
+    if (user && user.currentTaskId) {
+      try {
+        const taskId = user.currentTaskId;
+        const taskRef = db
+          .collection('tasks')
+          .doc(user.id)
+          .collection('tasks')
+          .doc(taskId);
+
+        // Increment pomodoro
+        await taskRef.update({
+          timeSpend: firebase.firestore.FieldValue.increment(time),
+        });
+      } catch {
+        console.log("Something went wrong, couldn't save time");
+      }
+    } else {
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
+    }
+  };
+
   return {
     createTask,
     editTask,
@@ -246,5 +280,6 @@ export const useTasks = (): useTasksType => {
     uncompleteTask,
     addPomodoro,
     getTasks,
+    updateTaskTime,
   };
 };
