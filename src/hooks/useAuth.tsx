@@ -16,8 +16,10 @@ import {
 import {
   PomodoroSettingsDefaultValues,
   UserData,
+  UserRecordDefaultValues,
   UserSettingsDefaultValues,
 } from '../utils/types/userTypes';
+import { useTasks } from './useTasks';
 
 const AuthContext = createContext<authContextType>(authContextDefaultValues);
 
@@ -43,6 +45,8 @@ export const useAuthProvider = (): authContextType => {
   const [user, setUser] = useState<UserData | null>(null);
   const [userLoading, setLoading] = useState<boolean>(true);
   const [update, setUpdate] = useState(0);
+
+  const { updateTaskTime, addPomodoro } = useTasks();
 
   // Update state of the user
   const handleUpdate = () => {
@@ -99,7 +103,7 @@ export const useAuthProvider = (): authContextType => {
   };
 
   // Function that creates a doc for the user in database.
-  const createUser = async (user: UserData): Promise<any> => {
+  const createUser = async (user: UserData) => {
     const newUser = await db
       .collection('users')
       .doc(user.id)
@@ -111,14 +115,23 @@ export const useAuthProvider = (): authContextType => {
 
     if (newUser) {
       // Create settings, tasks, and pomodoroSettings docs with the same id as user
-      db.collection('userSettings')
+      await db
+        .collection('userSettings')
         .doc(newUser.id)
         .set(UserSettingsDefaultValues);
-      db.collection('tasks').doc(newUser.id).set({});
-      db.collection('mutedUsers').doc(newUser.id).set({ mutedUserIds: [] });
-      db.collection('pomodoroSettings')
+      await db.collection('tasks').doc(newUser.id).set({});
+      await db
+        .collection('mutedUsers')
+        .doc(newUser.id)
+        .set({ mutedUserIds: [] });
+      await db
+        .collection('pomodoroSettings')
         .doc(newUser.id)
         .set(PomodoroSettingsDefaultValues);
+      await db
+        .collection('dailyRecord')
+        .doc(newUser.id)
+        .set(UserRecordDefaultValues);
     } else {
       return { error: 'Something went wrong!' };
     }
@@ -127,7 +140,7 @@ export const useAuthProvider = (): authContextType => {
   };
 
   // Returns user data from the firestore db.
-  const getUserAdditionalData = async (user: UserData): Promise<void> => {
+  const getUserAdditionalData = async (user: UserData) => {
     return await db
       .collection('users')
       .doc(user?.id)
@@ -155,11 +168,7 @@ export const useAuthProvider = (): authContextType => {
   };
 
   // Sign up the user and create a doc for the user.
-  const signUp = async ({
-    username,
-    email,
-    password,
-  }: SignUpData): Promise<any> => {
+  const signUp = async ({ username, email, password }: SignUpData) => {
     return await auth
       .createUserWithEmailAndPassword(email, password)
       .then((response) => {
@@ -182,7 +191,7 @@ export const useAuthProvider = (): authContextType => {
   };
 
   // Sign in the user and get additional data of the user.
-  const signIn = async ({ email, password }: SignInData): Promise<any> => {
+  const signIn = async ({ email, password }: SignInData) => {
     return await auth
       .signInWithEmailAndPassword(email, password)
       .then(async (response) => {
@@ -209,7 +218,7 @@ export const useAuthProvider = (): authContextType => {
 
   // Sign out the user.
   // Change the state of the user to null.
-  const signOut = async (): Promise<void> => {
+  const signOut = async () => {
     // Change the state of the user
     if (user === null) return;
 
@@ -224,7 +233,7 @@ export const useAuthProvider = (): authContextType => {
   };
 
   // Send password reset email.
-  const sendPasswordResetEmail = async (email: string): Promise<void> => {
+  const sendPasswordResetEmail = async (email: string) => {
     return await auth.sendPasswordResetEmail(email).then((response) => {
       return response;
     });
@@ -232,9 +241,7 @@ export const useAuthProvider = (): authContextType => {
 
   // Keeps user logged in.
   // When user re-enters the application, we need to fetch additional data again.
-  const handleAuthStateChanged = async (
-    user: UserData | null
-  ): Promise<void> => {
+  const handleAuthStateChanged = async (user: UserData | null) => {
     if (user) {
       await getUserAdditionalData(user);
     }
@@ -277,6 +284,26 @@ export const useAuthProvider = (): authContextType => {
     }
   }, [update]);
 
+  const updateTimeSpend = async (time: number) => {
+    if (user) {
+      await db
+        .collection('dailyRecord')
+        .doc(user.id)
+        .update({ timeSpend: firebase.firestore.FieldValue.increment(time) });
+      await updateTaskTime(time);
+    }
+  };
+
+  const updatePomodoro = async () => {
+    if (user) {
+      await db
+        .collection('dailyRecord')
+        .doc(user.id)
+        .update({ pomodoros: firebase.firestore.FieldValue.increment(1) });
+      await addPomodoro();
+    }
+  };
+
   return {
     user,
     userLoading,
@@ -285,5 +312,7 @@ export const useAuthProvider = (): authContextType => {
     signOut,
     sendPasswordResetEmail,
     handleUpdate,
+    updateTimeSpend,
+    updatePomodoro,
   };
 };

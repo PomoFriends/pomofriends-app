@@ -58,3 +58,19 @@ export type TaskData = {
   createdAt?: number;
   updatedAt?: number;
 };
+
+export type UserRecord = {
+  timeSpend: number;
+  pomodoros: number;
+  tasksComplited: number;
+  tasksIds: string[];
+  tasks: TaskData[];
+};
+
+export const UserRecordDefaultValues: UserRecord = {
+  timeSpend: 0,
+  pomodoros: 0,
+  tasksComplited: 0,
+  tasksIds: [],
+  tasks: [],
+};

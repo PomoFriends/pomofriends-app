@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 import { useGroup } from '../../hooks/useGroup';
 import { useSettings } from '../../hooks/useSettings';
-import { useTasks } from '../../hooks/useTasks';
 import {
   PomodoroSettings,
   PomodoroSettingsDefaultValues,
@@ -33,7 +33,7 @@ const Pomodoro: React.FC<PomodoroProps> = ({
     getGroupTime,
   } = useGroup();
   const { getSettings } = useSettings();
-  const { addPomodoro, updateTaskTime } = useTasks();
+  const { updateTimeSpend, updatePomodoro } = useAuth();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
@@ -132,8 +132,8 @@ const Pomodoro: React.FC<PomodoroProps> = ({
     }
   };
 
-  const sendTaskData = () => {
-    updateTaskTime(fullPomodoroTime);
+  const sendTimeSpend = () => {
+    updateTimeSpend(fullPomodoroTime);
     setFullPomodoroTime(0);
   };
 
@@ -233,7 +233,7 @@ const Pomodoro: React.FC<PomodoroProps> = ({
 
     if (isPomodoro) {
       setTime(settings.pomodoro);
-      sendTaskData();
+      sendTimeSpend();
     } else if (isBreak && isLongBreak) {
       setTime(settings.longBreak);
     } else if (isBreak && !isLongBreak) {
@@ -267,7 +267,7 @@ const Pomodoro: React.FC<PomodoroProps> = ({
         );
         setCompletedCycles(completedCycles + 1);
       }
-      sendTaskData();
+      sendTimeSpend();
     }
 
     if (isBreak) startPomodoro();
@@ -297,8 +297,8 @@ const Pomodoro: React.FC<PomodoroProps> = ({
         setCompletedCycles(completedCycles + 1);
       }
       setNumberOfPomodoros(numberOfPomodoros + 1);
-      addPomodoro();
-      sendTaskData();
+      updatePomodoro();
+      sendTimeSpend();
     }
 
     if (isBreak) startPomodoro();

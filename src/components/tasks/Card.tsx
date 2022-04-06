@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { useTasks } from '../../hooks/useTasks';
 import { TaskData } from '../../utils/types/userTypes';
 import EditForm from './EditForm';
+import AssignmentReturnedIcon from '@mui/icons-material/AssignmentReturned';
 
 const useStyles = makeStyles((theme: any) => ({
   editButton: {
@@ -23,9 +24,11 @@ const useStyles = makeStyles((theme: any) => ({
   },
   completeButton: {
     color: theme.palette.primary.main,
+    marginLeft: '0.10rem',
   },
   notCompleteButton: {
     color: 'gray',
+    marginLeft: '0.10rem',
   },
   pomodoroCount: {
     '&.Mui-disabled': {
@@ -100,10 +103,20 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
             </Tooltip>
           </>
         }
-        onClick={handleSetCurrentTask}
+        // onClick={handleSetCurrentTask}
         selected={current}
         className={classes.listItem}
       >
+        <Tooltip title="Start this task?">
+          <IconButton
+            edge="start"
+            aria-label="set-current-task"
+            onClick={handleSetCurrentTask}
+            color="primary"
+          >
+            <AssignmentReturnedIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title="Complete?">
           <IconButton
             edge="start"

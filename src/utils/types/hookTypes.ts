@@ -19,6 +19,8 @@ export type authContextType = {
   signOut: () => void;
   sendPasswordResetEmail: (email: string) => void;
   handleUpdate: () => void;
+  updateTimeSpend: (time: number) => Promise<void>;
+  updatePomodoro: () => Promise<void>;
 };
 
 /** Default values for useAuth */
@@ -30,6 +32,8 @@ export const authContextDefaultValues: authContextType = {
   signOut: async () => {},
   sendPasswordResetEmail: async () => {},
   handleUpdate: () => {},
+  updateTimeSpend: async () => {},
+  updatePomodoro: async () => {},
 };
 
 /** Type for useGroup hook */
