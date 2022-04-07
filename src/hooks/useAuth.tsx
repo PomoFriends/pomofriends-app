@@ -18,6 +18,7 @@ import {
   UserData,
   UserRecordDefaultValues,
   UserSettingsDefaultValues,
+  UserWeeklyRecordDefaultValues,
 } from '../utils/types/userTypes';
 import { useTasks } from './useTasks';
 
@@ -132,6 +133,10 @@ export const useAuthProvider = (): authContextType => {
         .collection('dailyRecord')
         .doc(newUser.id)
         .set(UserRecordDefaultValues);
+      await db
+        .collection('weeklyRecord')
+        .doc(newUser.id)
+        .set(UserWeeklyRecordDefaultValues);
     } else {
       return { error: 'Something went wrong!' };
     }
@@ -290,6 +295,10 @@ export const useAuthProvider = (): authContextType => {
         .collection('dailyRecord')
         .doc(user.id)
         .update({ timeSpend: firebase.firestore.FieldValue.increment(time) });
+      await db
+        .collection('weeklyRecord')
+        .doc(user.id)
+        .update({ timeSpend: firebase.firestore.FieldValue.increment(time) });
       await updateTaskTime(time);
     }
   };
@@ -298,6 +307,10 @@ export const useAuthProvider = (): authContextType => {
     if (user) {
       await db
         .collection('dailyRecord')
+        .doc(user.id)
+        .update({ pomodoros: firebase.firestore.FieldValue.increment(1) });
+      await db
+        .collection('weeklyRecord')
         .doc(user.id)
         .update({ pomodoros: firebase.firestore.FieldValue.increment(1) });
       await addPomodoro();

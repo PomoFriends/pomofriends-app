@@ -202,6 +202,13 @@ export const useTasks = (): useTasksType => {
             tasksComplited: FieldValue.increment(1),
           });
 
+        await db
+          .collection('weeklyRecord')
+          .doc(user.id)
+          .update({
+            tasksComplited: FieldValue.increment(1),
+          });
+
         notification({
           title: "You've complited the task:",
           message: task.title,
@@ -242,6 +249,13 @@ export const useTasks = (): useTasksType => {
             tasksIds: FieldValue.arrayRemove(taskId),
             tasks: FieldValue.arrayRemove(taskInRec),
           });
+
+          await db
+            .collection('weeklyRecord')
+            .doc(user.id)
+            .update({
+              tasksComplited: FieldValue.increment(-1),
+            });
         }
 
         // Set values to the task

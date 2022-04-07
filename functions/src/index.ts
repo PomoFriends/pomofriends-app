@@ -176,3 +176,105 @@ exports.onFirebaseStatusUpdate = functions.firestore
         }
       });
   });
+
+// exports.scheduledDailyUpdate = functions.pubsub
+//   .schedule('* * * * *')
+//   .timeZone('America/New_York')
+//   .onRun(async (context) => {
+//     console.log('Daily record saving');
+//     return await db
+//       .collection('dailyRecord')
+//       .get()
+//       .then((querySnapshot: any) => {
+//         querySnapshot.forEach(async (doc: any) => {
+//           await doc.ref.get().then(async (res: any) => {
+//             console.log('get doc data');
+//             const recordData = res.data();
+
+//             console.log(`update ${doc.ref.id} doc`);
+//             await db
+//               .collection('weeklyRecord')
+//               .doc(doc.ref.id)
+//               .update({
+//                 dates: FieldValue.arrayUnion(context.timestamp),
+//                 records: FieldValue.arrayUnion(recordData),
+//               });
+//           });
+//           console.log('remove data from daily record');
+//           await doc.ref.update({
+//             pomodoros: 0,
+//             tasks: [],
+//             tasksComplited: 0,
+//             tasksIds: [],
+//             timeSpend: 0,
+//           });
+//         });
+//       });
+//   });
+
+exports.scheduledDailyUpdate = functions.pubsub
+  .schedule('55 23 * * *')
+  .timeZone('America/New_York')
+  .onRun(async (context) => {
+    console.log('Daily record saving');
+    return await db
+      .collection('dailyRecord')
+      .get()
+      .then((querySnapshot: any) => {
+        querySnapshot.forEach(async (doc: any) => {
+          await doc.ref.get().then(async (res: any) => {
+            console.log('get doc data');
+            const recordData = res.data();
+
+            console.log(
+              'check if user has 7 days and delete last day to replace it'
+            );
+            await db
+              .collection('weeklyRecord')
+              .doc(doc.ref.id)
+              .get()
+              .then(async (res: any) => {
+                const weeklyData = res.data();
+
+                if (weeklyData.records.length === 7) {
+                  console.log('remove first day');
+                  const firstRecord = weeklyData.records[0];
+                  const firstDate = weeklyData.dates[0];
+                  const firstTime = firstRecord.timeSpend;
+                  const firstPomodoros = firstRecord.pomodoros;
+                  const firstTaskscomplited = firstRecord.tasksComplited;
+                  db.collection('weeklyRecord')
+                    .doc(doc.ref.id)
+                    .update({
+                      dates: FieldValue.arrayRemove(firstDate),
+                      records: FieldValue.arrayRemove(firstRecord),
+                      timeSpend: FieldValue.increment(-firstTime),
+                      pomodoros: FieldValue.increment(-firstPomodoros),
+                      tasksComplited: FieldValue.increment(
+                        -firstTaskscomplited
+                      ),
+                    });
+                }
+              });
+
+            console.log(`update ${doc.ref.id} doc`);
+            await db
+              .collection('weeklyRecord')
+              .doc(doc.ref.id)
+              .update({
+                dates: FieldValue.arrayUnion(context.timestamp),
+                records: FieldValue.arrayUnion(recordData),
+              });
+          });
+          console.log('remove data from daily record');
+          await doc.ref.update({
+            pomodoros: 0,
+            tasks: [],
+            tasksComplited: 0,
+            tasksIds: [],
+            timeSpend: 0,
+            updatedAt: Date.now(),
+          });
+        });
+      });
+  });

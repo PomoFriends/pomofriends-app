@@ -16,24 +16,27 @@ import { useTasks } from '../../hooks/useTasks';
 import { TaskData } from '../../utils/types/userTypes';
 import EditForm from './EditForm';
 import AssignmentReturnedIcon from '@mui/icons-material/AssignmentReturned';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const useStyles = makeStyles((theme: any) => ({
   editButton: {
     color: theme.palette.primary.main,
     marginLeft: '1rem',
+    marginRight: '0.20rem',
   },
   completeButton: {
     color: theme.palette.primary.main,
     marginLeft: '0.10rem',
+  },
+  deleteButton: {
+    color: theme.palette.error.main,
   },
   notCompleteButton: {
     color: 'gray',
     marginLeft: '0.10rem',
   },
   pomodoroCount: {
-    '&.Mui-disabled': {
-      color: theme.palette.secondary.main,
-    },
+    color: theme.palette.secondary.main,
   },
   listItem: {
     '&:hover': {
@@ -62,7 +65,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
   const classes = useStyles();
   const taskId = task.id;
 
-  const { setCurrentTask, completeTask, uncompleteTask } = useTasks();
+  const { setCurrentTask, completeTask, uncompleteTask, deleteTask } =
+    useTasks();
 
   const [openEdit, setOpenEdit] = useState(false);
   const handleOpenEdit = () => setOpenEdit(true);
@@ -76,21 +80,22 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
       await uncompleteTask(taskId);
     }
   };
+  const handleDelete = async () => {
+    await deleteTask(taskId);
+  };
 
   return (
     <>
       <ListItem
         secondaryAction={
           <>
-            <IconButton
-              edge="end"
-              className={classes.pomodoroCount}
-              disabled={true}
-            >
-              <Typography>
-                {task.pomodorosDone} / {task.pomodorosTotal}
-              </Typography>
-            </IconButton>
+            <Tooltip title="Pomodoros done/goal">
+              <IconButton edge="end" className={classes.pomodoroCount}>
+                <Typography>
+                  {task.pomodorosDone} / {task.pomodorosTotal}
+                </Typography>
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Edit">
               <IconButton
                 edge="end"
@@ -99,6 +104,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
                 className={classes.editButton}
               >
                 <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <IconButton
+                edge="end"
+                aria-label="delete-task"
+                onClick={handleDelete}
+                className={classes.deleteButton}
+              >
+                <DeleteIcon />
               </IconButton>
             </Tooltip>
           </>

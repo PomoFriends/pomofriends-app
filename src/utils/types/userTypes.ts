@@ -65,6 +65,7 @@ export type UserRecord = {
   tasksComplited: number;
   tasksIds: string[];
   tasks: TaskData[];
+  updatedAt: number;
 };
 
 export const UserRecordDefaultValues: UserRecord = {
@@ -73,4 +74,21 @@ export const UserRecordDefaultValues: UserRecord = {
   tasksComplited: 0,
   tasksIds: [],
   tasks: [],
+  updatedAt: Date.now(),
+};
+
+export type UserWeeklyRecord = {
+  dates: number[];
+  records: UserRecord[];
+  timeSpend: number;
+  pomodoros: number;
+  tasksComplited: number;
+};
+
+export const UserWeeklyRecordDefaultValues: UserWeeklyRecord = {
+  dates: [],
+  records: [],
+  timeSpend: 0,
+  pomodoros: 0,
+  tasksComplited: 0,
 };
