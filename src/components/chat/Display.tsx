@@ -8,6 +8,7 @@ import {
   List,
   ListItem,
   ListItemSecondaryAction,
+  Modal,
   Popover,
   Tooltip,
   Typography,
@@ -17,6 +18,7 @@ import { MouseEvent, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useChat } from '../../hooks/useChat';
 import { GroupMessage } from '../../utils/types/groupTypes';
+import ReportForm from '../participants/ReportForm';
 
 const useStyles = makeStyles((theme: any) => ({
   actionButton: {
@@ -50,6 +52,17 @@ const useStyles = makeStyles((theme: any) => ({
     flexDirection: 'row',
     // justifyContent: 'center',
   },
+  reportModal: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    border: '2px solid #000',
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 8,
+    borderColor: theme.palette.primary.main,
+  },
 }));
 interface DisplayMessageProps {
   message: GroupMessage;
@@ -78,6 +91,12 @@ const DisplayMessages: React.FC<DisplayMessageProps> = ({
 
   const open = Boolean(anchorEl);
   const id = open ? 'group-details' : undefined;
+
+  const [openReport, setOpenReport] = useState(false);
+  const handleOpen = () => setOpenReport(true);
+  const handleClose = () => {
+    setOpenReport(false);
+  };
 
   return (
     <>
@@ -141,7 +160,7 @@ const DisplayMessages: React.FC<DisplayMessageProps> = ({
                 </UnstyledButton>
               ) : (
                 <UnstyledButton style={{ width: '100%' }}>
-                  <ListItem className={classes.listItem}>
+                  <ListItem className={classes.listItem} onClick={handleOpen}>
                     <Box className={classes.actionButton}>
                       <FlagIcon color={'error'} />
                     </Box>
@@ -159,6 +178,11 @@ const DisplayMessages: React.FC<DisplayMessageProps> = ({
           </Popover>
         </ListItemSecondaryAction>
       </ListItem>
+      <Modal open={openReport} onClose={handleClose}>
+        <Box className={classes.reportModal}>
+          <ReportForm handleClose={handleClose} userId={message.userId} />
+        </Box>
+      </Modal>
     </>
   );
 };

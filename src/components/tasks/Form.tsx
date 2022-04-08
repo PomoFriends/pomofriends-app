@@ -150,7 +150,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
               render={({ field: { onChange, value } }) => (
                 <Grid container spacing={2} className={classes.input}>
                   <Grid item xs={6}>
-                    <Typography># of Pomodoros</Typography>
+                    <Typography># of Pomodoro</Typography>
                   </Grid>
                   <Grid item xs={6} container justifyContent="flex-end">
                     <Input

@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme: any) => ({
   actionButton: {
     color: theme.palette.primary.main,
   },
+  report: {
+    color: theme.palette.error.main,
+  },
   popover: {
     // maxHeight: '20rem',
     '&: .MuiPopover-root': {
@@ -210,12 +213,7 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
             {participant.username}
           </Typography>
           {admin ? (
-            <Box
-              sx={{
-                marginTop: '0.3rem',
-              }}
-              className={classes.actionButton}
-            >
+            <Box sx={{ marginTop: '0.3rem' }} className={classes.actionButton}>
               <Tooltip title="admin">
                 <TimerIcon />
               </Tooltip>
@@ -250,65 +248,97 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
             className={classes.popover}
           >
             <Box>
-              <ScrollArea style={{ height: '20rem' }}>
-                <List sx={{ width: '20rem' }}>
-                  <ListItem className={classes.listDetails}>
-                    <CalendarTodayIcon color="primary" />
-                    <Typography position={'inherit'} ml={'0.5rem'}>
-                      Joined{' '}
-                      <span className={classes.spanColor}>
-                        {moment(new Date(participant.joinedAt)).fromNow(true)}{' '}
-                      </span>
-                      ago
-                    </Typography>
-                  </ListItem>
-                  <ListItem className={classes.listDetails}>
-                    <TimerIcon color="primary" />
-                    <Typography position={'inherit'} ml={'0.5rem'}>
-                      Pomodoros Done:{' '}
-                      <span className={classes.spanColor}>
-                        {participant.pomodoros}
-                      </span>
-                    </Typography>
-                  </ListItem>
-                  <ListItem className={classes.listDetails}>
-                    <AssignmentReturnedIcon color="primary" />
-                    <Typography position={'inherit'} ml={'0.5rem'}>
-                      Current task:{' '}
-                      {participant.currentTask ? null : (
-                        <span className={classes.spanColor}>N/A</span>
-                      )}
-                    </Typography>
-                  </ListItem>
-                  {participant.currentTask ? (
-                    <Box sx={{ width: '18rem', marginLeft: '1rem' }}>
-                      <TaskCard task={participant.currentTask} />
-                    </Box>
-                  ) : null}
-                  <ListItem className={classes.listDetails}>
-                    <CheckCircleIcon color="primary" />
-                    <Typography position={'inherit'} ml={'0.5rem'}>
-                      Completed Tasks:{' '}
-                      {participant.tasksComplited &&
-                      participant.tasksComplited.length > 0 ? null : (
-                        <span className={classes.spanColor}>N/A</span>
-                      )}
-                    </Typography>
-                  </ListItem>
-                  {participant.tasksComplited &&
-                  participant.tasksComplited.length > 0 ? (
-                    <Box sx={{ width: '18rem', marginLeft: '1rem' }}>
-                      <List>
-                        {participant.tasksComplited.map((task: TaskData) => (
-                          <div key={task.id}>
-                            <TaskCard task={task} />
-                          </div>
-                        ))}
-                      </List>
-                    </Box>
-                  ) : null}
-                </List>
-              </ScrollArea>
+              {participant.activityVisible || participant.id === user!.id ? (
+                <ScrollArea style={{ maxHeight: '20rem' }}>
+                  <List sx={{ width: '20rem' }}>
+                    <ListItem className={classes.listDetails}>
+                      <CalendarTodayIcon color="primary" />
+                      <Typography position={'inherit'} ml={'0.5rem'}>
+                        Joined{' '}
+                        <span className={classes.spanColor}>
+                          {moment(new Date(participant.joinedAt)).fromNow(true)}{' '}
+                        </span>
+                        ago
+                      </Typography>
+                    </ListItem>
+                    <ListItem className={classes.listDetails}>
+                      <TimerIcon color="primary" />
+                      <Typography position={'inherit'} ml={'0.5rem'}>
+                        Pomodoro Done:{' '}
+                        <span className={classes.spanColor}>
+                          {participant.pomodoros}
+                        </span>
+                      </Typography>
+                    </ListItem>
+                    {participant.tasksVisible || participant.id === user!.id ? (
+                      <>
+                        <ListItem className={classes.listDetails}>
+                          <AssignmentReturnedIcon color="primary" />
+                          <Typography position={'inherit'} ml={'0.5rem'}>
+                            Current task:{' '}
+                            {participant.currentTask ? null : (
+                              <span className={classes.spanColor}>N/A</span>
+                            )}
+                          </Typography>
+                        </ListItem>
+                        {participant.currentTask ? (
+                          <Box sx={{ width: '18rem', marginLeft: '1rem' }}>
+                            <TaskCard task={participant.currentTask} />
+                          </Box>
+                        ) : null}
+                        <ListItem className={classes.listDetails}>
+                          <CheckCircleIcon color="primary" />
+                          <Typography position={'inherit'} ml={'0.5rem'}>
+                            Completed Tasks:{' '}
+                            {participant.tasksComplited &&
+                            participant.tasksComplited.length > 0 ? null : (
+                              <span className={classes.spanColor}>N/A</span>
+                            )}
+                          </Typography>
+                        </ListItem>
+                        {participant.tasksComplited &&
+                        participant.tasksComplited.length > 0 ? (
+                          <Box sx={{ width: '18rem', marginLeft: '1rem' }}>
+                            <List>
+                              {participant.tasksComplited.map(
+                                (task: TaskData) => (
+                                  <div key={task.id}>
+                                    <TaskCard task={task} />
+                                  </div>
+                                )
+                              )}
+                            </List>
+                          </Box>
+                        ) : null}
+                      </>
+                    ) : null}
+                  </List>
+                </ScrollArea>
+              ) : (
+                <ScrollArea style={{ maxHeight: '20rem' }}>
+                  <List sx={{ width: '20rem' }}>
+                    <ListItem className={classes.listDetails}>
+                      <CalendarTodayIcon color="primary" />
+                      <Typography position={'inherit'} ml={'0.5rem'}>
+                        Joined{' '}
+                        <span className={classes.spanColor}>
+                          {moment(new Date(participant.joinedAt)).fromNow(true)}{' '}
+                        </span>
+                        ago
+                      </Typography>
+                    </ListItem>
+                    <ListItem className={classes.listDetails}>
+                      <Typography
+                        position={'inherit'}
+                        ml={'0.5rem'}
+                        color={'error'}
+                      >
+                        This user disabled visibility of their activity
+                      </Typography>
+                    </ListItem>
+                  </List>
+                </ScrollArea>
+              )}
             </Box>
           </Popover>
           {participant.id === user!.id ? null : (
@@ -341,13 +371,13 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
                 <List sx={{ width: '10rem' }}>
                   <UnstyledButton style={{ width: '100%' }}>
                     <ListItem className={classes.listItem} onClick={handleOpen}>
-                      <Box className={classes.actionButton}>
+                      <Box className={classes.report}>
                         <FlagIcon />
                       </Box>
                       <Typography
                         position={'inherit'}
                         ml={'0.5rem'}
-                        color={'primary'}
+                        color={'error'}
                       >
                         Report
                       </Typography>
@@ -374,12 +404,7 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
           )}
         </ListItemSecondaryAction>
       </ListItem>
-      <Modal
-        open={openReport}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={openReport} onClose={handleClose}>
         <Box className={classes.reportModal}>
           <ReportForm handleClose={handleClose} userId={participant.id} />
         </Box>

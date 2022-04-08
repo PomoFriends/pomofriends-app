@@ -31,7 +31,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       <ListItem
         secondaryAction={
           <>
-            <Tooltip title="Pomodoros done/goal">
+            <Tooltip title="Pomodoro done/goal">
               <IconButton edge="end" className={classes.pomodoroCount}>
                 <Typography>
                   {task.pomodorosDone} / {task.pomodorosTotal}
