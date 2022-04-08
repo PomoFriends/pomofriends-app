@@ -7,7 +7,6 @@ import { GroupMessage } from '../../utils/types/groupTypes';
 import DisplayMessages from './Display';
 import ChatForm from './Form';
 import { ScrollArea } from '@mantine/core';
-import { useScrollIntoView } from '@mantine/hooks';
 
 const useStyles = makeStyles(() => ({
   fab: {
@@ -28,49 +27,62 @@ const Chat: React.FC<ChatProps> = ({ groupId, mutedUsers }) => {
   const classes = useStyles();
   const { getMessages } = useChat();
 
-  const { scrollIntoView, targetRef, scrollableRef } = useScrollIntoView();
   const [scrollUp, setScrollUp] = useState(false);
+  const [scrollPosition, onScrollPositionChange] = useState({ x: 0, y: 0 });
   const [messages, setMessages] = useState<GroupMessage[]>([]);
 
-  const messageEl = useRef<null | HTMLDivElement>(null);
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-  const scrollToBottom = () => {
-    if (!scrollUp) {
-      if (messageEl) {
-        if (messageEl.current) {
-          // messageEl.current.scrollIntoView({ behavior: 'auto' });
-          scrollIntoView();
-        }
-      }
-    }
-  };
+  const viewport = useRef<HTMLDivElement | null>(null);
 
-  const handleScroll = (e: any) => {
-    const element = e.target;
-    if (
-      element.scrollHeight - element.scrollTop - 200 >=
-      element.clientHeight
-    ) {
-      if (!scrollUp) {
+  useEffect(() => {
+    if (!scrollUp) scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    if (viewport.current) {
+      if (
+        viewport.current.scrollHeight - viewport.current.scrollTop - 100 >=
+        scrollPosition.y
+      ) {
         setScrollUp(true);
       }
-    }
-    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
-      if (scrollUp) {
+      if (
+        viewport.current.scrollHeight - viewport.current.clientHeight ===
+        viewport.current.scrollTop
+      ) {
         setScrollUp(false);
       }
     }
+  }, [scrollPosition]);
+
+  const scrollToBottom = () => {
+    if (viewport.current)
+      viewport.current.scrollTo({
+        top: viewport.current.scrollHeight,
+        behavior: 'auto',
+      });
   };
 
-  const toggleAutoScroll = () => {
-    if (messageEl) {
-      if (messageEl.current) {
-        messageEl.current.scrollIntoView({ behavior: 'auto' });
-      }
-    }
+  const handleToggleScroll = () => {
+    setScrollUp(false);
+    scrollToBottom();
   };
+
+  // const handleScroll = (e: any) => {
+  //   const element = e.target;
+  //   if (
+  //     element.scrollHeight - element.scrollTop - 200 >=
+  //     element.clientHeight
+  //   ) {
+  //     if (!scrollUp) {
+  //       setScrollUp(true);
+  //     }
+  //   }
+  //   if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+  //     if (scrollUp) {
+  //       setScrollUp(false);
+  //     }
+  //   }
+  // };
 
   // automatically check db for new messages
   useEffect(() => {
@@ -89,8 +101,13 @@ const Chat: React.FC<ChatProps> = ({ groupId, mutedUsers }) => {
         position: 'relative',
       }}
     >
-      <Box onScroll={handleScroll} ref={scrollableRef}>
-        <ScrollArea style={{ height: '30rem' }} mb={'0.45rem'}>
+      <Box>
+        <ScrollArea
+          style={{ height: '30rem' }}
+          mb={'0.45rem'}
+          viewportRef={viewport}
+          onScrollPositionChange={onScrollPositionChange}
+        >
           <List>
             {messages.map((message: GroupMessage) => (
               <div key={message.id}>
@@ -100,8 +117,6 @@ const Chat: React.FC<ChatProps> = ({ groupId, mutedUsers }) => {
               </div>
             ))}
           </List>
-
-          <Box ref={targetRef} />
         </ScrollArea>
         {scrollUp ? (
           <Tooltip title="Auto Scroll">
@@ -110,7 +125,7 @@ const Chat: React.FC<ChatProps> = ({ groupId, mutedUsers }) => {
               sx={{ position: 'absolute' }}
               aria-label="auto-scroll"
               color="primary"
-              onClick={toggleAutoScroll}
+              onClick={handleToggleScroll}
             >
               <KeyboardArrowDownIcon />
             </Fab>
