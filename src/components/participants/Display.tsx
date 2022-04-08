@@ -23,17 +23,32 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { UnstyledButton } from '@mantine/core';
 import ReportForm from './ReportForm';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import moment from 'moment';
+import TaskCard from './TaskCard';
+import { TaskData } from '../../utils/types/userTypes';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import AssignmentReturnedIcon from '@mui/icons-material/AssignmentReturned';
 
 const useStyles = makeStyles((theme: any) => ({
   actionButton: {
     color: theme.palette.primary.main,
   },
-  popover: {},
+  popover: {
+    maxHeight: '20rem',
+  },
   listItem: {
     fontSize: '1rem',
     '&:hover': {
       backgroundColor: 'rgba(187, 134, 252, 0.08)',
     },
+  },
+  listDetails: {
+    fontSize: '1rem',
+  },
+  spanColor: {
+    color: theme.palette.primary.main,
   },
   list: {
     minHeight: '1.5rem',
@@ -85,23 +100,41 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
   const { user } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const openDetails = (event: MouseEvent<HTMLButtonElement>) => {
+  const openActions = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const closeDetails = () => {
+  const closeActions = () => {
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
-  const id = open ? 'group-details' : undefined;
+  const id = open ? 'group-actions' : undefined;
+
+  const [detailsAnchorEl, setDetailsAnchorEl] =
+    useState<HTMLButtonElement | null>(null);
+  const openDetails = (event: MouseEvent<HTMLButtonElement>) => {
+    setDetailsAnchorEl(event.currentTarget);
+  };
+  const closeDetails = () => {
+    setDetailsAnchorEl(null);
+  };
+  const detailsOpen = Boolean(detailsAnchorEl);
+  const detailsId = detailsOpen ? 'group-actions' : undefined;
+
+  const [openReport, setOpenReport] = useState(false);
+  const handleOpen = () => setOpenReport(true);
+  const handleClose = () => {
+    setOpenReport(false);
+    closeActions();
+  };
 
   const handleChangeAdmin = () => {
     changeAdmin(groupId, participant.id);
-    closeDetails();
+    closeActions();
   };
 
   const handleKickUser = () => {
     kickUser(groupId, participant.id);
-    closeDetails();
+    closeActions();
   };
 
   const handleMute = () => {
@@ -110,14 +143,7 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
     } else {
       muteUser(participant.id);
     }
-    closeDetails();
-  };
-
-  const [openReport, setOpenReport] = useState(false);
-  const handleOpen = () => setOpenReport(true);
-  const handleClose = () => {
-    setOpenReport(false);
-    closeDetails();
+    closeActions();
   };
 
   let popover = null;
@@ -192,12 +218,105 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
         </Box>
 
         <ListItemSecondaryAction className={classes.listItemSecondaryAction}>
+          <Tooltip title="View Details">
+            <IconButton
+              edge="end"
+              onClick={openDetails}
+              aria-label="details-button"
+              className={classes.actionButton}
+            >
+              <AssignmentIcon />
+            </IconButton>
+          </Tooltip>
+          <Popover
+            id={detailsId}
+            open={detailsOpen}
+            anchorEl={detailsAnchorEl}
+            onClose={closeDetails}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            className={classes.popover}
+          >
+            <List sx={{ width: '20rem' }}>
+              <ListItem className={classes.listDetails}>
+                <CalendarTodayIcon color="primary" />
+                <Typography position={'inherit'} ml={'0.5rem'}>
+                  Joined{' '}
+                  <span className={classes.spanColor}>
+                    {moment(new Date(participant.joinedAt)).fromNow(true)}{' '}
+                  </span>
+                  ago
+                </Typography>
+              </ListItem>
+              <ListItem className={classes.listDetails}>
+                <TimerIcon color="primary" />
+                <Typography position={'inherit'} ml={'0.5rem'}>
+                  Pomodoros Done:{' '}
+                  <span className={classes.spanColor}>
+                    {participant.pomodoros}
+                  </span>
+                </Typography>
+              </ListItem>
+              {/* <ListItem className={classes.listDetails}>
+                <Typography position={'inherit'} ml={'0.5rem'}>
+                  Tasks Complited:{' '}
+                  <span className={classes.spanColor}>
+                    {participant.tasksComplited
+                      ? participant.tasksComplited.length
+                      : 0}
+                  </span>
+                </Typography>
+              </ListItem> */}
+              <ListItem className={classes.listDetails}>
+                <AssignmentReturnedIcon color="primary" />
+                <Typography position={'inherit'} ml={'0.5rem'}>
+                  Current task:{' '}
+                  {participant.currentTask ? null : (
+                    <span className={classes.spanColor}>N/A</span>
+                  )}
+                </Typography>
+              </ListItem>
+              {participant.currentTask ? (
+                <Box sx={{ width: '18rem', marginLeft: '1rem' }}>
+                  <TaskCard task={participant.currentTask} />
+                </Box>
+              ) : null}
+              <ListItem className={classes.listDetails}>
+                <CheckCircleIcon color="primary" />
+                <Typography position={'inherit'} ml={'0.5rem'}>
+                  Complited Tasks:{' '}
+                  {participant.tasksComplited &&
+                  participant.tasksComplited.length > 0 ? null : (
+                    <span className={classes.spanColor}>N/A</span>
+                  )}
+                </Typography>
+              </ListItem>
+              {participant.tasksComplited &&
+              participant.tasksComplited.length > 0 ? (
+                <Box sx={{ width: '18rem', marginLeft: '1rem' }}>
+                  <List>
+                    {participant.tasksComplited.map((task: TaskData) => (
+                      <div key={task.id}>
+                        <TaskCard task={task} />
+                      </div>
+                    ))}
+                  </List>
+                </Box>
+              ) : null}
+            </List>
+          </Popover>
           {participant.id === user!.id ? null : (
             <>
-              <Tooltip title="action">
+              <Tooltip title="Action">
                 <IconButton
                   edge="end"
-                  onClick={openDetails}
+                  onClick={openActions}
                   aria-label="action-button"
                   className={classes.actionButton}
                 >
@@ -208,7 +327,7 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
                 id={id}
                 open={open}
                 anchorEl={anchorEl}
-                onClose={closeDetails}
+                onClose={closeActions}
                 anchorOrigin={{
                   vertical: 'top',
                   horizontal: 'left',
