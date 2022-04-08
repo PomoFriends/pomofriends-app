@@ -6,6 +6,7 @@ import {
   SignInData,
   SignUpData,
   TaskForm,
+  VisibilitySettingsForm,
 } from './formTypes';
 import { GroupMessage } from './groupTypes';
 import { PomodoroSettings, UserData } from './userTypes';
@@ -70,6 +71,12 @@ export type useSettingsType = {
     isSubscribed: boolean
   ) => void;
   updateAboutYou: (aboutYou: AboutYouSettingsForm) => Promise<void>;
+  getVisibilitySettings: (
+    userId: string,
+    setVisibilitySettings: any,
+    isSubscribed: boolean
+  ) => void;
+  updateVisibilitySettings: (settings: VisibilitySettingsForm) => Promise<void>;
 };
 
 /** Type for useTasks hook */

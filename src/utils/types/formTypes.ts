@@ -43,6 +43,13 @@ export type PomodoroSettingsForm = {
   notificationsOn: boolean;
 };
 
+/** Pomodoro settings form */
+export type VisibilitySettingsForm = {
+  color: string;
+  tasksVisible: boolean;
+  activityVisible: boolean;
+};
+
 /** Group settings form */
 export type GroupSettingsForm = {
   pomodoro: number;

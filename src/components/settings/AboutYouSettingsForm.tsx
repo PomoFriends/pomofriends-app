@@ -107,7 +107,7 @@ const AboutYouSettingsForm: React.FC<AboutYouSettingsFormProps> = ({
                 },
                 maxLength: {
                   value: 20,
-                  message: 'Should have should be less than 20 characters',
+                  message: 'Should be less than 20 characters',
                 },
               }}
             />

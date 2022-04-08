@@ -12,13 +12,26 @@ import Layout from '../components/elements/Layout';
 import Loader from '../components/elements/Loader';
 import AboutYouSettingsForm from '../components/settings/AboutYouSettingsForm';
 import PomodoroSettingsForm from '../components/settings/PomodoroSettingsForm';
+import VisibilitySettingsForm from '../components/settings/VisibilitySettings';
 import { useRequireAuth } from '../hooks/useRequireAuth';
 import { useSettings } from '../hooks/useSettings';
-import { PomodoroSettings } from '../utils/types/userTypes';
+import { PomodoroSettings, UserSettings } from '../utils/types/userTypes';
 
 const useStyles = makeStyles((theme: any) => ({
   container: {
     marginTop: theme.spacing(2),
+    display: 'flex',
+    alignContent: 'center',
+    justifyContent: 'center',
+    maxWidth: '34rem',
+    padding: 0,
+  },
+  closedContainer: {
+    display: 'flex',
+    alignContent: 'center',
+    justifyContent: 'center',
+    maxWidth: '34rem',
+    padding: 0,
   },
   aboutYou: {
     width: '100%',
@@ -52,17 +65,22 @@ const SettingsPage: React.FC = (): JSX.Element => {
   const classes = useStyles();
 
   const { user } = useRequireAuth();
-  const { getSettings } = useSettings();
+  const { getSettings, getVisibilitySettings } = useSettings();
   const [pomodoroSettings, setSettings] = useState<PomodoroSettings | null>(
     null
   );
+
+  const [visSettings, setVisSettings] = useState<UserSettings | null>(null);
 
   // Automatically check db for updated settings
   useEffect(() => {
     let isSubscribed = true;
 
     // Get user settings
-    if (user) getSettings(user.id, setSettings, isSubscribed);
+    if (user) {
+      getSettings(user.id, setSettings, isSubscribed);
+      getVisibilitySettings(user.id, setVisSettings, isSubscribed);
+    }
 
     return () => {
       isSubscribed = false;
@@ -72,7 +90,7 @@ const SettingsPage: React.FC = (): JSX.Element => {
   return (
     <Layout>
       <>
-        {!user || !pomodoroSettings ? (
+        {!user || !pomodoroSettings || !visSettings ? (
           <Box my={45}>
             <Loader />
           </Box>
@@ -86,6 +104,15 @@ const SettingsPage: React.FC = (): JSX.Element => {
                   </Typography>
                   <Divider />
                   <AboutYouSettingsForm user={user!} />
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Paper className={classes.aboutYou} elevation={3}>
+                  <Typography p={2} variant="h6">
+                    Visibility Settings
+                  </Typography>
+                  <Divider />
+                  <VisibilitySettingsForm settings={visSettings!} />
                 </Paper>
               </Grid>
               <Grid item xs={12}>

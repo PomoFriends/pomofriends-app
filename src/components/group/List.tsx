@@ -130,12 +130,7 @@ const GroupList: React.FC<GroupListProps> = ({ user }) => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
+            <Modal open={open} onClose={handleClose}>
               <Box className={classes.addGroupModal}>
                 <GroupForm handleClose={handleClose} setJoining={setJoining} />
               </Box>
