@@ -6,10 +6,10 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemText,
   Popover,
   Tooltip,
   Typography,
+  ListItemSecondaryAction,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import moment from 'moment';
@@ -82,105 +82,110 @@ const GroupPreview: React.FC<GroupPreviewProps> = ({ group, joining }) => {
 
   return (
     <>
-      <ListItem
-        className={classes.listItem}
-        secondaryAction={
-          <>
+      <ListItem className={classes.listItem}>
+        <Typography sx={{ wordBreak: 'break-all' }} display="block" pr={'6rem'}>
+          <Typography component="span">{group.name}</Typography>
+        </Typography>
+        <ListItemSecondaryAction>
+          <IconButton
+            edge="end"
+            className={classes.participantsIcon}
+            disabled={true}
+          >
+            <PeopleAltIcon />
+            <Typography
+              sx={{
+                color: 'white',
+                marginLeft: '0.5rem',
+                marginRight: '1rem',
+              }}
+            >
+              {group.participantsCount}
+            </Typography>
+          </IconButton>
+
+          <Tooltip title="Open details">
             <IconButton
               edge="end"
-              className={classes.participantsIcon}
-              disabled={true}
+              aria-label="open-details"
+              onClick={openDetails}
+              className={classes.details}
             >
-              <PeopleAltIcon />
-              <Typography
-                sx={{
-                  color: 'white',
-                  marginLeft: '0.5rem',
-                  marginRight: '1rem',
-                }}
-              >
-                {group.participantsCount}
-              </Typography>
+              <MoreHorizIcon />
             </IconButton>
-
-            <Tooltip title="Open details">
-              <IconButton
-                edge="end"
-                aria-label="open-details"
-                onClick={openDetails}
-                className={classes.details}
+          </Tooltip>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={closeDetails}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            className={classes.popover}
+          >
+            <List>
+              <ListItem
+                secondaryAction={
+                  <>
+                    <IconButton
+                      edge="end"
+                      className={classes.participantsIcon}
+                      disabled={true}
+                    >
+                      <PeopleAltIcon />
+                      <Typography sx={{ color: 'white', marginLeft: '0.5rem' }}>
+                        {group.participantsCount}
+                      </Typography>
+                    </IconButton>
+                  </>
+                }
               >
-                <MoreHorizIcon />
-              </IconButton>
-            </Tooltip>
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={closeDetails}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              className={classes.popover}
-            >
-              <List>
-                <ListItem
-                  secondaryAction={
-                    <>
-                      <IconButton
-                        edge="end"
-                        className={classes.participantsIcon}
-                        disabled={true}
-                      >
-                        <PeopleAltIcon />
-                        <Typography
-                          sx={{ color: 'white', marginLeft: '0.5rem' }}
-                        >
-                          {group.participantsCount}
-                        </Typography>
-                      </IconButton>
-                    </>
-                  }
+                <Typography
+                  sx={{ wordBreak: 'break-all' }}
+                  pr={'1rem'}
+                  display="block"
                 >
-                  <Typography>{group.name}</Typography>
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <Typography>
-                    Description:{' '}
-                    <span className={classes.description}>
-                      {group.description}
-                    </span>
-                  </Typography>
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <Typography>
-                    Online for{' '}
-                    {moment(new Date(group.createdAt!)).fromNow(true)}
-                  </Typography>
-                </ListItem>
-              </List>
-            </Popover>
-            <Tooltip title={`Join ${group.name}`}>
-              <IconButton
-                edge="end"
-                aria-label="join-group"
-                onClick={handleJoin}
-                className={classes.join}
-              >
-                <ArrowForwardIosIcon />
-              </IconButton>
-            </Tooltip>
-          </>
-        }
-      >
-        <ListItemText primary={group.name} />
+                  {group.name}
+                </Typography>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <Typography
+                  sx={{ wordBreak: 'break-all' }}
+                  pr={'1rem'}
+                  display="block"
+                >
+                  Description:{' '}
+                  <span className={classes.description}>
+                    {group.description}
+                  </span>
+                </Typography>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <Typography>
+                  Online for {moment(new Date(group.createdAt!)).fromNow(true)}
+                </Typography>
+              </ListItem>
+            </List>
+          </Popover>
+          <Tooltip title={`Join ${group.name}`}>
+            <IconButton
+              edge="end"
+              aria-label="join-group"
+              onClick={handleJoin}
+              className={classes.join}
+            >
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </Tooltip>
+        </ListItemSecondaryAction>
       </ListItem>
       <Divider />
     </>

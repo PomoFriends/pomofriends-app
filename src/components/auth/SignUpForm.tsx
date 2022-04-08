@@ -118,7 +118,7 @@ const SignUpForm: React.FC = (): JSX.Element => {
                 },
                 maxLength: {
                   value: 20,
-                  message: 'Should have should be less than 20 characters',
+                  message: 'Should have less than 20 characters',
                 },
               }}
             />

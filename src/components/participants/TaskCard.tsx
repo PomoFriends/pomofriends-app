@@ -42,7 +42,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         }
         className={classes.listItem}
       >
-        <ListItemText primary={task.title} secondary={task.description} />
+        <ListItemText
+          primary={task.title}
+          secondary={task.description}
+          sx={{ wordBreak: 'break-all', paddingRight: '0.5rem' }}
+        />
       </ListItem>
       <Divider />
     </>

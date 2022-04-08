@@ -91,6 +91,10 @@ const GroupForm: React.FC<GroupFormProps> = ({ handleClose, setJoining }) => {
               )}
               rules={{
                 required: 'Group Name required',
+                maxLength: {
+                  value: 30,
+                  message: 'Should have less than 30 characters',
+                },
               }}
             />
           </Grid>

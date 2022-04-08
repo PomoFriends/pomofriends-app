@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { ScrollArea } from '@mantine/core';
 import { useState, useEffect } from 'react';
 import { useGroup } from '../../hooks/useGroup';
 import { useParticipants } from '../../hooks/useParticipants';
@@ -94,9 +95,16 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
       <Box>
         <Grid container direction="row">
           <Grid item xs={9}>
-            <Typography variant="h5" className={classes.typography}>
-              {group.name}
-            </Typography>
+            <ScrollArea offsetScrollbars>
+              <Typography
+                variant="h5"
+                className={classes.typography}
+                sx={{ overflow: 'hidden' }}
+                display="block"
+              >
+                {group.name}
+              </Typography>
+            </ScrollArea>
           </Grid>
           <Grid
             item

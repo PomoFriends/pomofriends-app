@@ -87,14 +87,13 @@ const DisplayMessages: React.FC<DisplayMessageProps> = ({
           container: classes.list,
         }}
       >
-        <Box className={classes.box}>
-          <Typography>
-            <Typography color={message.color} component="span" fontWeight={600}>
-              {message.username}
-            </Typography>
-            : {message.message}
+        <Typography display="block" sx={{ wordBreak: 'break-all' }}>
+          <Typography color={message.color} component="span" fontWeight={600}>
+            {message.username}
           </Typography>
-        </Box>
+          {': '}
+          <Typography component="span">{message.message}</Typography>
+        </Typography>
         <ListItemSecondaryAction className={classes.listItemSecondaryAction}>
           <Tooltip title="action">
             <IconButton

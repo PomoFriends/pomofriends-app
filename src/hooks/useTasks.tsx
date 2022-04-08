@@ -292,7 +292,7 @@ export const useTasks = (): useTasksType => {
         }
 
         notification({
-          title: "You've complited the task:",
+          title: "You've completed the task:",
           message: task.title,
           color: 'violet',
         });

@@ -30,13 +30,17 @@ import { TaskData } from '../../utils/types/userTypes';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AssignmentReturnedIcon from '@mui/icons-material/AssignmentReturned';
+import { ScrollArea } from '@mantine/core';
 
 const useStyles = makeStyles((theme: any) => ({
   actionButton: {
     color: theme.palette.primary.main,
   },
   popover: {
-    maxHeight: '20rem',
+    // maxHeight: '20rem',
+    '&: .MuiPopover-root': {
+      overflow: 'hidden',
+    },
   },
   listItem: {
     fontSize: '1rem',
@@ -198,7 +202,9 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
               marginLeft: '0.5rem',
               marginTop: '0.2rem',
               color: participant.color,
+              wordBreak: 'break-all',
             }}
+            display="block"
             variant="h6"
           >
             {participant.username}
@@ -243,73 +249,67 @@ const DisplayParticipant: React.FC<DisplayProps> = ({
             }}
             className={classes.popover}
           >
-            <List sx={{ width: '20rem' }}>
-              <ListItem className={classes.listDetails}>
-                <CalendarTodayIcon color="primary" />
-                <Typography position={'inherit'} ml={'0.5rem'}>
-                  Joined{' '}
-                  <span className={classes.spanColor}>
-                    {moment(new Date(participant.joinedAt)).fromNow(true)}{' '}
-                  </span>
-                  ago
-                </Typography>
-              </ListItem>
-              <ListItem className={classes.listDetails}>
-                <TimerIcon color="primary" />
-                <Typography position={'inherit'} ml={'0.5rem'}>
-                  Pomodoros Done:{' '}
-                  <span className={classes.spanColor}>
-                    {participant.pomodoros}
-                  </span>
-                </Typography>
-              </ListItem>
-              {/* <ListItem className={classes.listDetails}>
-                <Typography position={'inherit'} ml={'0.5rem'}>
-                  Tasks Complited:{' '}
-                  <span className={classes.spanColor}>
-                    {participant.tasksComplited
-                      ? participant.tasksComplited.length
-                      : 0}
-                  </span>
-                </Typography>
-              </ListItem> */}
-              <ListItem className={classes.listDetails}>
-                <AssignmentReturnedIcon color="primary" />
-                <Typography position={'inherit'} ml={'0.5rem'}>
-                  Current task:{' '}
-                  {participant.currentTask ? null : (
-                    <span className={classes.spanColor}>N/A</span>
-                  )}
-                </Typography>
-              </ListItem>
-              {participant.currentTask ? (
-                <Box sx={{ width: '18rem', marginLeft: '1rem' }}>
-                  <TaskCard task={participant.currentTask} />
-                </Box>
-              ) : null}
-              <ListItem className={classes.listDetails}>
-                <CheckCircleIcon color="primary" />
-                <Typography position={'inherit'} ml={'0.5rem'}>
-                  Complited Tasks:{' '}
+            <Box>
+              <ScrollArea style={{ height: '20rem' }}>
+                <List sx={{ width: '20rem' }}>
+                  <ListItem className={classes.listDetails}>
+                    <CalendarTodayIcon color="primary" />
+                    <Typography position={'inherit'} ml={'0.5rem'}>
+                      Joined{' '}
+                      <span className={classes.spanColor}>
+                        {moment(new Date(participant.joinedAt)).fromNow(true)}{' '}
+                      </span>
+                      ago
+                    </Typography>
+                  </ListItem>
+                  <ListItem className={classes.listDetails}>
+                    <TimerIcon color="primary" />
+                    <Typography position={'inherit'} ml={'0.5rem'}>
+                      Pomodoros Done:{' '}
+                      <span className={classes.spanColor}>
+                        {participant.pomodoros}
+                      </span>
+                    </Typography>
+                  </ListItem>
+                  <ListItem className={classes.listDetails}>
+                    <AssignmentReturnedIcon color="primary" />
+                    <Typography position={'inherit'} ml={'0.5rem'}>
+                      Current task:{' '}
+                      {participant.currentTask ? null : (
+                        <span className={classes.spanColor}>N/A</span>
+                      )}
+                    </Typography>
+                  </ListItem>
+                  {participant.currentTask ? (
+                    <Box sx={{ width: '18rem', marginLeft: '1rem' }}>
+                      <TaskCard task={participant.currentTask} />
+                    </Box>
+                  ) : null}
+                  <ListItem className={classes.listDetails}>
+                    <CheckCircleIcon color="primary" />
+                    <Typography position={'inherit'} ml={'0.5rem'}>
+                      Completed Tasks:{' '}
+                      {participant.tasksComplited &&
+                      participant.tasksComplited.length > 0 ? null : (
+                        <span className={classes.spanColor}>N/A</span>
+                      )}
+                    </Typography>
+                  </ListItem>
                   {participant.tasksComplited &&
-                  participant.tasksComplited.length > 0 ? null : (
-                    <span className={classes.spanColor}>N/A</span>
-                  )}
-                </Typography>
-              </ListItem>
-              {participant.tasksComplited &&
-              participant.tasksComplited.length > 0 ? (
-                <Box sx={{ width: '18rem', marginLeft: '1rem' }}>
-                  <List>
-                    {participant.tasksComplited.map((task: TaskData) => (
-                      <div key={task.id}>
-                        <TaskCard task={task} />
-                      </div>
-                    ))}
-                  </List>
-                </Box>
-              ) : null}
-            </List>
+                  participant.tasksComplited.length > 0 ? (
+                    <Box sx={{ width: '18rem', marginLeft: '1rem' }}>
+                      <List>
+                        {participant.tasksComplited.map((task: TaskData) => (
+                          <div key={task.id}>
+                            <TaskCard task={task} />
+                          </div>
+                        ))}
+                      </List>
+                    </Box>
+                  ) : null}
+                </List>
+              </ScrollArea>
+            </Box>
           </Popover>
           {participant.id === user!.id ? null : (
             <>

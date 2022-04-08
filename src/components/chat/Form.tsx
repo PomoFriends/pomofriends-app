@@ -4,8 +4,11 @@ import { makeStyles } from '@mui/styles';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useChat } from '../../hooks/useChat';
 import { ChatForm as Form } from '../../utils/types/formTypes';
+import Filter from 'bad-words';
+import { useEffect, useState } from 'react';
+import { useInterval } from '../../utils/useInterval';
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     display: 'flex',
@@ -43,19 +46,63 @@ interface ChatFormProps {
 }
 
 const ChatForm: React.FC<ChatFormProps> = ({ groupId }) => {
-  const classes = useStyles();
+  const classes: any = useStyles();
+  const filter = new Filter();
 
   const { sendMessage } = useChat();
 
   const { handleSubmit, control, reset } = useForm<Form>();
+
+  const [messages, setMessages] = useState<string[]>([]);
+  const [time, setTime] = useState<number>(0);
+  const [limited, setLimited] = useState<boolean>(false);
+  const [timeLimited, setTimeLimited] = useState<number>(0);
+
+  useInterval(
+    () => {
+      if (limited) {
+        setTimeLimited(timeLimited - 1);
+      }
+      setTime(time + 1);
+    },
+    true ? 1000 : null
+  );
+
+  useEffect(() => {
+    if (time === 10) {
+      setMessages([]);
+      setTime(0);
+    }
+    if (timeLimited === 0) {
+      setLimited(false);
+    }
+  }, [time, timeLimited]);
 
   const onSubmit: SubmitHandler<Form> = async (data: Form) => {
     reset({
       message: '',
     });
 
+    if (data.message.length === 0) {
+      return;
+    }
+
+    try {
+      filter.clean(data.message);
+    } catch {
+      return;
+    }
+
+    if (messages.length < 6) {
+      setMessages((messages) => [...messages, data.message]);
+    } else {
+      setLimited(true);
+      setTimeLimited(15);
+      console.log('timelimited');
+    }
+
     return await sendMessage({
-      message: data.message,
+      message: filter.clean(data.message),
       groupId,
     });
   };
@@ -68,25 +115,51 @@ const ChatForm: React.FC<ChatFormProps> = ({ groupId }) => {
           control={control}
           defaultValue=""
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <TextField
-              autoComplete="off"
-              className={classes.textField}
-              fullWidth
-              label="Send message"
-              variant="outlined"
-              value={value}
-              onChange={onChange}
-              error={!!error}
-              helperText={error ? error.message : null}
-              sx={{ border: 0 }}
-            />
+            <>
+              {limited ? (
+                <TextField
+                  autoComplete="off"
+                  className={classes.textField}
+                  fullWidth
+                  label={`You can chat in ${timeLimited} seconds`}
+                  variant="outlined"
+                  value={value}
+                  onChange={onChange}
+                  error={!!error}
+                  helperText={error ? error.message : null}
+                  sx={{ border: 0 }}
+                  disabled={limited}
+                />
+              ) : (
+                <TextField
+                  autoComplete="off"
+                  className={classes.textField}
+                  fullWidth
+                  label="Send message"
+                  variant="outlined"
+                  value={value}
+                  onChange={onChange}
+                  error={!!error}
+                  helperText={error ? error.message : null}
+                  sx={{ border: 0 }}
+                  disabled={limited}
+                />
+              )}
+            </>
           )}
+          rules={{
+            maxLength: {
+              value: 500,
+              message: 'Should have less than 500 characters',
+            },
+          }}
         />
         <Button
           type="submit"
           variant="contained"
           color="primary"
           className={classes.button}
+          disabled={limited}
         >
           <SendIcon />
         </Button>

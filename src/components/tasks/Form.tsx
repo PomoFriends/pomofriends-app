@@ -105,6 +105,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
               )}
               rules={{
                 required: 'Task Name required',
+                maxLength: {
+                  value: 30,
+                  message: 'Should have less than 30 characters',
+                },
               }}
             />
           </Grid>
@@ -130,6 +134,12 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
                   helperText={error ? error.message : null}
                 />
               )}
+              rules={{
+                maxLength: {
+                  value: 100,
+                  message: 'Should have less than 100 characters',
+                },
+              }}
             />
           </Grid>
           <Grid item xs={12}>

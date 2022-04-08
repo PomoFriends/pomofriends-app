@@ -7,6 +7,7 @@ import { GroupMessage } from '../../utils/types/groupTypes';
 import DisplayMessages from './Display';
 import ChatForm from './Form';
 import { ScrollArea } from '@mantine/core';
+import { useScrollIntoView } from '@mantine/hooks';
 
 const useStyles = makeStyles(() => ({
   fab: {
@@ -27,6 +28,7 @@ const Chat: React.FC<ChatProps> = ({ groupId, mutedUsers }) => {
   const classes = useStyles();
   const { getMessages } = useChat();
 
+  const { scrollIntoView, targetRef, scrollableRef } = useScrollIntoView();
   const [scrollUp, setScrollUp] = useState(false);
   const [messages, setMessages] = useState<GroupMessage[]>([]);
 
@@ -39,6 +41,7 @@ const Chat: React.FC<ChatProps> = ({ groupId, mutedUsers }) => {
       if (messageEl) {
         if (messageEl.current) {
           // messageEl.current.scrollIntoView({ behavior: 'auto' });
+          scrollIntoView();
         }
       }
     }
@@ -86,8 +89,8 @@ const Chat: React.FC<ChatProps> = ({ groupId, mutedUsers }) => {
         position: 'relative',
       }}
     >
-      <Box onScroll={handleScroll}>
-        <ScrollArea style={{ height: '30rem' }} mb={'0.45rem'} offsetScrollbars>
+      <Box onScroll={handleScroll} ref={scrollableRef}>
+        <ScrollArea style={{ height: '30rem' }} mb={'0.45rem'}>
           <List>
             {messages.map((message: GroupMessage) => (
               <div key={message.id}>
@@ -98,7 +101,7 @@ const Chat: React.FC<ChatProps> = ({ groupId, mutedUsers }) => {
             ))}
           </List>
 
-          <div ref={messageEl} />
+          <Box ref={targetRef} />
         </ScrollArea>
         {scrollUp ? (
           <Tooltip title="Auto Scroll">

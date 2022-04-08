@@ -146,7 +146,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, current }) => {
             <CheckCircleIcon />
           </IconButton>
         </Tooltip>
-        <ListItemText primary={task.title} secondary={task.description} />
+        <ListItemText
+          primary={task.title}
+          secondary={task.description}
+          sx={{ wordBreak: 'break-all', paddingRight: '5rem' }}
+        />
       </ListItem>
       <Modal
         open={openEdit}
