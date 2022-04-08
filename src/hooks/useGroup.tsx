@@ -11,7 +11,7 @@ import {
   KickedUser,
 } from '../utils/types/groupTypes';
 import { useGroupType } from '../utils/types/hookTypes';
-import { UserSettings } from '../utils/types/userTypes';
+import { TaskData, UserSettings } from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
 
 export const useGroup = (): useGroupType => {
@@ -72,30 +72,41 @@ export const useGroup = (): useGroupType => {
         // Create participants doc with the same id as the group
         await db.collection('participants').doc(newGroup.id).set({});
 
-        const userColor = await db
+        const visibilitySettings = await db
           .collection('userSettings')
           .doc(user.id)
           .get()
-          .then((response) => {
-            const userSettings = response.data() as UserSettings;
-            return userSettings.color;
+          .then((res) => {
+            return res.data() as UserSettings;
           });
+
+        let currentTask: TaskData | null = null;
+
+        if (user.currentTaskId) {
+          await db
+            .collection('tasks')
+            .doc(user.id)
+            .collection('tasks')
+            .doc(user.currentTaskId)
+            .get()
+            .then((res) => {
+              currentTask = res.data() as TaskData;
+            });
+        }
 
         const participant: GroupParticipant = {
           id: user.id,
           username: user.username,
           profilePic: user.profilePic,
-          color: userColor,
-          completedTasks: null,
-          currentTaskId: user.currentTaskId,
-          time: 0,
-          pomodoroCount: 0,
+          color: visibilitySettings.color,
+          tasksIds: [],
+          tasksComplited: [],
+          currentTask: currentTask,
+          timeSpend: 0,
+          pomodoros: 0,
           joinedAt: Date.now(),
-          pomodoro: false,
-          shortBreak: false,
-          longBreak: false,
-          showTimer: true,
-          showTasks: true,
+          tasksVisible: visibilitySettings.tasksVisible,
+          activityVisible: visibilitySettings.activityVisible,
         };
 
         // add new participant
@@ -169,30 +180,41 @@ export const useGroup = (): useGroupType => {
 
       if (kicked) return;
 
-      const userColor = await db
+      const visibilitySettings = await db
         .collection('userSettings')
         .doc(user.id)
         .get()
-        .then((response) => {
-          const userSettings = response.data() as UserSettings;
-          return userSettings.color;
+        .then((res) => {
+          return res.data() as UserSettings;
         });
+
+      let currentTask: TaskData | null = null;
+
+      if (user.currentTaskId) {
+        await db
+          .collection('tasks')
+          .doc(user.id)
+          .collection('tasks')
+          .doc(user.currentTaskId)
+          .get()
+          .then((res) => {
+            currentTask = res.data() as TaskData;
+          });
+      }
 
       const participant: GroupParticipant = {
         id: user.id,
         username: user.username,
         profilePic: user.profilePic,
-        color: userColor,
-        completedTasks: null,
-        currentTaskId: user.currentTaskId,
-        time: 0,
-        pomodoroCount: 0,
+        color: visibilitySettings.color,
+        tasksIds: [],
+        tasksComplited: [],
+        currentTask: currentTask,
+        timeSpend: 0,
+        pomodoros: 0,
         joinedAt: Date.now(),
-        pomodoro: false,
-        shortBreak: false,
-        longBreak: false,
-        showTimer: true,
-        showTasks: true,
+        tasksVisible: visibilitySettings.tasksVisible,
+        activityVisible: visibilitySettings.activityVisible,
       };
 
       const newParticipant = db

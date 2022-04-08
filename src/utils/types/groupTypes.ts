@@ -43,16 +43,14 @@ export type GroupParticipant = {
   username: string;
   profilePic: string | null;
   color: string;
-  completedTasks: TaskData[] | null;
-  currentTaskId: string | null;
-  time: number;
-  pomodoroCount: number;
+  tasksIds: string[];
+  tasksComplited: TaskData[] | null;
+  currentTask: TaskData | null;
+  timeSpend: number;
+  pomodoros: number;
   joinedAt: number;
-  pomodoro: boolean;
-  shortBreak: boolean;
-  longBreak: boolean;
-  showTimer: boolean;
-  showTasks: boolean;
+  tasksVisible: boolean;
+  activityVisible: boolean;
 };
 
 /** Message type */

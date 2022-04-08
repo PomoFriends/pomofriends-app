@@ -6,6 +6,7 @@ import { useTasksType } from '../utils/types/hookTypes';
 import { TaskData, UserRecord } from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
 import { notification } from '../utils/notification';
+import { GroupParticipant } from '../utils/types/groupTypes';
 
 export const useTasks = (): useTasksType => {
   const { user, handleUpdate } = useAuth();
@@ -40,6 +41,26 @@ export const useTasks = (): useTasksType => {
           .doc(user.id)
           .update({ currentTaskId: newTask.id });
 
+        if (user.groupId) {
+          const currentTask: TaskData = {
+            id: newTask.id,
+            ...task,
+            pomodorosDone: 0,
+            timeSpend: 0,
+            complete: false,
+            completedAt: null,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          };
+
+          await db
+            .collection('participants')
+            .doc(user.groupId)
+            .collection('participants')
+            .doc(user.id)
+            .update({ currentTask: currentTask });
+        }
+
         notification({
           title: "You've created the task:",
           message: task.title,
@@ -71,6 +92,29 @@ export const useTasks = (): useTasksType => {
           ...task,
           updatedAt: Date.now(),
         });
+
+        if (user.groupId && user.currentTaskId === taskId) {
+          let currentTask: TaskData | null = null;
+
+          if (user.currentTaskId) {
+            await db
+              .collection('tasks')
+              .doc(user.id)
+              .collection('tasks')
+              .doc(taskId)
+              .get()
+              .then((res) => {
+                currentTask = res.data() as TaskData;
+              });
+          }
+
+          await db
+            .collection('participants')
+            .doc(user.groupId)
+            .collection('participants')
+            .doc(user.id)
+            .update({ currentTask: currentTask });
+        }
 
         notification({
           title: "You've updated the task:",
@@ -116,6 +160,15 @@ export const useTasks = (): useTasksType => {
             .collection('users')
             .doc(user.id)
             .update({ currentTaskId: null });
+
+          if (user.groupId) {
+            await db
+              .collection('participants')
+              .doc(user.groupId)
+              .collection('participants')
+              .doc(user.id)
+              .update({ currentTask: null });
+          }
         }
       } catch {
         console.log("Something went wrong, couldn't delete the task");
@@ -141,6 +194,15 @@ export const useTasks = (): useTasksType => {
           .doc(taskId)
           .get()
           .then((res) => res.data() as TaskData);
+
+        if (user.groupId) {
+          await db
+            .collection('participants')
+            .doc(user.groupId)
+            .collection('participants')
+            .doc(user.id)
+            .update({ currentTask: task });
+        }
 
         notification({
           title: 'Your current task is:',
@@ -174,14 +236,6 @@ export const useTasks = (): useTasksType => {
             updatedAt: Date.now(),
           });
 
-        // set current task to null
-        if (user.currentTaskId === taskId) {
-          await db
-            .collection('users')
-            .doc(user.id)
-            .update({ currentTaskId: null });
-        }
-
         // get task to show the name of this task in notifications
         // and to add it to the record
         const task: TaskData = await db
@@ -192,6 +246,22 @@ export const useTasks = (): useTasksType => {
           .get()
           .then((res) => res.data() as TaskData);
 
+        // set current task to null
+        if (user.currentTaskId === taskId) {
+          await db
+            .collection('users')
+            .doc(user.id)
+            .update({ currentTaskId: null });
+
+          if (user.groupId) {
+            await db
+              .collection('participants')
+              .doc(user.groupId)
+              .collection('participants')
+              .doc(user.id)
+              .update({ currentTask: null });
+          }
+        }
         // add task to the daily record
         await db
           .collection('dailyRecord')
@@ -208,6 +278,18 @@ export const useTasks = (): useTasksType => {
           .update({
             tasksComplited: FieldValue.increment(1),
           });
+
+        if (user.groupId) {
+          await db
+            .collection('participants')
+            .doc(user.groupId)
+            .collection('participants')
+            .doc(user.id)
+            .update({
+              tasksIds: FieldValue.arrayUnion(task.id),
+              tasksComplited: FieldValue.arrayUnion(task),
+            });
+        }
 
         notification({
           title: "You've complited the task:",
@@ -256,6 +338,30 @@ export const useTasks = (): useTasksType => {
             .update({
               tasksComplited: FieldValue.increment(-1),
             });
+        }
+
+        if (user.groupId) {
+          const participantRef = db
+            .collection('participants')
+            .doc(user.groupId)
+            .collection('participants')
+            .doc(user.id);
+
+          const participant = await participantRef
+            .get()
+            .then((res) => res.data() as GroupParticipant);
+
+          if (participant.tasksIds.includes(taskId)) {
+            const taskInRec = await taskRef
+              .get()
+              .then((res) => res.data() as TaskData);
+
+            // delete task
+            await participantRef.update({
+              tasksIds: FieldValue.arrayRemove(taskId),
+              tasksComplited: FieldValue.arrayRemove(taskInRec),
+            });
+          }
         }
 
         // Set values to the task

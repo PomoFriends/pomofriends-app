@@ -47,6 +47,8 @@ export const useAuthProvider = (): authContextType => {
   const [userLoading, setLoading] = useState<boolean>(true);
   const [update, setUpdate] = useState(0);
 
+  const FieldValue = firebase.firestore.FieldValue;
+
   const { updateTaskTime, addPomodoro } = useTasks();
 
   // Update state of the user
@@ -70,11 +72,11 @@ export const useAuthProvider = (): authContextType => {
 
     const isOfflineForFirestore = {
       state: 'offline',
-      last_changed: firebase.firestore.FieldValue.serverTimestamp(),
+      last_changed: FieldValue.serverTimestamp(),
     };
     const isOnlineForFirestore = {
       state: 'online',
-      last_changed: firebase.firestore.FieldValue.serverTimestamp(),
+      last_changed: FieldValue.serverTimestamp(),
     };
 
     realtimedb.ref('.info/connected').on('value', (snapshot) => {
@@ -294,12 +296,23 @@ export const useAuthProvider = (): authContextType => {
       await db
         .collection('dailyRecord')
         .doc(user.id)
-        .update({ timeSpend: firebase.firestore.FieldValue.increment(time) });
+        .update({ timeSpend: FieldValue.increment(time) });
       await db
         .collection('weeklyRecord')
         .doc(user.id)
-        .update({ timeSpend: firebase.firestore.FieldValue.increment(time) });
+        .update({ timeSpend: FieldValue.increment(time) });
       await updateTaskTime(time);
+
+      if (user.groupId) {
+        await db
+          .collection('participants')
+          .doc(user.groupId)
+          .collection('participants')
+          .doc(user.id)
+          .update({
+            timeSpend: FieldValue.increment(time),
+          });
+      }
     }
   };
 
@@ -308,12 +321,23 @@ export const useAuthProvider = (): authContextType => {
       await db
         .collection('dailyRecord')
         .doc(user.id)
-        .update({ pomodoros: firebase.firestore.FieldValue.increment(1) });
+        .update({ pomodoros: FieldValue.increment(1) });
       await db
         .collection('weeklyRecord')
         .doc(user.id)
-        .update({ pomodoros: firebase.firestore.FieldValue.increment(1) });
+        .update({ pomodoros: FieldValue.increment(1) });
       await addPomodoro();
+
+      if (user.groupId) {
+        await db
+          .collection('participants')
+          .doc(user.groupId)
+          .collection('participants')
+          .doc(user.id)
+          .update({
+            pomodoros: FieldValue.increment(1),
+          });
+      }
     }
   };
 
