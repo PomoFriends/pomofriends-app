@@ -1,8 +1,8 @@
+import { UnstyledButton } from '@mantine/core';
 import Dashboard from '@mui/icons-material/Dashboard';
 import Info from '@mui/icons-material/Info';
 import Logout from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
-import Person from '@mui/icons-material/Person';
 import Settings from '@mui/icons-material/Settings';
 import Star from '@mui/icons-material/Star';
 import {
@@ -14,11 +14,11 @@ import {
   Divider,
   IconButton,
   ListItemIcon,
+  Menu,
   MenuItem,
   Toolbar,
   Tooltip,
   Typography,
-  Menu,
 } from '@mui/material';
 import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
@@ -80,14 +80,8 @@ const Navbar = () => {
             {user.username}
           </Typography>
           <Divider />
-          <MenuItem sx={{ mt: '0.45rem' }}>
-            <ListItemIcon>
-              <Person fontSize="small" />
-            </ListItemIcon>
-            My Profile
-          </MenuItem>
           <Link href="/dashboard" passHref={true}>
-            <MenuItem>
+            <MenuItem sx={{ mt: '0.45rem' }}>
               <ListItemIcon>
                 <Dashboard fontSize="small" />
               </ListItemIcon>
@@ -128,14 +122,20 @@ const Navbar = () => {
     <AppBar position="static">
       <Container maxWidth="lg">
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-          >
-            <Link href="/">PomoFriends</Link>
-          </Typography>
+          <Link href="/" passHref>
+            <UnstyledButton>
+              <Typography
+                variant="h5"
+                noWrap
+                component="div"
+                sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+                color={'primary'}
+              >
+                PomoFriends
+              </Typography>
+            </UnstyledButton>
+          </Link>
+
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -147,6 +147,19 @@ const Navbar = () => {
             >
               <MenuIcon />
             </IconButton>
+            <Link href="/" passHref>
+              <UnstyledButton>
+                <Typography
+                  variant="h5"
+                  noWrap
+                  component="div"
+                  sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
+                  color={'primary'}
+                >
+                  PomoFriends
+                </Typography>
+              </UnstyledButton>
+            </Link>
             <Menu
               id="nav-menu"
               anchorEl={anchorElNav}
