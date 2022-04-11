@@ -16,6 +16,8 @@ import { GroupData } from '../../utils/types/groupTypes';
 import RoomButtons from '../buttons/RoomButtons';
 import Chat from '../chat/Chat';
 import Participants from '../participants/Participants';
+import { useAuth } from '../../hooks/useAuth';
+import { notification } from '../../utils/notification';
 
 const useStyles = makeStyles((theme: any) => ({
   typography: {
@@ -48,6 +50,7 @@ interface GroupProps {
 const GroupRoom: React.FC<GroupProps> = ({ group }) => {
   const classes = useStyles();
 
+  const { user } = useAuth();
   const { leaveGroup } = useGroup();
   const { getAdmin, getMutedUser } = useParticipants();
   const [clickedButton, setClicked] = useState<boolean>(false);
@@ -89,6 +92,16 @@ const GroupRoom: React.FC<GroupProps> = ({ group }) => {
       isSubscribed = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (adminId === user!.id) {
+      notification({
+        title: 'You are now an admin of the group',
+        message: '',
+        color: 'yellow',
+      });
+    }
+  }, [adminId]);
 
   return (
     <>

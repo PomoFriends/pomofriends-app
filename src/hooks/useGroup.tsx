@@ -1,6 +1,7 @@
 import firebase from 'firebase/compat/app';
 import { useRouter } from 'next/router';
 import { db } from '../firebase/firebase';
+import { notification } from '../utils/notification';
 import { GroupForm, GroupSettingsForm } from '../utils/types/formTypes';
 import {
   GroupAdmin,
@@ -147,7 +148,14 @@ export const useGroup = (): useGroupType => {
         await db
           .collection('users')
           .doc(user.id)
-          .update({ groupId: newGroup.id });
+          .update({ groupId: newGroup.id })
+          .then(() => {
+            notification({
+              title: "You've created the group",
+              message: group.name,
+              color: 'green',
+            });
+          });
 
         handleUpdate();
       } catch {
@@ -171,7 +179,11 @@ export const useGroup = (): useGroupType => {
           if (res.exists) {
             const kickedRef = res.data() as KickedUser;
             if (kickedRef) {
-              console.log('you were kicked from the group');
+              notification({
+                title: `You've been kicked from this group`,
+                message: '',
+                color: 'red',
+              });
               return kickedRef.kicked;
             }
           }
@@ -236,7 +248,23 @@ export const useGroup = (): useGroupType => {
       });
       await newParticipant.set(participant);
 
-      await db.collection('users').doc(user.id).update({ groupId });
+      const group = await db
+        .collection('groups')
+        .doc(groupId)
+        .get()
+        .then((res) => res.data() as GroupData);
+
+      await db
+        .collection('users')
+        .doc(user.id)
+        .update({ groupId })
+        .then(() => {
+          notification({
+            title: "You've joined the group",
+            message: group.name,
+            color: 'green',
+          });
+        });
 
       handleUpdate();
     } else {
@@ -254,7 +282,17 @@ export const useGroup = (): useGroupType => {
         .doc(user.id)
         .delete();
 
-      await db.collection('users').doc(user.id).update({ groupId: null });
+      await db
+        .collection('users')
+        .doc(user.id)
+        .update({ groupId: null })
+        .then(() => {
+          notification({
+            title: "You've left the group",
+            message: '',
+            color: 'red',
+          });
+        });
       await db
         .collection('mutedUsers')
         .doc(user.id)
@@ -395,7 +433,17 @@ export const useGroup = (): useGroupType => {
 
     if (admin.userId === user.id) {
       // Update group settings
-      await db.collection('groupSettings').doc(groupId).update(settings);
+      await db
+        .collection('groupSettings')
+        .doc(groupId)
+        .update(settings)
+        .then(() => {
+          notification({
+            title: "You've changed the settings of the group",
+            message: '',
+            color: 'green',
+          });
+        });
     } else {
       console.log('User is not an admin of the group');
       return;

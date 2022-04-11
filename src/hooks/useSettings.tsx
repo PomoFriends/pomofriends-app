@@ -7,6 +7,7 @@ import {
 import { useSettingsType } from '../utils/types/hookTypes';
 import { PomodoroSettings, UserSettings } from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
+import { notification } from '../utils/notification';
 
 export const useSettings = (): useSettingsType => {
   const { user, handleUpdate } = useAuth();
@@ -14,7 +15,17 @@ export const useSettings = (): useSettingsType => {
 
   const updateSettings = async (settings: PomodoroSettings) => {
     if (user) {
-      await db.collection('pomodoroSettings').doc(user.id).update(settings);
+      await db
+        .collection('pomodoroSettings')
+        .doc(user.id)
+        .update(settings)
+        .then(() => {
+          notification({
+            title: "You've updated your pomodoro settings",
+            message: '',
+            color: 'green',
+          });
+        });
     } else {
       console.log('User is not logged in!');
       await router.push('/sign-in');
@@ -69,7 +80,17 @@ export const useSettings = (): useSettingsType => {
 
   const updateAboutYou = async (aboutYou: AboutYouSettingsForm) => {
     if (user) {
-      await db.collection('users').doc(user.id).update(aboutYou);
+      await db
+        .collection('users')
+        .doc(user.id)
+        .update(aboutYou)
+        .then(() => {
+          notification({
+            title: "You've updated your username to",
+            message: aboutYou.username,
+            color: 'green',
+          });
+        });
       handleUpdate();
     } else {
       console.log('User is not logged in!');
@@ -80,7 +101,17 @@ export const useSettings = (): useSettingsType => {
   const updateVisibilitySettings = async (settings: VisibilitySettingsForm) => {
     if (user) {
       if (settings.color.length === 7 && settings.color.includes('#'))
-        await db.collection('userSettings').doc(user.id).update(settings);
+        await db
+          .collection('userSettings')
+          .doc(user.id)
+          .update(settings)
+          .then(() => {
+            notification({
+              title: "You've updated your visibility settings",
+              message: '',
+              color: 'green',
+            });
+          });
       handleUpdate();
     } else {
       console.log('User is not logged in!');

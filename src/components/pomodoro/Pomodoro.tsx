@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useGroup } from '../../hooks/useGroup';
 import { useSettings } from '../../hooks/useSettings';
+import { notification } from '../../utils/notification';
 import {
   PomodoroSettings,
   PomodoroSettingsDefaultValues,
@@ -124,6 +125,14 @@ const Pomodoro: React.FC<PomodoroProps> = ({
         setTime(settings.shortBreak);
       }
     }
+
+    if (groupId !== null && !isAdmin) {
+      notification({
+        title: 'The group admin has changed the settings',
+        message: '',
+        color: 'violet',
+      });
+    }
   }, [settings]);
 
   const sendTimeData = async () => {
@@ -156,12 +165,42 @@ const Pomodoro: React.FC<PomodoroProps> = ({
   const startTimer = useCallback(async () => {
     await sendCommand('startTimer');
 
+    if (isPomodoro) {
+      if (groupId !== null && !isAdmin) {
+        notification({
+          title: 'Your group has started the Pomodoro Session',
+          message: '',
+          color: 'violet',
+        });
+      } else {
+        notification({
+          title: "You've started the Pomodoro Session",
+          message: '',
+          color: 'violet',
+        });
+      }
+    }
+
     setTimeCounting(true);
     setStarted(true);
   }, [setTimeCounting, setStarted, sendCommand]);
 
   const startPomodoro = useCallback(async () => {
     await sendCommand('startPomodoro');
+
+    if (groupId !== null && !isAdmin) {
+      notification({
+        title: 'Your group has started the Pomodoro Session',
+        message: '',
+        color: 'violet',
+      });
+    } else {
+      notification({
+        title: "You've started the Pomodoro Session",
+        message: '',
+        color: 'violet',
+      });
+    }
 
     if (settings.autoStartPomodoro) {
       startTimer();
@@ -206,9 +245,19 @@ const Pomodoro: React.FC<PomodoroProps> = ({
       if (long) {
         setTime(settings.longBreak);
         setIsLongBreak(true);
+        notification({
+          title: 'You are now on a long break',
+          message: '',
+          color: 'violet',
+        });
       } else {
         setTime(settings.shortBreak);
         setIsLongBreak(false);
+        notification({
+          title: 'You are now on a short break',
+          message: '',
+          color: 'violet',
+        });
       }
     },
     [
@@ -230,6 +279,20 @@ const Pomodoro: React.FC<PomodoroProps> = ({
     await sendCommand('resetTimer');
     setTimeCounting(false);
     setStarted(false);
+
+    if (groupId !== null && !isAdmin) {
+      notification({
+        title: 'The group admin reset the timer',
+        message: '',
+        color: 'violet',
+      });
+    } else {
+      notification({
+        title: "You've reset the timer",
+        message: '',
+        color: 'violet',
+      });
+    }
 
     if (isPomodoro) {
       setTime(settings.pomodoro);

@@ -3,6 +3,8 @@ import { GroupParticipant } from '../utils/types/groupTypes';
 import { useParticipantsType } from '../utils/types/hookTypes';
 import firebase from 'firebase/compat/app';
 import { useAuth } from './useAuth';
+import { notification } from '../utils/notification';
+import { UserData } from '../utils/types/userTypes';
 
 export const useParticipants = (): useParticipantsType => {
   const { user } = useAuth();
@@ -49,8 +51,20 @@ export const useParticipants = (): useParticipantsType => {
 
   const changeAdmin = async (groupId: string, userId: string) => {
     try {
+      const adminUsername = await db
+        .collection('users')
+        .doc(userId)
+        .get()
+        .then((res) => {
+          const newAdmin = res.data() as UserData;
+          return newAdmin.username;
+        });
       await db.collection('admins').doc(groupId).set({ userId: userId });
-      console.log('make admin');
+      notification({
+        title: 'The new group admin is',
+        message: adminUsername,
+        color: 'green',
+      });
     } catch (error) {
       console.log("Couldn't set admin");
     }
@@ -58,6 +72,15 @@ export const useParticipants = (): useParticipantsType => {
 
   const kickUser = async (groupId: string, userId: string) => {
     try {
+      const kickedUsername = await db
+        .collection('users')
+        .doc(userId)
+        .get()
+        .then((res) => {
+          const newAdmin = res.data() as UserData;
+          return newAdmin.username;
+        });
+
       await db
         .collection('participants')
         .doc(groupId)
@@ -80,6 +103,12 @@ export const useParticipants = (): useParticipantsType => {
         .collection('kickedUsers')
         .doc(userId)
         .set({ id: userId, kicked: true });
+
+      notification({
+        title: `You've kicked ${kickedUsername} from the group`,
+        message: '',
+        color: 'green',
+      });
     } catch (error) {
       console.log("Couldn't kick user");
     }
@@ -88,11 +117,26 @@ export const useParticipants = (): useParticipantsType => {
   const muteUser = async (userId: string) => {
     if (user) {
       try {
+        const mutedUsername = await db
+          .collection('users')
+          .doc(userId)
+          .get()
+          .then((res) => {
+            const newAdmin = res.data() as UserData;
+            return newAdmin.username;
+          });
         await db
           .collection('mutedUsers')
           .doc(user.id)
           .update({
             mutedUserIds: FieldValue.arrayUnion(userId),
+          })
+          .then(() => {
+            notification({
+              title: `You've muted ${mutedUsername}`,
+              message: 'You will no longer see their messages',
+              color: 'green',
+            });
           });
       } catch (error) {
         console.log("Couldn't mute user");
@@ -103,11 +147,26 @@ export const useParticipants = (): useParticipantsType => {
   const unmuteUser = async (userId: string) => {
     if (user) {
       try {
+        const mutedUsername = await db
+          .collection('users')
+          .doc(userId)
+          .get()
+          .then((res) => {
+            const newAdmin = res.data() as UserData;
+            return newAdmin.username;
+          });
         await db
           .collection('mutedUsers')
           .doc(user.id)
           .update({
             mutedUserIds: FieldValue.arrayRemove(userId),
+          })
+          .then(() => {
+            notification({
+              title: `You've unmuted ${mutedUsername}`,
+              message: 'You will now see their messages',
+              color: 'green',
+            });
           });
       } catch (error) {
         console.log("Couldn't unmunte user");
@@ -137,13 +196,21 @@ export const useParticipants = (): useParticipantsType => {
     if (user) {
       try {
         const report = db.collection('reportedUsers').doc();
-        await report.set({
-          id: report.id,
-          reason: reason,
-          reportedUser: userId,
-          reportBy: user.id,
-          reportedAt: Date.now(),
-        });
+        await report
+          .set({
+            id: report.id,
+            reason: reason,
+            reportedUser: userId,
+            reportBy: user.id,
+            reportedAt: Date.now(),
+          })
+          .then(() => {
+            notification({
+              title: `We have received your report`,
+              message: '',
+              color: 'green',
+            });
+          });
       } catch (error) {
         console.log("Couldn't report user");
       }

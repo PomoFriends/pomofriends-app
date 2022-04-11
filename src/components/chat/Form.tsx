@@ -7,6 +7,7 @@ import { ChatForm as Form } from '../../utils/types/formTypes';
 import Filter from 'bad-words';
 import { useEffect, useState } from 'react';
 import { useInterval } from '../../utils/useInterval';
+import { notification } from '../../utils/notification';
 
 const useStyles: any = makeStyles((theme: any) => ({
   form: {
@@ -98,7 +99,11 @@ const ChatForm: React.FC<ChatFormProps> = ({ groupId }) => {
     } else {
       setLimited(true);
       setTimeLimited(15);
-      console.log('timelimited');
+      notification({
+        title: 'Please, do not spam',
+        message: '',
+        color: 'red',
+      });
     }
 
     return await sendMessage({
