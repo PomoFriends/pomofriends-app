@@ -2,7 +2,7 @@ import { UnstyledButton } from '@mantine/core';
 import Dashboard from '@mui/icons-material/Dashboard';
 import Info from '@mui/icons-material/Info';
 import Logout from '@mui/icons-material/Logout';
-import MenuIcon from '@mui/icons-material/Menu';
+// import MenuIcon from '@mui/icons-material/Menu';
 import Settings from '@mui/icons-material/Settings';
 import Star from '@mui/icons-material/Star';
 import {
@@ -24,7 +24,7 @@ import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 
-const pages = ['rating', 'about'];
+// const pages = ['about'];
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
@@ -32,9 +32,9 @@ const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
+  // const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
+  //   setAnchorElNav(event.currentTarget);
+  // };
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -137,7 +137,7 @@ const Navbar = () => {
           </Link>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
+            {/* <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="nav-menu"
@@ -146,7 +146,7 @@ const Navbar = () => {
               color="inherit"
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
             <Link href="/" passHref>
               <UnstyledButton>
                 <Typography
@@ -181,13 +181,13 @@ const Navbar = () => {
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {/* {pages.map((page) => (
               <Link key={page} href={`/${page}`} passHref={true}>
                 <Button onClick={handleCloseNavMenu} sx={{ my: 2 }}>
                   {page}
                 </Button>
               </Link>
-            ))}
+            ))} */}
           </Box>
           {rightSide}
         </Toolbar>

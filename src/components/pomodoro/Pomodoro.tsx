@@ -12,6 +12,9 @@ import { useInterval } from '../../utils/useInterval';
 import ButtonsControl from '../buttons/ButtonsControl';
 import ButtonsType from '../buttons/ButtonsType';
 import TimeDisplay from './TimeDisplay';
+import { NextSeo } from 'next-seo';
+import { extraDigit, formatTime } from '../../utils/formatTime';
+import Head from 'next/head';
 
 interface PomodoroProps {
   user: UserData | null;
@@ -367,8 +370,29 @@ const Pomodoro: React.FC<PomodoroProps> = ({
     if (isBreak) startPomodoro();
   }, [time]);
 
+  const convertedTime = formatTime(time, false);
+  const timeTitle: string =
+    extraDigit(convertedTime.minutes).toString() +
+    ':' +
+    extraDigit(convertedTime.seconds).toString();
+
   return (
     <>
+      {started ? <NextSeo title={timeTitle} description="" /> : null}
+      <Head>
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href={isBreak ? `/favicon-break-32x32.png` : `/favicon-32x32.png`}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href={isBreak ? `/favicon-break-16x16.png` : `/favicon-16x16.png`}
+        />
+      </Head>
       <ButtonsType
         startPomodoro={startPomodoro}
         startBreak={startBreak}

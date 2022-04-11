@@ -114,7 +114,7 @@ const AboutYouSettingsForm: React.FC<AboutYouSettingsFormProps> = ({
           </Grid>
         </Grid>
         <SubmitButton
-          title="Submit changes"
+          title="Change username"
           type="submit"
           isLoading={isLoading}
         />
