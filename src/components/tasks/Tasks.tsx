@@ -92,7 +92,7 @@ const Tasks: React.FC = () => {
   } else {
     body = (
       <Box>
-        <ScrollArea style={{ height: '16rem' }} offsetScrollbars>
+        <ScrollArea style={{ height: '16rem' }}>
           <List>
             {taskList.map((task: TaskData) => (
               <div key={task.id}>

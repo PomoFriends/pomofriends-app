@@ -35,7 +35,7 @@ const Participants: React.FC<ParticipantsProps> = ({
   return (
     <>
       <Box>
-        <ScrollArea style={{ height: '36rem' }} offsetScrollbars>
+        <ScrollArea style={{ height: '36rem' }}>
           <List>
             {participants.map((participant: GroupParticipant) => {
               return (

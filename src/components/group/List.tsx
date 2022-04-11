@@ -90,7 +90,7 @@ const GroupList: React.FC<GroupListProps> = ({ user }) => {
   } else {
     body = (
       <Box>
-        <ScrollArea style={{ height: '36rem' }} offsetScrollbars>
+        <ScrollArea style={{ height: '36rem' }}>
           <List>
             {groupList.map((group: GroupData) => (
               <div key={group.id}>
