@@ -30,6 +30,7 @@
     "@mui/styles": "^5.4.2",
     "bad-words": "^3.0.4",
     "firebase": "^9.6.5",
+    "firebase-functions": "^3.19.0",
     "firebase-tools": "^10.5.0",
     "ion-alert": "^1.0.1",
     "moment": "^2.29.1",
