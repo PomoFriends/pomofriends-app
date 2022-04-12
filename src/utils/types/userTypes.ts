@@ -92,3 +92,15 @@ export const UserWeeklyRecordDefaultValues: UserWeeklyRecord = {
   pomodoros: 0,
   tasksComplited: 0,
 };
+
+export type NotificationSettings = {
+  soundOn: boolean;
+  volume: number;
+  soundtrack: number;
+};
+
+export const NotificationSettingsDefaultValues: NotificationSettings = {
+  soundOn: true,
+  volume: 100,
+  soundtrack: 0,
+};

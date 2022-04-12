@@ -5,7 +5,11 @@ import {
   VisibilitySettingsForm,
 } from '../utils/types/formTypes';
 import { useSettingsType } from '../utils/types/hookTypes';
-import { PomodoroSettings, UserSettings } from '../utils/types/userTypes';
+import {
+  NotificationSettings,
+  PomodoroSettings,
+  UserSettings,
+} from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
 import { notification } from '../utils/notification';
 
@@ -43,9 +47,28 @@ export const useSettings = (): useSettingsType => {
         .doc(userId)
         .onSnapshot((settings) => {
           if (settings.exists) {
-            if (isSubscribed) {
-              setSettings(settings.data() as PomodoroSettings);
-            }
+            setSettings(settings.data() as PomodoroSettings);
+          } else {
+            console.log('No such document!');
+          }
+        });
+    } catch (error) {
+      console.log("Couldn't get settings");
+    }
+  };
+
+  const getNotificationSettings = (
+    userId: string,
+    setNotificationSettings: any,
+    isSubscribed: boolean
+  ) => {
+    if (!isSubscribed) return;
+    try {
+      db.collection('notificationSettings')
+        .doc(userId)
+        .onSnapshot((settings) => {
+          if (settings.exists) {
+            setNotificationSettings(settings.data() as NotificationSettings);
           } else {
             console.log('No such document!');
           }
@@ -66,9 +89,7 @@ export const useSettings = (): useSettingsType => {
         .doc(userId)
         .onSnapshot((settings) => {
           if (settings.exists) {
-            if (isSubscribed) {
-              setVisibilitySettings(settings.data() as UserSettings);
-            }
+            setVisibilitySettings(settings.data() as UserSettings);
           } else {
             console.log('No such document!');
           }
@@ -119,11 +140,33 @@ export const useSettings = (): useSettingsType => {
     }
   };
 
+  const updateNotificationSettings = async (settings: NotificationSettings) => {
+    if (user) {
+      await db
+        .collection('notificationSettings')
+        .doc(user.id)
+        .update(settings)
+        .then(() => {
+          notification({
+            title: "You've updated your notification settings",
+            message: '',
+            color: 'green',
+          });
+        });
+      handleUpdate();
+    } else {
+      console.log('User is not logged in!');
+      await router.push('/sign-in');
+    }
+  };
+
   return {
     updateSettings,
     getSettings,
     updateAboutYou,
     getVisibilitySettings,
     updateVisibilitySettings,
+    getNotificationSettings,
+    updateNotificationSettings,
   };
 };

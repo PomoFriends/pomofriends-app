@@ -9,7 +9,7 @@ import {
   VisibilitySettingsForm,
 } from './formTypes';
 import { GroupMessage } from './groupTypes';
-import { PomodoroSettings, UserData } from './userTypes';
+import { NotificationSettings, PomodoroSettings, UserData } from './userTypes';
 
 /** Type for useAuth hook */
 export type authContextType = {
@@ -77,6 +77,12 @@ export type useSettingsType = {
     isSubscribed: boolean
   ) => void;
   updateVisibilitySettings: (settings: VisibilitySettingsForm) => Promise<void>;
+  getNotificationSettings: (
+    userId: string,
+    setNotificationSettings: any,
+    isSubscribed: boolean
+  ) => void;
+  updateNotificationSettings: (settings: NotificationSettings) => Promise<void>;
 };
 
 /** Type for useTasks hook */

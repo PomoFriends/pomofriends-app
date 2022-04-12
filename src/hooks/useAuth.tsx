@@ -14,6 +14,7 @@ import {
   authContextType,
 } from '../utils/types/hookTypes';
 import {
+  NotificationSettingsDefaultValues,
   PomodoroSettingsDefaultValues,
   UserData,
   UserRecordDefaultValues,
@@ -131,6 +132,10 @@ export const useAuthProvider = (): authContextType => {
         .collection('pomodoroSettings')
         .doc(newUser.id)
         .set(PomodoroSettingsDefaultValues);
+      await db
+        .collection('notificationSettings')
+        .doc(newUser.id)
+        .set(NotificationSettingsDefaultValues);
       await db
         .collection('dailyRecord')
         .doc(newUser.id)

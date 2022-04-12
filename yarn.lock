@@ -12122,6 +12122,11 @@
   "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.2.4.tgz"
   "version" "4.2.4"
 
+"uifx@^2.0.7":
+  "integrity" "sha512-tnPwdYe1dDmsxWJeU84CjDN/rcWOzOcG6tL1bsi5bUXw5nJaq+c4ThsbShMkedX2dAQ5gq1Q5CxQGsxwa5wxfw=="
+  "resolved" "https://registry.npmjs.org/uifx/-/uifx-2.0.7.tgz"
+  "version" "2.0.7"
+
 "unbox-primitive@^1.0.1":
   "integrity" "sha512-tZU/3NqK3dA5gpE1KtyiJUrEB0lxnGkMFHptJ7q6ewdZ8s12QrODwNbhIJStmJkd1QDXa1NRA8aF2A1zk/Ypyw=="
   "resolved" "https://registry.npmjs.org/unbox-primitive/-/unbox-primitive-1.0.1.tgz"
@@ -12256,7 +12261,7 @@
   "resolved" "https://registry.npmjs.org/url-join/-/url-join-0.0.1.tgz"
   "version" "0.0.1"
 
-"url-loader@^4.1.0":
+"url-loader@^4.1.0", "url-loader@^4.1.1":
   "integrity" "sha512-3BTV812+AVHHOJQO8O5MkWgZ5aosP7GnROJwvzLS9hWDj00lZ6Z0wNak423Lp9PBZN05N+Jk/N5Si8jRAlGyWA=="
   "resolved" "https://registry.npmjs.org/url-loader/-/url-loader-4.1.1.tgz"
   "version" "4.1.1"

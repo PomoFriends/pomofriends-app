@@ -4,6 +4,8 @@ import { useGroup } from '../../hooks/useGroup';
 import { useSettings } from '../../hooks/useSettings';
 import { notification } from '../../utils/notification';
 import {
+  NotificationSettings,
+  NotificationSettingsDefaultValues,
   PomodoroSettings,
   PomodoroSettingsDefaultValues,
   UserData,
@@ -15,6 +17,7 @@ import TimeDisplay from './TimeDisplay';
 import { NextSeo } from 'next-seo';
 import { extraDigit, formatTime } from '../../utils/formatTime';
 import Head from 'next/head';
+import { playNotification } from '../../utils/playNotification';
 
 interface PomodoroProps {
   user: UserData | null;
@@ -36,12 +39,14 @@ const Pomodoro: React.FC<PomodoroProps> = ({
     updateGroupTime,
     getGroupTime,
   } = useGroup();
-  const { getSettings } = useSettings();
+  const { getSettings, getNotificationSettings } = useSettings();
   const { updateTimeSpend, updatePomodoro } = useAuth();
 
   const [settings, setSettings] = useState<PomodoroSettings>(
     PomodoroSettingsDefaultValues
   );
+  const [notificationSettings, setNotificationSettings] =
+    useState<NotificationSettings>(NotificationSettingsDefaultValues);
   const [command, setCommand] = useState<string>('');
   const [justJoined, setJustJoined] = useState(true);
 
@@ -72,6 +77,9 @@ const Pomodoro: React.FC<PomodoroProps> = ({
     // Get group settings
     if (isGroup && groupId)
       getGroupSettings(groupId, setSettings, isSubscribed);
+
+    if (user)
+      getNotificationSettings(user.id, setNotificationSettings, isSubscribed);
 
     return () => {
       isSubscribed = false;
@@ -154,6 +162,7 @@ const Pomodoro: React.FC<PomodoroProps> = ({
       setTime(time - 1);
       if (isPomodoro) setFullPomodoroTime(fullPomodoroTime + 1);
       if (isAdmin) sendTimeData();
+      if (time === 1) playNotification(notificationSettings);
     },
     timeCounting ? 1000 : null
   );
