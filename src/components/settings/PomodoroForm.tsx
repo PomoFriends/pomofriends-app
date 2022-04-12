@@ -76,7 +76,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
               defaultValue={settings.pomodoro / 60}
               render={({ field: { onChange, value } }) => (
                 <Grid container spacing={2} className={classes.input}>
-                  <Grid item xs={6}>
+                  <Grid item xs={6} mt={1}>
                     <Typography>Pomodoro</Typography>
                   </Grid>
                   <Grid item xs={6} container justifyContent="flex-end">
@@ -103,7 +103,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
               defaultValue={settings.shortBreak / 60}
               render={({ field: { onChange, value } }) => (
                 <Grid container spacing={2} className={classes.input}>
-                  <Grid item xs={6}>
+                  <Grid item xs={6} mt={1}>
                     <Typography>Short Break</Typography>
                   </Grid>
                   <Grid item xs={6} container justifyContent="flex-end">
@@ -130,7 +130,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
               defaultValue={settings.longBreak / 60}
               render={({ field: { onChange, value } }) => (
                 <Grid container spacing={2} className={classes.input}>
-                  <Grid item xs={6}>
+                  <Grid item xs={6} mt={1}>
                     <Typography>Long Break</Typography>
                   </Grid>
                   <Grid item xs={6} container justifyContent="flex-end">
@@ -158,7 +158,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
               defaultValue={settings.longBreakInterval}
               render={({ field: { onChange, value } }) => (
                 <Grid container spacing={2} className={classes.input}>
-                  <Grid item xs={6}>
+                  <Grid item xs={6} mt={1}>
                     <Typography>Long Break Interval</Typography>
                   </Grid>
                   <Grid item xs={6} container justifyContent="flex-end">
@@ -185,7 +185,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
               defaultValue={settings.autoStartPomodoro}
               render={({ field: { onChange, value } }) => (
                 <Grid container spacing={2} className={classes.input}>
-                  <Grid item xs={6}>
+                  <Grid item xs={6} mt={1}>
                     <Typography>Auto Start Pomodoro</Typography>
                   </Grid>
                   <Grid item xs={6} container justifyContent="flex-end">
@@ -205,7 +205,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
               defaultValue={settings.autoStartBreak}
               render={({ field: { onChange, value } }) => (
                 <Grid container spacing={2} className={classes.input}>
-                  <Grid item xs={6}>
+                  <Grid item xs={6} mt={1}>
                     <Typography>Auto Start Break</Typography>
                   </Grid>
                   <Grid item xs={6} container justifyContent="flex-end">

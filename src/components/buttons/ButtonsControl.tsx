@@ -5,6 +5,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { makeStyles } from '@mui/styles';
 import { Box } from '@mui/material';
+import { playNotification } from '../../utils/playNotification';
 
 const useStyles = makeStyles((theme: any) => ({
   box: {
@@ -38,6 +39,7 @@ const ButtonsControl: React.FC<ButtonsProps> = ({
   admin,
 }) => {
   const classes = useStyles();
+  const sound = { soundOn: true, volume: 30, soundtrack: 5 };
 
   if (!admin) {
     return null;
@@ -49,7 +51,10 @@ const ButtonsControl: React.FC<ButtonsProps> = ({
           text={<RestartAltIcon />}
           color="secondary"
           className={classes.buttons}
-          onClick={() => resetTimer()}
+          onClick={() => {
+            resetTimer();
+            playNotification(sound);
+          }}
         />
       ) : null}
 
@@ -71,6 +76,7 @@ const ButtonsControl: React.FC<ButtonsProps> = ({
           } else {
             toggleTimeCounting();
           }
+          playNotification(sound);
         }}
       />
       {started ? (
@@ -78,7 +84,10 @@ const ButtonsControl: React.FC<ButtonsProps> = ({
           text={<SkipNextIcon />}
           color="secondary"
           className={classes.buttons}
-          onClick={() => skipCurrent()}
+          onClick={() => {
+            skipCurrent();
+            playNotification(sound);
+          }}
         />
       ) : null}
     </Box>

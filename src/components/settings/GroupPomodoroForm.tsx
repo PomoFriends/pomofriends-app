@@ -28,7 +28,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
       <Grid container spacing={2} className={classes.form}>
         <Grid item xs={12}>
           <Grid container spacing={2} className={classes.input}>
-            <Grid item xs={6}>
+            <Grid item xs={6} mt={1}>
               <Typography>Pomodoro</Typography>
             </Grid>
             <Grid item xs={6} container justifyContent="flex-end">
@@ -40,7 +40,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={2} className={classes.input}>
-            <Grid item xs={6}>
+            <Grid item xs={6} mt={1}>
               <Typography>Short Break</Typography>
             </Grid>
             <Grid item xs={6} container justifyContent="flex-end">
@@ -52,7 +52,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={2} className={classes.input}>
-            <Grid item xs={6}>
+            <Grid item xs={6} mt={1}>
               <Typography>Long Break</Typography>
             </Grid>
             <Grid item xs={6} container justifyContent="flex-end">
@@ -65,7 +65,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
 
         <Grid item xs={12}>
           <Grid container spacing={2} className={classes.input}>
-            <Grid item xs={6}>
+            <Grid item xs={6} mt={1}>
               <Typography>Long Break Interval</Typography>
             </Grid>
             <Grid item xs={6} container justifyContent="flex-end">
@@ -77,7 +77,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={2} className={classes.input}>
-            <Grid item xs={6}>
+            <Grid item xs={6} mt={1}>
               <Typography>Auto Start Pomodoro</Typography>
             </Grid>
             <Grid item xs={6} container justifyContent="flex-end">
@@ -85,7 +85,7 @@ const PomodoroSettingsForm: React.FC<PomodoroSettingsFormProps> = ({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} mt={1}>
           <Grid container spacing={2} className={classes.input}>
             <Grid item xs={6}>
               <Typography>Auto Start Break</Typography>

@@ -414,6 +414,7 @@ const Pomodoro: React.FC<PomodoroProps> = ({
         isBreak={isBreak}
         isLongBreak={isLongBreak}
         settings={settings}
+        notificationSettings={notificationSettings}
         groupId={groupId}
         admin={isAdmin}
       />

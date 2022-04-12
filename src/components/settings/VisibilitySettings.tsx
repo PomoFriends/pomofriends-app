@@ -96,7 +96,7 @@ const VisibilitySettingsForm: React.FC<VisibilitySettingsFormProps> = ({
               }) => (
                 <>
                   <Grid container spacing={2} className={classes.input}>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} mt={1}>
                       <Typography>Color</Typography>
                     </Grid>
                     <Grid item xs={6} container justifyContent="flex-end">
@@ -162,7 +162,7 @@ const VisibilitySettingsForm: React.FC<VisibilitySettingsFormProps> = ({
               defaultValue={settings.tasksVisible}
               render={({ field: { onChange, value } }) => (
                 <Grid container spacing={2} className={classes.input}>
-                  <Grid item xs={6}>
+                  <Grid item xs={6} mt={1}>
                     <Typography>Tasks are visible to other users</Typography>
                   </Grid>
                   <Grid item xs={6} container justifyContent="flex-end">
@@ -182,7 +182,7 @@ const VisibilitySettingsForm: React.FC<VisibilitySettingsFormProps> = ({
               defaultValue={settings.activityVisible}
               render={({ field: { onChange, value } }) => (
                 <Grid container spacing={2} className={classes.input}>
-                  <Grid item xs={6}>
+                  <Grid item xs={6} mt={1}>
                     <Typography>Activity visible to other users</Typography>
                   </Grid>
                   <Grid item xs={6} container justifyContent="flex-end">

@@ -11,10 +11,11 @@ import {
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
 import { extraDigit, formatTime } from '../../utils/formatTime';
-import { PomodoroSettings } from '../../utils/types/userTypes';
-import SettingsForm from '../settings/PomodoroForm';
-import GroupSettingsForm from '../settings/GroupPomodoroForm';
-import AdminSettingsForm from '../settings/AdminPomodoroForm';
+import {
+  NotificationSettings,
+  PomodoroSettings,
+} from '../../utils/types/userTypes';
+import SettingsTabs from '../settings/SettingsTabs';
 
 const useStyles = makeStyles((theme: any) => ({
   timer: {
@@ -93,6 +94,7 @@ interface TimerProps {
   isBreak: boolean;
   isLongBreak: boolean;
   settings: PomodoroSettings;
+  notificationSettings: NotificationSettings;
   groupId?: string | null;
   admin?: boolean;
 }
@@ -102,6 +104,7 @@ const TimeDisplay: React.FC<TimerProps> = ({
   isBreak,
   isLongBreak,
   settings,
+  notificationSettings,
   groupId,
   admin,
 }) => {
@@ -138,19 +141,13 @@ const TimeDisplay: React.FC<TimerProps> = ({
         aria-describedby="modal-modal-description"
       >
         <Box className={classes.settingsModal}>
-          {groupId ? (
-            admin === true ? (
-              <AdminSettingsForm
-                handleClose={handleClose}
-                settings={settings}
-                groupId={groupId!}
-              />
-            ) : (
-              <GroupSettingsForm settings={settings} />
-            )
-          ) : (
-            <SettingsForm handleClose={handleClose} settings={settings} />
-          )}
+          <SettingsTabs
+            settings={settings}
+            notificationSettings={notificationSettings}
+            groupId={groupId}
+            admin={admin}
+            handleClose={handleClose}
+          />
         </Box>
       </Modal>
 
