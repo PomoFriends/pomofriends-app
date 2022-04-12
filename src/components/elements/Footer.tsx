@@ -4,7 +4,6 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PollIcon from '@mui/icons-material/Poll';
 import { Box, Container, Typography, Divider, Grid } from '@mui/material';
-import Link from 'next/link';
 
 const Footer = () => {
   return (
@@ -27,9 +26,11 @@ const Footer = () => {
         <Grid container spacing={2} mt={2}>
           <Grid item xs={4}>
             <UnstyledButton>
-              <Link
+              <a
+                target="_blank"
                 href="https://github.com/PomoFriends/pomofriends-app"
-                passHref
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none' }}
               >
                 <Box
                   sx={{
@@ -43,12 +44,17 @@ const Footer = () => {
                     GitHub
                   </Typography>
                 </Box>
-              </Link>
+              </a>
             </UnstyledButton>
           </Grid>
           <Grid item xs={4}>
             <UnstyledButton>
-              <Link href="https://www.linkedin.com/in/vadimegorov13/" passHref>
+              <a
+                target="_blank"
+                href="https://www.linkedin.com/in/vadimegorov13/"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none' }}
+              >
                 <Box
                   sx={{
                     display: 'flex',
@@ -61,12 +67,17 @@ const Footer = () => {
                     LinkedIn
                   </Typography>
                 </Box>
-              </Link>
+              </a>
             </UnstyledButton>
           </Grid>
           <Grid item xs={4}>
             <UnstyledButton>
-              <Link href="/" passHref>
+              <a
+                target="_blank"
+                href="https://forms.gle/C3UHejiw4H4BgYi89"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none' }}
+              >
                 <Box
                   sx={{
                     display: 'flex',
@@ -79,7 +90,7 @@ const Footer = () => {
                     Survey
                   </Typography>
                 </Box>
-              </Link>
+              </a>
             </UnstyledButton>
           </Grid>
         </Grid>
