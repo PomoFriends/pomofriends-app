@@ -1,6 +1,12 @@
 {
   "name": "pomofriends",
   "private": true,
+  "version": "1.0.0",
+  "author": {
+    "name": "Vadim Egorov",
+    "email": "vadegor00@gmail.com",
+    "url": "https://github.com/vadimegorov13"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
