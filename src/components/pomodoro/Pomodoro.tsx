@@ -223,7 +223,7 @@ const Pomodoro: React.FC<PomodoroProps> = ({
 
     setIsPomodoro(true);
     setIsBreak(false);
-    setTime(5);
+    setTime(settings.pomodoro);
   }, [
     setTimeCounting,
     setIsPomodoro,
