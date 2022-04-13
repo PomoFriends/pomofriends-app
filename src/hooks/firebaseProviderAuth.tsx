@@ -19,7 +19,7 @@ const FirebaseProviderAuth: React.FC = (): JSX.Element => {
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.GithubAuthProvider.PROVIDER_ID,
-      firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+      // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
     ],
   };
 
