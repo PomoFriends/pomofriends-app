@@ -74,7 +74,7 @@ const Footer = () => {
             <UnstyledButton>
               <a
                 target="_blank"
-                href="https://forms.gle/C3UHejiw4H4BgYi89"
+                href="https://forms.gle/gTTyr2Zn5LrjKgDG9"
                 rel="noopener noreferrer"
                 style={{ textDecoration: 'none' }}
               >
