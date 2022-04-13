@@ -24,7 +24,7 @@ import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 
-// const pages = ['about'];
+const pages = ['about'];
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
@@ -160,6 +160,15 @@ const Navbar = () => {
                 </Typography>
               </UnstyledButton>
             </Link>
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              {pages.map((page) => (
+                <Link key={page} href={`/${page}`} passHref={true}>
+                  <Button onClick={handleCloseNavMenu} sx={{ my: 2 }}>
+                    {page}
+                  </Button>
+                </Link>
+              ))}
+            </Box>
             <Menu
               id="nav-menu"
               anchorEl={anchorElNav}
@@ -181,13 +190,13 @@ const Navbar = () => {
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {/* {pages.map((page) => (
+            {pages.map((page) => (
               <Link key={page} href={`/${page}`} passHref={true}>
                 <Button onClick={handleCloseNavMenu} sx={{ my: 2 }}>
                   {page}
                 </Button>
               </Link>
-            ))} */}
+            ))}
           </Box>
           {rightSide}
         </Toolbar>

@@ -112,7 +112,11 @@ const Chat: React.FC<ChatProps> = ({ groupId, mutedUsers }) => {
             {messages.map((message: GroupMessage) => (
               <div key={message.id}>
                 {mutedUsers.includes(message.userId) ? null : (
-                  <DisplayMessages message={message} groupId={groupId} />
+                  <>
+                    {message.userId === '5wLyG0ZNob0pq4M2sgSXpomoBot' ? null : (
+                      <DisplayMessages message={message} groupId={groupId} />
+                    )}
+                  </>
                 )}
               </div>
             ))}
