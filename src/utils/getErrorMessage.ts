@@ -15,7 +15,7 @@ export const getErrorMessage = (errorResponse: any): ErrorMessage | null => {
   // the db for the first time but it still signs in the user.
   // Therefore this error can be ignored.
   if (errorResponse?.message?.includes('uid')) {
-    console.log(errorResponse?.message);
+    // console.log(errorResponse?.message);
     error = { message: null };
   }
 

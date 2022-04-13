@@ -48,7 +48,6 @@ const ChangePomodoro: React.FC<ChangePomodoroProps> = ({ user, groupId }) => {
 
         if (admin && adminId) {
           if (adminId === user.id) {
-            console.log('admin');
             body = (
               <Pomodoro
                 user={user}
@@ -58,7 +57,6 @@ const ChangePomodoro: React.FC<ChangePomodoroProps> = ({ user, groupId }) => {
               />
             );
           } else {
-            console.log('participant');
             body = (
               <Pomodoro
                 user={user}
@@ -69,9 +67,6 @@ const ChangePomodoro: React.FC<ChangePomodoroProps> = ({ user, groupId }) => {
             );
           }
         } else {
-          console.log('loading herre');
-          console.log('admin', admin);
-          console.log('adminId', adminId);
           body = (
             <Box my={18}>
               <Loader />
@@ -79,13 +74,11 @@ const ChangePomodoro: React.FC<ChangePomodoroProps> = ({ user, groupId }) => {
           );
         }
       } else {
-        console.log('loner');
         body = (
           <Pomodoro user={user} groupId={null} isAdmin={true} isGroup={false} />
         );
       }
     } else {
-      console.log('nobody');
       body = (
         <Pomodoro user={null} groupId={null} isAdmin={true} isGroup={false} />
       );

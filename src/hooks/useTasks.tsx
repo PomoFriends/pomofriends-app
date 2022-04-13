@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { db } from '../firebase/firebase';
 import { TaskForm } from '../utils/types/formTypes';
 import { useTasksType } from '../utils/types/hookTypes';
-import { TaskData, UserRecord } from '../utils/types/userTypes';
+import { TaskData, UserData, UserRecord } from '../utils/types/userTypes';
 import { useAuth } from './useAuth';
 import { notification } from '../utils/notification';
 import { GroupParticipant } from '../utils/types/groupTypes';
@@ -317,10 +317,8 @@ export const useTasks = (): useTasksType => {
           .get()
           .then((res) => res.data() as UserRecord);
 
-        console.log('record', record);
         // if task in record delete it
         if (record.tasksIds.includes(taskId)) {
-          console.log('here');
           const taskInRec = await taskRef
             .get()
             .then((res) => res.data() as TaskData);
@@ -379,7 +377,7 @@ export const useTasks = (): useTasksType => {
     }
   };
 
-  const addPomodoro = async () => {
+  const addPomodoro = async (user: UserData) => {
     if (user && user.currentTaskId) {
       try {
         const taskId = user.currentTaskId;

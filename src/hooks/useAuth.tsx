@@ -331,7 +331,7 @@ export const useAuthProvider = (): authContextType => {
         .collection('weeklyRecord')
         .doc(user.id)
         .update({ pomodoros: FieldValue.increment(1) });
-      await addPomodoro();
+      await addPomodoro(user);
 
       if (user.groupId) {
         await db

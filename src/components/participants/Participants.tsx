@@ -25,7 +25,6 @@ const Participants: React.FC<ParticipantsProps> = ({
     let isSubscribed = true;
 
     getParticipants(groupId, setParticipants, isSubscribed);
-    console.log();
 
     return () => {
       isSubscribed = false;

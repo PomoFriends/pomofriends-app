@@ -20,6 +20,6 @@ const realtimedb = firebase.database();
 // return firebase components
 export { auth, db, now, storage, app, realtimedb };
 
-console.log(
-  app.name ? 'Firebase is working!😎😎😎' : 'Firebase is not working 😫😪🤔'
-);
+// console.log(
+//   app.name ? 'Firebase is working!😎😎😎' : 'Firebase is not working 😫😪🤔'
+// );

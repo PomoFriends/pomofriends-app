@@ -47,8 +47,6 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
-  // console.log(user?.profilePic);
-
   let rightSide;
 
   if (user) {
