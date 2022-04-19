@@ -1,5 +1,5 @@
 import { UnstyledButton } from '@mantine/core';
-import Dashboard from '@mui/icons-material/Dashboard';
+// import Dashboard from '@mui/icons-material/Dashboard';
 import Info from '@mui/icons-material/Info';
 import Logout from '@mui/icons-material/Logout';
 // import MenuIcon from '@mui/icons-material/Menu';
@@ -78,7 +78,7 @@ const Navbar = () => {
             {user.username}
           </Typography>
           <Divider />
-          <Link href="/dashboard" passHref={true}>
+          {/* <Link href="/dashboard" passHref={true}>
             <MenuItem sx={{ mt: '0.45rem' }}>
               <ListItemIcon>
                 <Dashboard fontSize="small" />
@@ -86,15 +86,16 @@ const Navbar = () => {
               My Dashboard
             </MenuItem>
           </Link>
-          <Divider />
+          <Divider /> */}
           <Link href="/settings" passHref={true}>
-            <MenuItem>
+            <MenuItem sx={{ marginTop: '0.5rem' }}>
               <ListItemIcon>
                 <Settings fontSize="small" />
               </ListItemIcon>
               Settings
             </MenuItem>
           </Link>
+          <Divider />
           <MenuItem onClick={() => signOut()}>
             <ListItemIcon>
               <Logout fontSize="small" />

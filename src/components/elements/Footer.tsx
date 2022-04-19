@@ -1,7 +1,7 @@
 import { UnstyledButton } from '@mantine/core';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+// import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PollIcon from '@mui/icons-material/Poll';
 import { Box, Container, Typography, Divider, Grid } from '@mui/material';
 
@@ -24,30 +24,32 @@ const Footer = () => {
         </Container>
         <Divider />
         <Grid container spacing={2} mt={2}>
-          <Grid item xs={4}>
-            <UnstyledButton>
-              <a
-                target="_blank"
-                href="https://github.com/PomoFriends/pomofriends-app"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none' }}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                  }}
+          <Grid item xs={6}>
+            <Box sx={{ textAlign: 'center' }}>
+              <UnstyledButton>
+                <a
+                  target="_blank"
+                  href="https://github.com/PomoFriends/pomofriends-app"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: 'none' }}
                 >
-                  <GitHubIcon color="primary" />
-                  <Typography component={'span'} color="white" ml={0.5}>
-                    GitHub
-                  </Typography>
-                </Box>
-              </a>
-            </UnstyledButton>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <GitHubIcon color="primary" />
+                    <Typography component={'span'} color="white" ml={0.5}>
+                      GitHub
+                    </Typography>
+                  </Box>
+                </a>
+              </UnstyledButton>
+            </Box>
           </Grid>
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
             <UnstyledButton>
               <a
                 target="_blank"
@@ -69,29 +71,31 @@ const Footer = () => {
                 </Box>
               </a>
             </UnstyledButton>
-          </Grid>
-          <Grid item xs={4}>
-            <UnstyledButton>
-              <a
-                target="_blank"
-                href="https://forms.gle/gTTyr2Zn5LrjKgDG9"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none' }}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                  }}
+          </Grid> */}
+          <Grid item xs={6}>
+            <Box sx={{ textAlign: 'center' }}>
+              <UnstyledButton>
+                <a
+                  target="_blank"
+                  href="https://forms.gle/gTTyr2Zn5LrjKgDG9"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: 'none' }}
                 >
-                  <PollIcon color="primary" />
-                  <Typography component={'span'} color="white" ml={0.5}>
-                    Survey
-                  </Typography>
-                </Box>
-              </a>
-            </UnstyledButton>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <PollIcon color="primary" />
+                    <Typography component={'span'} color="white" ml={0.5}>
+                      Survey
+                    </Typography>
+                  </Box>
+                </a>
+              </UnstyledButton>
+            </Box>
           </Grid>
         </Grid>
       </Box>
